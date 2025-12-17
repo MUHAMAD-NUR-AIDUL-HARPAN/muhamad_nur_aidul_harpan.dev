@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* ... kode variant dark mode anda ... */
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Inter", sans-serif;
+}
+
+@layer base {
+  /* HAPUS scroll-behavior: smooth; (Karena sudah pakai Lenis) */
+
+  html {
+    /* 1. Sembunyikan scrollbar untuk Firefox */
+    scrollbar-width: none;
+
+    /* 2. Sembunyikan scrollbar untuk IE dan Edge lama */
+    -ms-overflow-style: none;
+  }
+
+  /* 3. Sembunyikan scrollbar untuk Chrome, Safari, dan Opera */
+  html::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500;
+  }
+  /* Sembunyikan Scrollbar tapi tetap bisa di-scroll */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}

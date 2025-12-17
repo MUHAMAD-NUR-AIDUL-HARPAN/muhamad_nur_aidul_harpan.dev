@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* Konfigurasi Tema (Font, dll) */
+@theme {
+  --font-display: "Inter", sans-serif;
+}
+
+/* @layer base: Digunakan untuk style dasar HTML (body, h1, a, dll).
+  PENTING: Kita masukkan logic warna body di sini agar rapi.
+*/
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    /* Style default (Light Mode) */
+    @apply bg-gray-50 text-gray-900 transition-colors duration-300;
+  }
+
+  /* Logic Dark Mode Manual */
+  /* Ini artinya: Jika tag <html> punya class 'dark', ubah body jadi hitam */
+  :root.dark body {
+    @apply bg-black text-white;
+  }
+}
+
+/* @layer utilities: Untuk class tambahan buatan sendiri */
