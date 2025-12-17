@@ -1,11 +1,8 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite' // <--- PENTING: Import ini
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(), // <--- PENTING: Masukkan plugin ini di sini
-  ],
-})
+  base: "/muhamad_nur_aidul_harpan.dev/", // 🔥 PENTING
+  plugins: [react(), tailwindcss()],
+});
