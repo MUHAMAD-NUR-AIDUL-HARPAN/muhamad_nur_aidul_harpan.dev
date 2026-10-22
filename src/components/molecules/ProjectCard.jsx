@@ -2,64 +2,115 @@ import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 
 export const ProjectCard = ({ project }) => {
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('/uploads/')) {
+      const fileName = imagePath.replace('/uploads/', '');
+      return `https://ugbwpgalnyazmbmntxhi.supabase.co/storage/v1/object/public/portfolio/${fileName}`;
+    }
+    return imagePath;
+  };
+
   return (
     <motion.div
-      layout // Magic prop dari Framer Motion untuk animasi posisi otomatis
+      layout
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.5 }}
       transition={{ duration: 0.3 }}
-      className="group relative rounded-2xl overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg"
+      className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg"
     >
-      {/* Image Container */}
-      <div className="h-64 overflow-hidden relative">
+      {/* IMAGE */}
+      <div className="h-60 scale-[1.03] overflow-hidden relative">
         <img
-          src={project.image}
+          src={getImageUrl(project.image)}
           alt={project.title}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
         />
 
-        {/* Overlay on Hover */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-          <button
-            className="p-3 bg-white text-black rounded-full hover:scale-110 transition-transform"
-            title="View Code"
-          >
-            <Github size={20} />
-          </button>
-          <button
-            className="p-3 bg-blue-600 text-white rounded-full hover:scale-110 transition-transform"
-            title="Live Demo"
-          >
-            <ExternalLink size={20} />
-          </button>
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              className="p-3 bg-white/90 text-slate-900 rounded-full hover:bg-white hover:scale-110 transition-all shadow-xl"
+              title="Source Code"
+            >
+              <Github size={20} />
+            </a>
+          )}
+
+          {project.link && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noreferrer"
+              className="p-3 bg-blue-600/90 text-white rounded-full hover:bg-blue-600 hover:scale-110 transition-all shadow-xl"
+              title="Live Demo"
+            >
+              <ExternalLink size={20} />
+            </a>
+          )}
         </div>
       </div>
 
-      {/* Content */}
+      {/* CONTENT */}
       <div className="p-6">
-        <div className="flex justify-between items-start mb-2">
-          <span className="text-xs font-bold text-blue-500 uppercase tracking-widest">
-            {project.category}
-          </span>
-        </div>
-        <h3 className="text-xl font-bold mb-2 group-hover:text-blue-500 transition-colors">
+        <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full">
+          {project.category}
+        </span>
+
+        <h3 className="text-xl font-bold mt-4 mb-2 group-hover:text-blue-600 transition-colors">
           {project.title}
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+
+        <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-2 leading-relaxed">
           {project.desc}
         </p>
 
-        {/* Tech Stack Tags */}
-        <div className="flex flex-wrap gap-2">
-          {project.tech.map((t) => (
+        {/* TECH STACK */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {(Array.isArray(project.tech) ? project.tech : (project.tech ? project.tech.split(',').map(t => t.trim()) : [])).map((t) => (
             <span
               key={t}
-              className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-gray-500"
+              className="text-xs font-medium px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
             >
-              #{t}
+              {t}
             </span>
           ))}
+        </div>
+
+        {/* ACTIONS (TEXT LINK) */}
+        <div className="flex items-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+          {project.link ? (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              <ExternalLink size={16} />
+              Live Demo
+            </a>
+          ) : (
+            <span className="text-sm text-slate-400 flex items-center gap-2">
+              <ExternalLink size={16} /> Live Demo
+            </span>
+          )}
+
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              className="ml-auto flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <Github size={16} />
+              Source
+            </a>
+          )}
         </div>
       </div>
     </motion.div>

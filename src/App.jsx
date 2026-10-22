@@ -10,6 +10,9 @@ import { GlobalProvider } from "./context/GlobalContext";
 import { MainLayout } from "./components/templates/MainLayout";
 import HomePage from "./pages/HomePage";
 import CertificatesPage from "./pages/CertificatesPage";
+import AdminPage from "./pages/AdminPage";
+import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./components/utilities/ProtectedRoute";
 import "./index.css"; //
 // Wrapper component to use useLocation hook inside Router
 const AnimatedRoutes = () => {
@@ -21,6 +24,15 @@ const AnimatedRoutes = () => {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<HomePage />} />
           <Route path="/certificates" element={<CertificatesPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </AnimatePresence>
     </MainLayout>

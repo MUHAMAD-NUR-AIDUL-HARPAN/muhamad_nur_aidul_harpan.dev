@@ -12,7 +12,7 @@ export const TechTag = ({ label, index }) => {
         backgroundColor: "#3b82f6",
         color: "#fff",
       }}
-      className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-lg text-sm font-semibold border border-gray-200 dark:border-gray-700 cursor-default transition-colors duration-300"
+      className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-semibold border border-slate-200 dark:border-slate-700 cursor-default transition-colors duration-300"
     >
       {label}
     </motion.div>

@@ -1,24 +1,24 @@
-import { motion } from "framer-motion";
 import { aboutData } from "../../data/content";
+import { useGlobal } from "../../context/GlobalContext"; // Import context
 
 export const StatsGrid = () => {
+  const { lang } = useGlobal(); // Ambil bahasa
+
   return (
-    <div className="grid grid-cols-2 gap-4 mt-8">
-      {aboutData.stats.map((stat, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 + i * 0.1 }}
-          className="p-4 rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 shadow-sm text-center hover:bg-blue-50 dark:hover:bg-white/10 transition-colors"
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+      {aboutData.stats.map((stat, index) => (
+        <div
+          key={index}
+          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-md transition-shadow"
         >
-          <h4 className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="text-3xl font-black text-blue-600 dark:text-blue-400 mb-1">
             {stat.value}
-          </h4>
-          <p className="text-xs text-gray-500 uppercase tracking-wider font-medium mt-1">
-            {stat.label}
-          </p>
-        </motion.div>
+          </div>
+          {/* LOGIC BARU: Pilih label berdasarkan bahasa */}
+          <div className="text-sm text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wide">
+            {lang === "id" ? stat.label.id : stat.label.en}
+          </div>
+        </div>
       ))}
     </div>
   );

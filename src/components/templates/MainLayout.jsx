@@ -1,67 +1,78 @@
 import { useState, useEffect } from "react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { Hand } from "lucide-react";
 import { Navbar } from "../organisms/Navbar";
 import { Preloader } from "../organisms/Preloader";
+import { Footer } from "../organisms/Footer";
+import { AiAssistant } from "../organisms/AiAssistant"; // <--- 1. JANGAN LUPA IMPORT INI
 
 export const MainLayout = ({ children }) => {
-  // --- LOGIC BARU: Session Storage Check ---
-  const [isLoading, setIsLoading] = useState(() => {
-    // Cek apakah user sudah pernah berkunjung di sesi browser ini?
-    // Jika sessionStorage "visited" KOSONG (!null = true), maka loading aktif.
-    // Jika ADA, maka loading mati (false).
-    return !sessionStorage.getItem("visited");
-  });
+  // Selalu tampilkan preloader saat di-refresh sesuai permintaan
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Inisialisasi Smooth Scroll (Lenis)
+    // Inisialisasi Smooth Scroll (Lenis) ultra-smooth tanpa stutter/gredeg
     const lenis = new Lenis({
-      duration: 1.5,
+      autoRaf: true,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+      syncTouch: false, // syncTouch dimatikan agar tidak berbenturan dengan native momentum
     });
+    window.lenis = lenis;
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    // Kunci scroll saat loading, lepaskan saat selesai
+    // Logic Kunci Scroll saat Loading Preloader
     if (isLoading) {
       lenis.stop();
-      document.body.style.overflow = "hidden"; // Tambahan: Paksa stop scroll browser native
+      document.body.style.overflow = "hidden";
     } else {
       lenis.start();
-      document.body.style.overflow = ""; // Reset
-      requestAnimationFrame(raf);
+      document.body.style.overflow = "";
     }
 
-    return () => lenis.destroy();
+    return () => {
+      lenis.destroy();
+      window.lenis = null;
+      document.body.style.overflow = "";
+    };
   }, [isLoading]);
 
-  // Handler saat Preloader selesai
   const handlePreloaderComplete = () => {
     setIsLoading(false);
-    // Simpan tanda bahwa user sudah berkunjung
     sessionStorage.setItem("visited", "true");
   };
 
+  // --- SCROLL PROGRESS BAR LOGIC ---
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   return (
     <>
-      {/* AnimatePresence menangani animasi keluar (slide up) preloader */}
       <AnimatePresence mode="wait">
         {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
       </AnimatePresence>
 
-      <div className="min-h-screen w-full transition-colors duration-500 bg-gray-50 dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
-        <Navbar />
+      {/* Global Progress Bar */}
+      <motion.div
+        style={{ scaleX }}
+        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_10px_rgba(96,165,250,0.5)]"
+      />
 
-        <main className="relative">{children}</main>
-
-        <footer className="py-10 text-center text-sm text-gray-500 border-t border-gray-200 dark:border-gray-900 transition-colors duration-500">
-          © {new Date().getFullYear()} Alex. Built with React & Lenis.
-        </footer>
+      <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 transition-colors duration-500 relative z-0 overflow-x-clip">
+        <div className="relative z-10">
+          <Navbar />
+          <main className="relative">{children}</main>
+          <Footer />
+          <AiAssistant />
+        </div>
       </div>
     </>
   );

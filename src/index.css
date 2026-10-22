@@ -4,36 +4,89 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-display: "Inter", sans-serif;
+  --font-sans: "Poppins", sans-serif;
+  --font-display: "Darker Grotesque", sans-serif;
+
+  /* Ubah palet abu-abu menjadi Slate untuk kesan lebih profesional dan tech-oriented */
+  --color-gray-50: var(--color-slate-50);
+  --color-gray-100: var(--color-slate-100);
+  --color-gray-200: var(--color-slate-200);
+  --color-gray-300: var(--color-slate-300);
+  --color-gray-400: var(--color-slate-400);
+  --color-gray-500: var(--color-slate-500);
+  --color-gray-600: var(--color-slate-600);
+  --color-gray-700: var(--color-slate-700);
+  --color-gray-800: var(--color-slate-800);
+  --color-gray-900: var(--color-slate-900);
+  --color-gray-950: var(--color-slate-950);
 }
 
 @layer base {
-  /* HAPUS scroll-behavior: smooth; (Karena sudah pakai Lenis) */
-
-  html {
-    /* 1. Sembunyikan scrollbar untuk Firefox */
-    scrollbar-width: none;
-
-    /* 2. Sembunyikan scrollbar untuk IE dan Edge lama */
-    -ms-overflow-style: none;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
   }
 
-  /* 3. Sembunyikan scrollbar untuk Chrome, Safari, dan Opera */
-  html::-webkit-scrollbar {
-    display: none;
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Light Mode: Background #F8FAFC, Text #0F172A */
+    background-color: #F8FAFC;
+    color: #0F172A;
+  }
+  
+  .dark body {
+    /* Dark Mode: Background #0F172A, Text #F1F5F9 */
+    background-color: #0F172A;
+    color: #F1F5F9;
+  }
+
+  /* Accent selection color */
+  ::selection {
+    background-color: #93C5FD; /* blue-300 */
+    color: #1D4ED8; /* blue-700 */
+  }
+  .dark ::selection {
+    background-color: #1E3A8A; /* blue-900 */
+    color: #BFDBFE; /* blue-200 */
+  }
+  
+  html {
+    scroll-behavior: auto;
+    scrollbar-gutter: stable;
   }
 }
 
-@layer utilities {
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500;
-  }
-  /* Sembunyikan Scrollbar tapi tetap bisa di-scroll */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
+@layer components {
+  /* Class utility untuk menyembunyikan scrollbar */
+  .scrollbar-hide {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+  
+  /* Class untuk custom scrollbar yang tipis dan elegan */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gray-300) transparent;
+  }
+  .dark .scrollbar-thin {
+    scrollbar-color: var(--color-gray-700) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-gray-300);
+    border-radius: 20px;
+  }
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-gray-700);
   }
 }
