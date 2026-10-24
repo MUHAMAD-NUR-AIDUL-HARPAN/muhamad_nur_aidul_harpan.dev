@@ -17,18 +17,17 @@ export const MainLayout = ({ children }) => {
   });
 
   useEffect(() => {
-    // Inisialisasi Smooth Scroll (Lenis) untuk Desktop dan Mobile
-    const isMobile =
-      typeof window !== "undefined" &&
-      ("ontouchstart" in window || navigator.maxTouchPoints > 0 || window.innerWidth < 768);
-
+    // Inisialisasi Smooth Scroll (Lenis) dengan silky smooth momentum untuk Mobile & Desktop
     const lenis = new Lenis({
       autoRaf: true,
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      syncTouch: false, // Hilangkan beban virtual touch di HP agar scroll 100% ringan seperti bulu & responsif instan
+      syncTouch: true,
+      syncTouchLerp: 0.08,
+      touchMultiplier: 1.15,
+      touchInertiaExponent: 35,
     });
     window.lenis = lenis;
 
@@ -65,7 +64,7 @@ export const MainLayout = ({ children }) => {
       {/* Global Progress Bar */}
       <motion.div
         style={{ scaleX: scrollYProgress }}
-        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] pointer-events-none"
+        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] pointer-events-none transform-gpu will-change-transform"
       />
 
       <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 transition-colors duration-300 relative z-0 overflow-x-clip">

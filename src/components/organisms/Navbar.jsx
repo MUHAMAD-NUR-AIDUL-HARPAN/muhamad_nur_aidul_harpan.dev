@@ -11,28 +11,30 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (location.pathname !== "/" || ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const sections = navItems
-          .filter((item) => item.type === "scroll")
-          .map((item) => item.id);
-        const current = sections.find((section) => {
-          const element = document.getElementById(section);
-          if (element) {
-            const rect = element.getBoundingClientRect();
-            return rect.top >= -120 && rect.top <= 250;
-          }
-          return false;
-        });
-        if (current) setActiveSection(current);
-        ticking = false;
-      });
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    if (location.pathname !== "/") return;
+
+    const sections = navItems
+      .filter((item) => item.type === "scroll")
+      .map((item) => document.getElementById(item.id))
+      .filter(Boolean);
+
+    // Menggunakan IntersectionObserver murni tanpa memicu reflow DOM saat scrolling
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSection = entries.find((entry) => entry.isIntersecting);
+        if (visibleSection) {
+          setActiveSection(visibleSection.target.id);
+        }
+      },
+      {
+        rootMargin: "-20% 0px -55% 0px",
+        threshold: 0,
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
   }, [location.pathname]);
 
   const scrollToTarget = (targetId) => {

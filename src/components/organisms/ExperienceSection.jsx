@@ -25,26 +25,26 @@ const ExperienceCard = ({ item, index }) => {
         <div className="relative w-10 h-10 rounded-full flex items-center justify-center">
           {/* Animated Ring Glow */}
           <div 
-            className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-60 blur-[4px] pointer-events-none"
+            className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-60 blur-[4px] pointer-events-none transform-gpu"
             style={{
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
               maskComposite: "exclude",
             }}
           >
-            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_6s_linear_infinite]" />
+            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_6s_linear_infinite] will-change-transform transform-gpu" />
           </div>
 
           {/* Animated Crisp Ring */}
           <div 
-            className="absolute -inset-[1.5px] rounded-full p-[1.5px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/20"
+            className="absolute -inset-[1.5px] rounded-full p-[1.5px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/20 transform-gpu"
             style={{
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
               maskComposite: "exclude",
             }}
           >
-            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_6s_linear_infinite]" />
+            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_6s_linear_infinite] will-change-transform transform-gpu" />
           </div>
 
           {/* Inner Node Core */}
