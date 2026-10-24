@@ -64,11 +64,11 @@ const ExperienceCard = ({ item, index }) => {
 
       {/* 3. CONTENT CARD */}
       <motion.div
-        initial={{ opacity: 0, x: isLeft ? -45 : 45, y: 20 }}
+        initial={{ opacity: 0, x: isLeft ? -30 : 30, y: 10 }}
         whileInView={{ opacity: 1, x: 0, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
-        whileHover={{ y: -6, transition: { duration: 0.25 } }}
+        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        whileHover={{ y: -4, transition: { duration: 0.25 } }}
         className="w-full md:w-5/12 pl-12 md:pl-0"
       >
         <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300 group">
@@ -152,22 +152,16 @@ export const ExperienceSection = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Section Title */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-20"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <motion.div 
-              initial={{ scale: 0.7, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
-            >
+            <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 shadow-sm">
               <Briefcase size={20} />
-            </motion.div>
+            </div>
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
               {lang === "id" ? "Jejak Karir" : "Career Path"}
             </span>
@@ -180,17 +174,11 @@ export const ExperienceSection = () => {
               </span>
             </h2>
           </div>
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto"
-          >
+          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
             {lang === "id"
               ? "Perjalanan saya dalam membangun produk digital dan memperdalam keahlian teknis."
               : "My journey in building digital products and deepening technical expertise."}
-          </motion.p>
+          </p>
 
           {/* Connector Beacon leading downwards into timeline */}
           <div className="hidden md:flex flex-col items-center justify-center mt-8 -mb-12">

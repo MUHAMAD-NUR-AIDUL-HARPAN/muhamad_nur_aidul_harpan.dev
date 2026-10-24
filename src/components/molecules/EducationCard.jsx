@@ -7,11 +7,11 @@ export const EducationCard = ({ item, index }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 55, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ delay: index * 0.16, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -8, transition: { duration: 0.25 } }}
+      transition={{ delay: index * 0.12, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -6, transition: { duration: 0.25 } }}
       className="group relative bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-100 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300 overflow-hidden"
     >
       {/* Decorative Background Blob */}

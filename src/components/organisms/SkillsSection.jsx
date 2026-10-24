@@ -22,22 +22,16 @@ export const SkillsSection = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <motion.div 
-              initial={{ scale: 0.7, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
-            >
+            <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 shadow-sm">
               <Layers size={20} />
-            </motion.div>
+            </div>
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
               {lang === "id" ? "Keahlian Teknis" : "Skillset & Tools"}
             </span>
@@ -49,17 +43,11 @@ export const SkillsSection = () => {
               {lang === "id" ? "Kemampuan Teknis" : "Technical Proficiency"}
             </span>
           </h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-slate-500 max-w-xl mx-auto"
-          >
+          <p className="text-slate-500 max-w-xl mx-auto">
             {lang === "id"
               ? "Teknologi dan perangkat modern yang saya gunakan untuk membangun sistem handal dan terukur."
               : "A deep dive into the tools and modern technologies I use to build scalable products."}
-          </motion.p>
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -69,11 +57,11 @@ export const SkillsSection = () => {
             return (
               <motion.div
                 key={catIndex}
-                initial={{ opacity: 0, y: 60, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
-                transition={{ delay: catIndex * 0.16, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -8, transition: { duration: 0.25 } }}
+                transition={{ delay: catIndex * 0.12, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -6, transition: { duration: 0.25 } }}
                 className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300"
               >
                 {/* Header Icon */}

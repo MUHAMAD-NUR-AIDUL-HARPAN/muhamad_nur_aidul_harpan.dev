@@ -88,22 +88,16 @@ export const ContactSection = () => {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
         {/* LEFT COLUMN: Info & Title */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col justify-center h-full"
         >
           <div className="flex items-center gap-2 mb-4">
-            <motion.div 
-              initial={{ scale: 0.7, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
-            >
+            <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 shadow-sm">
               <Mail size={20} />
-            </motion.div>
+            </div>
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
               {lang === "id" ? "Hubungi Saya" : "Get In Touch"}
             </span>
@@ -115,23 +109,13 @@ export const ContactSection = () => {
               {lang === "id" ? t.title.id : t.title.en}
             </span>
           </h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg text-slate-500 mb-10 max-w-md"
-          >
+          <p className="text-lg text-slate-500 mb-10 max-w-md">
             {lang === "id" ? t.subtitle.id : t.subtitle.en}
-          </motion.p>
+          </p>
 
           <div className="space-y-6">
             {/* Info Cards */}
             <motion.div 
-              initial={{ opacity: 0, x: -45 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ x: 8, transition: { duration: 0.25 } }}
               className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
             >
@@ -147,10 +131,6 @@ export const ContactSection = () => {
             </motion.div>
 
             <motion.div 
-              initial={{ opacity: 0, x: -45 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ x: 8, transition: { duration: 0.25 } }}
               className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
             >
@@ -166,10 +146,6 @@ export const ContactSection = () => {
             </motion.div>
             
             <motion.div 
-              initial={{ opacity: 0, x: -45 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ x: 8, transition: { duration: 0.25 } }}
               className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
             >
