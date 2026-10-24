@@ -50,21 +50,17 @@ export const Navbar = () => {
   }, [location.pathname]);
 
   const scrollToTarget = (targetId) => {
-    if (targetId === "home") {
-      gsap.to(window, {
-        duration: 1.1,
-        scrollTo: { y: 0 },
-        ease: "power2.inOut",
-        overwrite: "auto",
+    const targetElement = targetId === "home" ? 0 : document.getElementById(targetId);
+    if (window.lenis) {
+      window.lenis.scrollTo(targetElement, {
+        offset: targetId === "home" ? 0 : -80,
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
-      return;
-    }
-
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
+    } else if (targetElement !== null) {
       gsap.to(window, {
         duration: 1.1,
-        scrollTo: { y: targetElement, offsetY: 80 },
+        scrollTo: { y: targetElement, offsetY: targetId === "home" ? 0 : 80 },
         ease: "power2.inOut",
         overwrite: "auto",
       });

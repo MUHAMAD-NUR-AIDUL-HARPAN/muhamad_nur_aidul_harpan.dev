@@ -240,10 +240,12 @@ export const AiAssistant = () => {
   // Kunci scroll halaman ketika modal chatbot dibuka
   useEffect(() => {
     if (isOpen) {
+      window.lenis?.stop();
       const originalBodyOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
 
       return () => {
+        window.lenis?.start();
         document.body.style.overflow = originalBodyOverflow;
       };
     }
@@ -455,6 +457,7 @@ export const AiAssistant = () => {
               {/* --- MESSAGES CONTAINER --- */}
               <div
                 ref={scrollRef}
+                data-lenis-prevent="true"
                 className="flex-1 min-h-0 p-4 sm:p-5 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/40 overscroll-contain select-text"
                 style={{
                   overflowY: "auto",

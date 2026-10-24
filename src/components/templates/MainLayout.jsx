@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import gsap from "gsap";
@@ -20,6 +22,7 @@ export const MainLayout = ({ children }) => {
     return !sessionStorage.getItem("visited");
   });
 
+  const lenisRef = useRef(null);
   const progressBarRef = useRef(null);
 
   // Optimasi ScrollTrigger untuk Mobile: Mencegah jitter saat address bar HP muncul/hilang
@@ -27,7 +30,7 @@ export const MainLayout = ({ children }) => {
     ScrollTrigger.config({ ignoreMobileResize: true });
   }, []);
 
-  // Inisialisasi AOS (Animate On Scroll) - Super ringan, 100% GPU CSS transitions
+  // Inisialisasi AOS (Animate On Scroll)
   useEffect(() => {
     AOS.init({
       duration: 600,
@@ -45,11 +48,45 @@ export const MainLayout = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      syncTouch: false,
+      smoothTouch: false,
+    });
+    lenisRef.current = lenis;
+    window.lenis = lenis;
+
+    // Sinkronisasi Sempurna Lenis dengan ScrollTrigger via GSAP Ticker
+    lenis.on("scroll", ScrollTrigger.update);
+    const tickerUpdate = (time) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(tickerUpdate);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(tickerUpdate);
+      lenis.destroy();
+      window.lenis = null;
+      lenisRef.current = null;
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   // Kontrol stop / start scroll saat preloader aktif
   useEffect(() => {
+    const lenis = lenisRef.current;
+
     if (isLoading) {
+      if (lenis) lenis.stop();
       document.body.style.overflow = "hidden";
     } else {
+      if (lenis) lenis.start();
       document.body.style.overflow = "";
       setTimeout(() => {
         AOS.refreshHard();
