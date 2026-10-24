@@ -14,31 +14,20 @@ export const MainLayout = ({ children }) => {
   });
 
   useEffect(() => {
-    // Deteksi apakah perangkat menggunakan layar sentuh / mobile
-    const isTouchDevice =
+    // Inisialisasi Smooth Scroll (Lenis) untuk Desktop dan Mobile
+    const isMobile =
       typeof window !== "undefined" &&
       ("ontouchstart" in window || navigator.maxTouchPoints > 0 || window.innerWidth < 768);
 
-    // Di HP / Layar Sentuh: JANGAN jalankan Lenis virtual touch agar native scroll 120Hz berjalan ringan & mulus
-    if (isTouchDevice) {
-      window.lenis = null;
-      if (isLoading) {
-        document.body.style.overflow = "hidden";
-      } else {
-        document.body.style.overflow = "";
-      }
-      return () => {
-        document.body.style.overflow = "";
-      };
-    }
-
-    // Inisialisasi Smooth Scroll (Lenis) HANYA untuk Desktop (Mouse/Trackpad)
     const lenis = new Lenis({
       autoRaf: true,
-      duration: 1.0,
+      duration: isMobile ? 0.9 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
+      touchMultiplier: 1.2,
+      syncTouch: true, // Menyelaraskan touch scroll agar terasa ultra-smooth khas Lenis di HP
+      syncTouchLerp: 0.08, // Memberikan sensasi gliding mewah tanpa stutter
     });
     window.lenis = lenis;
 

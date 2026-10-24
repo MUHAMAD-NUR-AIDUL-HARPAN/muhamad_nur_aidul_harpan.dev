@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, RotateCcw, ArrowRight } from "lucide-react";
-import OpenAI from "openai";
 import { supabase } from "../../lib/supabaseClient";
 import {
   heroData,
@@ -239,19 +238,13 @@ export const AiAssistant = () => {
   // Kunci scroll halaman ketika modal chatbot dibuka
   useEffect(() => {
     if (isOpen) {
-      // Hentikan Lenis smooth scroll pada halaman
       window.lenis?.stop();
-
       const originalBodyOverflow = document.body.style.overflow;
-      const originalHtmlOverflow = document.documentElement.style.overflow;
-
       document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
 
       return () => {
         window.lenis?.start();
         document.body.style.overflow = originalBodyOverflow;
-        document.documentElement.style.overflow = originalHtmlOverflow;
       };
     }
   }, [isOpen]);
@@ -302,13 +295,6 @@ export const AiAssistant = () => {
     setIsLoading(true);
 
     try {
-      // Setup Koneksi ke Groq Cloud API
-      const client = new OpenAI({
-        baseURL: "https://api.groq.com/openai/v1",
-        apiKey: apiKey,
-        dangerouslyAllowBrowser: true,
-      });
-
       // Generate context dinamis yang selalu sinkron dengan data website & database
       const dynamicContext = buildHarpanContext(dynamicCerts, dynamicProjects);
 
@@ -320,33 +306,41 @@ export const AiAssistant = () => {
       const isAskingList = lowerQuery.includes("semua") || lowerQuery.includes("daftar") || lowerQuery.includes("apa saja") || lowerQuery.includes("list") || lowerQuery.includes("rincian");
       const dynamicMaxTokens = isAskingList ? 800 : 450;
 
-      // Fallback model list: qwen/qwen3.8-27b (sangat cepat & kuota besar) -> openai/gpt-oss-120b
-      let reply = "";
-      try {
-        const completion = await client.chat.completions.create({
-          messages: [
-            { role: "system", content: dynamicContext },
-            ...recentHistory,
-            { role: "user", content: textToSend },
-          ],
-          model: "qwen/qwen3.8-27b",
-          temperature: 0.2,
-          max_tokens: dynamicMaxTokens,
-        });
-        reply = completion.choices[0]?.message?.content;
-      } catch (primaryErr) {
-        if (primaryErr.status === 429) {
-          // Jika terkena limit, fallback otomatis ke gpt-oss-20b
-          const fallbackCompletion = await client.chat.completions.create({
+      // Panggilan langsung via native fetch (bebas beban library 350KB)
+      const requestGroq = async (modelName) => {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
             messages: [
               { role: "system", content: dynamicContext },
               ...recentHistory,
               { role: "user", content: textToSend },
             ],
-            model: "openai/gpt-oss-20b",
-            temperature: 0.4,
+            model: modelName,
+            temperature: 0.2,
             max_tokens: dynamicMaxTokens,
-          });
+          }),
+        });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const error = new Error(errData.error?.message || `HTTP ${res.status}`);
+          error.status = res.status;
+          throw error;
+        }
+        return await res.json();
+      };
+
+      let reply = "";
+      try {
+        const completion = await requestGroq("qwen/qwen3.8-27b");
+        reply = completion.choices[0]?.message?.content;
+      } catch (primaryErr) {
+        if (primaryErr.status === 429) {
+          const fallbackCompletion = await requestGroq("openai/gpt-oss-20b");
           reply = fallbackCompletion.choices[0]?.message?.content;
         } else {
           throw primaryErr;
@@ -422,21 +416,22 @@ export const AiAssistant = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={() => setIsOpen(false)}
               data-lenis-prevent="true"
-              className="fixed inset-0 z-40 bg-slate-900/30 dark:bg-black/50 backdrop-blur-[2px]"
+              className="fixed inset-0 z-40 bg-black/40"
             />
 
             <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.92 }}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 40, scale: 0.92 }}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
+              exit={{ opacity: 0, y: 30, scale: 0.95 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
               data-lenis-prevent="true"
-              className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[580px] max-h-[85vh] rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200/80 dark:border-slate-800 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] flex flex-col overflow-hidden"
+              className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[580px] max-h-[85vh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden will-change-transform transform-gpu"
             >
               {/* --- HEADER --- */}
-              <div className="shrink-0 p-4 px-5 bg-slate-50/80 dark:bg-slate-800/60 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+              <div className="shrink-0 p-4 px-5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
                     <AiIcon size={20} />
@@ -566,7 +561,7 @@ export const AiAssistant = () => {
             </div>
 
             {/* --- INPUT BAR --- */}
-            <div className="shrink-0 p-3.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200/70 dark:border-slate-800">
+            <div className="shrink-0 p-3.5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
               <form onSubmit={handleSubmit} className="flex items-center gap-2">
                 <div className="flex-1 relative flex items-center rounded-2xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200/70 dark:border-slate-700/60 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
                   <input

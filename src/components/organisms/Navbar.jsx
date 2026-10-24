@@ -88,11 +88,11 @@ export const Navbar = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ clipPath: "circle(0% at calc(100% - 40px) 40px)", opacity: 0 }}
-            animate={{ clipPath: "circle(150% at calc(100% - 40px) 40px)", opacity: 1 }}
-            exit={{ clipPath: "circle(0% at calc(100% - 40px) 40px)", opacity: 0 }}
-            transition={{ type: "spring", stiffness: 30, damping: 15, mass: 1 }}
-            className="fixed inset-0 w-full h-[100dvh] bg-slate-50 dark:bg-slate-900 z-40 pointer-events-auto flex flex-col justify-center items-center md:hidden"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="fixed inset-0 w-full h-[100dvh] bg-slate-50 dark:bg-slate-900 z-40 pointer-events-auto flex flex-col justify-center items-center md:hidden will-change-transform transform-gpu"
           >
             {/* Background Decor */}
             <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
@@ -107,10 +107,10 @@ export const Navbar = () => {
                 return (
                   <motion.button
                     key={item.id}
-                    initial={{ opacity: 0, y: 50, rotateX: -20 }}
-                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ delay: 0.1 + i * 0.1, type: "spring", stiffness: 200, damping: 20 }}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ delay: 0.04 + i * 0.03, duration: 0.22, ease: "easeOut" }}
                     onClick={() => handleNavClick(item)}
                     className="group relative flex items-center justify-center w-full"
                   >
