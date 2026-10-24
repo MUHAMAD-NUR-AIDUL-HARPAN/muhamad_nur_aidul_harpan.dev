@@ -30,34 +30,30 @@ const Marquee = () => {
 };
 
 export const Hero = () => {
-  const { lang } = useGlobal();
+  const { lang, isPreloaderDone } = useGlobal();
   const t = heroData;
 
   const heroRef = useRef(null);
   
-  // Semua efek parallax scrollYProgress dihapus karena memicu konflik (stutter) dengan mesin scroll Lenis.
-  // Lenis sudah memberikan scroll yang sangat halus secara native.
-
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2,
+        delayChildren: 0.1,
       },
     },
   };
 
   const item = {
-    hidden: { y: "120%", opacity: 0, rotate: 3 },
+    hidden: { y: 30, opacity: 0 },
     show: {
-      y: "0%",
+      y: 0,
       opacity: 1,
-      rotate: 0,
       transition: {
-        duration: 1.2,
-        ease: [0.16, 1, 0.3, 1],
+        duration: 0.65,
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
@@ -92,7 +88,7 @@ export const Hero = () => {
           <motion.div
             variants={container}
             initial="hidden"
-            animate="show"
+            animate={isPreloaderDone ? "show" : "hidden"}
             className="overflow-hidden mb-6"
           >
             <div className="overflow-hidden">
@@ -253,7 +249,12 @@ export const Hero = () => {
           </motion.div>
         </div>
 
-        <div className="lg:col-span-5 flex justify-center lg:justify-end relative mt-10 lg:mt-0">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 30 }}
+          animate={isPreloaderDone ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 30 }}
+          transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          className="lg:col-span-5 flex justify-center lg:justify-end relative mt-10 lg:mt-0"
+        >
           {/* Cahaya di belakang foto - hanya di desktop untuk hemat daya HP */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 aspect-square bg-blue-500/15 dark:bg-blue-400/10 rounded-full blur-[50px] pointer-events-none z-0 hidden sm:block" />
 
@@ -295,7 +296,7 @@ export const Hero = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <Marquee />

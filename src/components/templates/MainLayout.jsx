@@ -6,8 +6,11 @@ import { Navbar } from "../organisms/Navbar";
 import { Preloader } from "../organisms/Preloader";
 import { Footer } from "../organisms/Footer";
 import { AiAssistant } from "../organisms/AiAssistant";
+import { useGlobal } from "../../context/GlobalContext";
 
 export const MainLayout = ({ children }) => {
+  const { setIsPreloaderDone } = useGlobal();
+
   // Hanya tampilkan preloader sekali per sesi agar pengunjung tidak terhambat
   const [isLoading, setIsLoading] = useState(() => {
     return !sessionStorage.getItem("visited");
@@ -21,13 +24,13 @@ export const MainLayout = ({ children }) => {
 
     const lenis = new Lenis({
       autoRaf: true,
-      duration: isMobile ? 0.9 : 1.2,
+      duration: isMobile ? 1.0 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 1.2,
-      syncTouch: true, // Menyelaraskan touch scroll agar terasa ultra-smooth khas Lenis di HP
-      syncTouchLerp: 0.08, // Memberikan sensasi gliding mewah tanpa stutter
+      touchMultiplier: 1, // Natural 1:1 touch ratio tanpa gredeg
+      syncTouch: true,
+      syncTouchLerp: 0.1, // Gliding sutra ultra-smooth
     });
     window.lenis = lenis;
 
@@ -48,6 +51,7 @@ export const MainLayout = ({ children }) => {
 
   const handlePreloaderComplete = () => {
     setIsLoading(false);
+    setIsPreloaderDone(true);
     sessionStorage.setItem("visited", "true");
   };
 

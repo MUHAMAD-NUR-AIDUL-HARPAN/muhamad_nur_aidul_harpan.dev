@@ -8,6 +8,9 @@ export const GlobalProvider = ({ children }) => {
 
   // 2. Setup State Dark Mode
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isPreloaderDone, setIsPreloaderDone] = useState(() => {
+    return !!sessionStorage.getItem("visited");
+  });
 
   // Logic Toggle Bahasa
   const toggleLang = () => {
@@ -35,6 +38,8 @@ export const GlobalProvider = ({ children }) => {
         toggleLang, // Fungsi ganti bahasa
         isDarkMode,
         toggleTheme,
+        isPreloaderDone,
+        setIsPreloaderDone,
       }}
     >
       {children}
