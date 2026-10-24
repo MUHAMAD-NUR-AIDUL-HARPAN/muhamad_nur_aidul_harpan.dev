@@ -69,9 +69,12 @@ export const Hero = () => {
 
   const image = t.image;
 
-  // Interactive High-End Grid Box Ring Animation (Snaps to Kotak-Kotak Grid)
+  // Interactive High-End Grid Box Ring Animation (Ultra-Smooth Spring Grid Lock)
   const GRID_SIZE = 48;
-  const [hoveredCell, setHoveredCell] = useState(null);
+  const springConfig = { stiffness: 240, damping: 26, mass: 0.15 };
+  const smoothCellX = useSpring(-200, springConfig);
+  const smoothCellY = useSpring(-200, springConfig);
+  const opacitySpring = useSpring(0, { stiffness: 280, damping: 28 });
 
   const handleHeroMouseMove = (e) => {
     if (!heroRef.current) return;
@@ -81,14 +84,13 @@ export const Hero = () => {
     const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
     const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
 
-    setHoveredCell((prev) => {
-      if (prev && prev.x === cellX && prev.y === cellY) return prev;
-      return { x: cellX, y: cellY };
-    });
+    smoothCellX.set(cellX);
+    smoothCellY.set(cellY);
+    opacitySpring.set(1);
   };
 
   const handleHeroMouseLeave = () => {
-    setHoveredCell(null);
+    opacitySpring.set(0);
   };
 
   const handleContactClick = () => {
@@ -118,53 +120,55 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808018_1px,transparent_1px),linear-gradient(to_bottom,#80808018_1px,transparent_1px)] bg-[size:48px_48px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)]" />
 
-        {/* High-Tech Animated Ring Snapped Exactly into the Active Grid Box (Kotak) */}
-        {hoveredCell && (
-          <div
+        {/* Ultra-Smooth High-Tech Animated Ring Snapped into Kotak-Kotak Grid */}
+        <motion.div
+          style={{
+            x: smoothCellX,
+            y: smoothCellY,
+            opacity: opacitySpring,
+            width: `${GRID_SIZE}px`,
+            height: `${GRID_SIZE}px`,
+          }}
+          className="absolute top-0 left-0 pointer-events-none z-0 flex items-center justify-center will-change-transform transform-gpu"
+        >
+          {/* 1. Soft Ambient Radial Glow beneath the active grid square */}
+          <div className="absolute -inset-6 bg-blue-500/10 dark:bg-blue-400/15 rounded-2xl blur-lg pointer-events-none" />
+
+          {/* 2. Highlighted Active Grid Box Frame */}
+          <div className="absolute inset-0 bg-blue-500/[0.08] dark:bg-blue-400/[0.12] border border-blue-500/50 dark:border-blue-400/60 rounded-md shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-colors duration-300" />
+
+          {/* 3. Precision Corner Target Crosshairs */}
+          <div className="absolute -top-[1px] -left-[1px] w-2 h-2 border-t-2 border-l-2 border-blue-600 dark:border-blue-400 rounded-tl-sm" />
+          <div className="absolute -top-[1px] -right-[1px] w-2 h-2 border-t-2 border-r-2 border-blue-600 dark:border-blue-400 rounded-tr-sm" />
+          <div className="absolute -bottom-[1px] -left-[1px] w-2 h-2 border-b-2 border-l-2 border-blue-600 dark:border-blue-400 rounded-bl-sm" />
+          <div className="absolute -bottom-[1px] -right-[1px] w-2 h-2 border-b-2 border-r-2 border-blue-600 dark:border-blue-400 rounded-br-sm" />
+
+          {/* 4. Inscribed Rotating Conic Traveling Light Beam Ring */}
+          <div 
+            className="absolute w-[38px] h-[38px] rounded-full p-[1.5px] overflow-hidden shadow-[0_0_10px_rgba(56,189,248,0.35)]"
             style={{
-              left: `${hoveredCell.x}px`,
-              top: `${hoveredCell.y}px`,
-              width: `${GRID_SIZE}px`,
-              height: `${GRID_SIZE}px`,
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude",
             }}
-            className="absolute pointer-events-none transition-all duration-100 ease-out z-0 flex items-center justify-center animate-in fade-in zoom-in-95"
           >
-            {/* 1. Highlighted Grid Box Frame */}
-            <div className="absolute inset-0 bg-blue-500/10 dark:bg-blue-400/15 border border-blue-500/50 dark:border-blue-400/60 rounded-md shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-colors duration-200" />
-
-            {/* 2. Precision Corner Target Ticks on the Box */}
-            <div className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t-2 border-l-2 border-blue-600 dark:border-blue-400" />
-            <div className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t-2 border-r-2 border-blue-600 dark:border-blue-400" />
-            <div className="absolute -bottom-[1px] -left-[1px] w-1.5 h-1.5 border-b-2 border-l-2 border-blue-600 dark:border-blue-400" />
-            <div className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b-2 border-r-2 border-blue-600 dark:border-blue-400" />
-
-            {/* 3. Inscribed Rotating Conic Traveling Light Beam Ring */}
-            <div 
-              className="absolute w-[36px] h-[36px] rounded-full p-[1.5px] overflow-hidden"
-              style={{
-                WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                WebkitMaskComposite: "xor",
-                maskComposite: "exclude",
-              }}
-            >
-              <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_45%,#2563eb_70%,#38bdf8_88%,#ffffff_98%,transparent_100%)] animate-[spin_2.5s_linear_infinite]" />
-            </div>
-
-            {/* 4. Concentric Inner Ring with Center Pulsing Dot */}
-            <div className="w-5 h-5 rounded-full border border-blue-400/40 dark:border-blue-300/30 flex items-center justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse shadow-[0_0_6px_#3b82f6]" />
-            </div>
-
-            {/* 5. Expanding Soft Radar Ripple Ring */}
-            <div className="absolute -inset-1 rounded-lg border border-blue-500/30 animate-ping opacity-40 pointer-events-none duration-1000" />
-
-            {/* 6. Subtle Neighboring Box Accents (HUD Crosshair Extension) */}
-            <div className="absolute -top-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/5 rounded-sm pointer-events-none opacity-40" />
-            <div className="absolute -bottom-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/5 rounded-sm pointer-events-none opacity-40" />
-            <div className="absolute -left-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/5 rounded-sm pointer-events-none opacity-40" />
-            <div className="absolute -right-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/5 rounded-sm pointer-events-none opacity-40" />
+            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_40%,#1d4ed8_65%,#3b82f6_80%,#38bdf8_92%,#ffffff_98%,transparent_100%)] animate-[spin_3s_linear_infinite]" />
           </div>
-        )}
+
+          {/* 5. Concentric Dashed Inner Tech Ring with Center Beacon */}
+          <div className="w-[20px] h-[20px] rounded-full border border-dashed border-blue-400/50 dark:border-blue-300/40 animate-[spin_8s_linear_infinite_reverse] flex items-center justify-center pointer-events-none">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse shadow-[0_0_8px_#3b82f6]" />
+          </div>
+
+          {/* 6. Expanding Soft Radar Ripple Wave */}
+          <div className="absolute -inset-1 rounded-lg border border-blue-500/30 animate-ping opacity-35 pointer-events-none duration-1000" />
+
+          {/* 7. Subtle Connected Crosshair HUD Accents (4 Neighbor Cells) */}
+          <div className="absolute -top-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
+          <div className="absolute -bottom-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
+          <div className="absolute -left-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
+          <div className="absolute -right-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
+        </motion.div>
       </div>
 
 
