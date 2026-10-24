@@ -84,14 +84,17 @@ export const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll and pause Lenis when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
+      window.lenis?.stop();
       document.body.style.overflow = "hidden";
     } else {
+      window.lenis?.start();
       document.body.style.overflow = "unset";
     }
     return () => {
+      window.lenis?.start();
       document.body.style.overflow = "unset";
     };
   }, [isMobileMenuOpen]);
