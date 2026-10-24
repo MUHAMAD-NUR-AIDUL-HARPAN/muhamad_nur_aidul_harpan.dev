@@ -59,13 +59,25 @@ export const AboutSection = () => {
               </h2>
             </div>
 
-            <h3 className="text-xl font-medium text-slate-500 mb-6 border-l-4 border-blue-500 pl-4">
+            <motion.h3 
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.75, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="text-xl font-medium text-slate-500 mb-6 border-l-4 border-blue-500 pl-4"
+            >
               {lang === "id" ? t.subtitle.id : t.subtitle.en}
-            </h3>
+            </motion.h3>
 
-            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-8">
+            <motion.p 
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.75, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-8"
+            >
               {lang === "id" ? t.bio.id : t.bio.en}
-            </p>
+            </motion.p>
 
             <StatsGrid />
           </motion.div>
@@ -79,7 +91,11 @@ export const AboutSection = () => {
             className="relative"
           >
             {/* Glassmorphic Card Container */}
-            <div className="p-8 rounded-3xl bg-white/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-2xl relative z-10">
+            <motion.div 
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.3 }}
+              className="p-8 rounded-3xl bg-white/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-2xl relative z-10 hover:shadow-blue-500/10 transition-shadow duration-300"
+            >
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600">
                   <Code size={20} />
@@ -97,7 +113,13 @@ export const AboutSection = () => {
               </div>
 
               {/* Decorative Code Snippet Style */}
-              <div className="mt-8 p-4 rounded-xl bg-slate-900 text-slate-300 font-mono text-xs overflow-hidden">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-8 p-4 rounded-xl bg-slate-900 text-slate-300 font-mono text-xs overflow-hidden border border-slate-800 shadow-md"
+              >
                 <div className="flex gap-1.5 mb-3">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
@@ -120,8 +142,8 @@ export const AboutSection = () => {
                 <p>
                   <span className="text-yellow-300">{`}`}</span>;
                 </p>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl -z-10" />
             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/20 rounded-full blur-2xl -z-10" />

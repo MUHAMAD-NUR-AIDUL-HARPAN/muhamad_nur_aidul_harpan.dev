@@ -88,16 +88,17 @@ export const CertificatesPage = () => {
 
   // Animasi Kartu Satuan
   const cardVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
+    hidden: { opacity: 0, y: 25, scale: 0.95 },
     visible: {
       opacity: 1,
+      y: 0,
       scale: 1,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
     },
     exit: {
       opacity: 0,
-      scale: 0.9,
-      transition: { duration: 0.2 }
+      scale: 0.95,
+      transition: { duration: 0.25 }
     }
   };
 
@@ -197,7 +198,8 @@ export const CertificatesPage = () => {
                 animate="visible"
                 exit="exit"
                 onClick={() => handleCardClick(cert)}
-                className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                whileHover={{ y: -6, transition: { duration: 0.25 } }}
+                className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300 cursor-pointer"
               >
                 {/* Image Section */}
                 <div className="h-56 overflow-hidden relative bg-slate-100 dark:bg-slate-800 flex items-center justify-center">

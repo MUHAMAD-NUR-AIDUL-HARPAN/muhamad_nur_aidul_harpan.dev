@@ -18,7 +18,8 @@ export const StatsGrid = () => {
             delay: index * 0.12,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-md transition-shadow"
+          whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.25 } }}
+          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-md transition-all cursor-default"
         >
           <div className="text-3xl font-black text-blue-600 dark:text-blue-400 mb-1">
             {stat.value}

@@ -49,11 +49,17 @@ export const SkillsSection = () => {
               {lang === "id" ? "Kemampuan Teknis" : "Technical Proficiency"}
             </span>
           </h2>
-          <p className="text-slate-500 max-w-xl mx-auto">
+          <motion.p 
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="text-slate-500 max-w-xl mx-auto"
+          >
             {lang === "id"
               ? "Teknologi dan perangkat modern yang saya gunakan untuk membangun sistem handal dan terukur."
               : "A deep dive into the tools and modern technologies I use to build scalable products."}
-          </p>
+          </motion.p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -67,8 +73,8 @@ export const SkillsSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ delay: catIndex * 0.15, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -5 }}
-                className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:border-blue-500/30 transition-all duration-300"
+                whileHover={{ y: -6, transition: { duration: 0.25 } }}
+                className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300"
               >
                 {/* Header Icon */}
                 <div className="flex items-center gap-4 mb-8">

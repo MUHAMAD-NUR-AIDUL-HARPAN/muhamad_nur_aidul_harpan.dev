@@ -68,9 +68,10 @@ const ExperienceCard = ({ item, index }) => {
         whileInView={{ opacity: 1, x: 0, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
+        whileHover={{ y: -4, transition: { duration: 0.25 } }}
         className="w-full md:w-5/12 pl-12 md:pl-0"
       >
-        <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 group">
+        <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300 group">
           {/* Panah dekorasi kecil mengarah ke timeline */}
           <div
             className={`hidden md:block absolute top-6 w-4 h-4 bg-slate-50 dark:bg-slate-800 border-t border-r border-slate-200 dark:border-slate-800 transform rotate-45 ${
@@ -179,11 +180,17 @@ export const ExperienceSection = () => {
               </span>
             </h2>
           </div>
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
+          <motion.p 
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto"
+          >
             {lang === "id"
               ? "Perjalanan saya dalam membangun produk digital dan memperdalam keahlian teknis."
               : "My journey in building digital products and deepening technical expertise."}
-          </p>
+          </motion.p>
 
           {/* Connector Beacon leading downwards into timeline */}
           <div className="hidden md:flex flex-col items-center justify-center mt-8 -mb-12">

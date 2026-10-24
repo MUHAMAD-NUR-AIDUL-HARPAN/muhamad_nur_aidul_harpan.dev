@@ -44,11 +44,17 @@ export const EducationSection = () => {
                 {lang === "id" ? "Latar Pendidikan" : "Academic Background"}
               </span>
             </h2>
-            <p className="text-gray-500 max-w-md">
+            <motion.p 
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="text-gray-500 max-w-md"
+            >
               {lang === "id"
                 ? "Fondasi akademis yang membentuk pemahaman teknis saya."
                 : "The academic foundation that shaped my technical understanding."}
-            </p>
+            </motion.p>
           </div>
 
           {/* Decorative Line */}

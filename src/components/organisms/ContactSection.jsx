@@ -115,13 +115,26 @@ export const ContactSection = () => {
               {lang === "id" ? t.title.id : t.title.en}
             </span>
           </h2>
-          <p className="text-lg text-slate-500 mb-10 max-w-md">
+          <motion.p 
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="text-lg text-slate-500 mb-10 max-w-md"
+          >
             {lang === "id" ? t.subtitle.id : t.subtitle.en}
-          </p>
+          </motion.p>
 
           <div className="space-y-6">
             {/* Info Cards */}
-            <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ x: 6, transition: { duration: 0.25 } }}
+              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
+            >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
                 <Mail size={24} />
               </div>
@@ -131,9 +144,16 @@ export const ContactSection = () => {
                 </p>
                 <p className="font-medium text-lg">{t.email}</p>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ x: 6, transition: { duration: 0.25 } }}
+              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
+            >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
                 <MessageCircle size={24} />
               </div>
@@ -143,9 +163,16 @@ export const ContactSection = () => {
                 </p>
                 <p className="font-medium text-lg">{t.whatsappDisplay || t.whatsappNumber}</p>
               </div>
-            </div>
+            </motion.div>
             
-            <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ x: 6, transition: { duration: 0.25 } }}
+              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
+            >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
                 <MapPin size={24} />
               </div>
@@ -155,16 +182,16 @@ export const ContactSection = () => {
                 </p>
                 <p className="font-medium text-lg">{t.location}</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
 
         {/* RIGHT COLUMN: The Complex Form Switcher */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.85, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="bg-white dark:bg-slate-900 p-2 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl"
         >
           {/* 1. Toggle Switcher (Tab) */}

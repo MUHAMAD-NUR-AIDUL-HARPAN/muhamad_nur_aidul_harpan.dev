@@ -87,11 +87,17 @@ export const ProjectsSection = () => {
               {lang === "id" ? "Proyek Pilihan" : "Featured Work"}
             </span>
           </h2>
-          <p className="text-slate-500 max-w-xl mx-auto">
+          <motion.p 
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="text-slate-500 max-w-xl mx-auto"
+          >
             {lang === "id"
               ? "Koleksi proyek terpilih yang memperlihatkan keahlian saya dalam menciptakan solusi aplikasi dengan kode yang terstruktur."
               : "A selection of projects that demonstrate my ability to solve complex problems with clean code."}
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* Filter Buttons */}
@@ -125,8 +131,8 @@ export const ProjectsSection = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+            {filteredProjects.map((project, index) => (
+              <ProjectCard key={project.id} project={project} index={index} />
             ))}
           </AnimatePresence>
         </motion.div>
