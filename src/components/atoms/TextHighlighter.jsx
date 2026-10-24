@@ -2,9 +2,8 @@ import { motion } from "framer-motion";
 
 /**
  * TextHighlighter
- * Komponen highlighter teks dengan animasi sapuan kuas halus (wipe / slide) dari kiri ke kanan saat di-scroll.
- * Mempertahankan kemiringan -skew-x-6 dan warna signature (blue-200 / dark:blue-800/50)
- * dengan tambahan kilau gradien dan leading edge glow yang profesional.
+ * Komponen highlighter teks dengan animasi sapuan halus (wipe / slide) dari kiri ke kanan saat di-scroll.
+ * Dirancang dengan durasi terukur dan kurva cubic-bezier yang sangat mulus (tidak terlalu cepat, tetap fluid).
  */
 export const TextHighlighter = ({ className = "" }) => {
   return (
@@ -15,11 +14,11 @@ export const TextHighlighter = ({ className = "" }) => {
       <motion.span
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
-        viewport={{ once: false, amount: 0.35 }}
+        viewport={{ once: false, amount: 0.3 }}
         transition={{
-          duration: 0.7,
-          ease: [0.16, 1, 0.3, 1], // Smooth exponential out
-          delay: 0.1,
+          duration: 1.1,
+          ease: [0.22, 1, 0.36, 1], // Smooth, natural, and continuous deceleration
+          delay: 0.15,
         }}
         className="absolute inset-0 bg-blue-200 dark:bg-blue-800/50 origin-left shadow-sm block will-change-transform transform-gpu"
       >

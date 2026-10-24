@@ -64,10 +64,10 @@ const ExperienceCard = ({ item, index }) => {
 
       {/* 3. CONTENT CARD */}
       <motion.div
-        initial={{ opacity: 0, x: isLeft ? -24 : 24, y: 15 }}
+        initial={{ opacity: 0, x: isLeft ? -20 : 20, y: 15 }}
         whileInView={{ opacity: 1, x: 0, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
         className="w-full md:w-5/12 pl-12 md:pl-0"
       >
         <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 group">
@@ -151,10 +151,10 @@ export const ExperienceSection = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Section Title */}
         <motion.div
-          initial={{ opacity: 0, y: 35 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-20"
         >
           <div className="flex items-center justify-center gap-2 mb-4">

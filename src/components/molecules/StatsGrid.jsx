@@ -14,8 +14,8 @@ export const StatsGrid = () => {
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{
-            duration: 0.5,
-            delay: index * 0.1,
+            duration: 0.75,
+            delay: index * 0.12,
             ease: [0.22, 1, 0.36, 1],
           }}
           className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-md transition-shadow"

@@ -36,10 +36,10 @@ export const AboutSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* LEFT COLUMN: Narrative & Stats */}
           <motion.div
-            initial={{ opacity: 0, y: 35 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="flex items-center gap-3 mb-6">
               <motion.div 
@@ -72,10 +72,10 @@ export const AboutSection = () => {
 
           {/* RIGHT COLUMN: Visual & Skills */}
           <motion.div
-            initial={{ opacity: 0, y: 35 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
             className="relative"
           >
             {/* Glassmorphic Card Container */}

@@ -60,10 +60,10 @@ export const ProjectsSection = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 35 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
