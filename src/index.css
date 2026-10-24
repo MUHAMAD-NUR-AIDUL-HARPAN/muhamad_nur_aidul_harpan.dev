@@ -111,42 +111,19 @@
 
   .animate-marquee-smooth {
     animation: marquee-scroll 25s linear infinite;
-    transform: translate3d(0, 0, 0);
-    will-change: transform, opacity;
+    will-change: transform;
   }
 
   /* GPU-Accelerated Highlighter sweep triggered by AOS */
   .highlighter-sweep {
-    transform: translate3d(0, 0, 0) scaleX(0);
+    transform: scaleX(0);
     transform-origin: left center;
-    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
-    will-change: transform, opacity;
+    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+    will-change: transform;
   }
   [data-aos].aos-animate .highlighter-sweep,
   .aos-animate.highlighter-sweep,
   .highlighter-sweep.is-active {
-    transform: translate3d(0, 0, 0) scaleX(1);
-  }
-
-  /* Ultra-smooth GPU Floating Ring for Mobile Hero (0 Scroll CPU cycles) */
-  @keyframes hero-ring-float {
-    0%, 100% {
-      transform: translate3d(0, 0, 0);
-    }
-    50% {
-      transform: translate3d(0, -12px, 0);
-    }
-  }
-
-  .animate-hero-ring-float {
-    animation: hero-ring-float 4s ease-in-out infinite;
-    transform: translate3d(0, 0, 0);
-    will-change: transform, opacity;
-  }
-
-  /* GPU Hardware Acceleration Helper */
-  .gpu-accelerated-bar {
-    transform: translate3d(0, 0, 0);
-    will-change: transform, opacity;
+    transform: scaleX(1);
   }
 }

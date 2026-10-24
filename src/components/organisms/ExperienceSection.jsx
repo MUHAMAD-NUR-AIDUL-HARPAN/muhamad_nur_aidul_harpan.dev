@@ -191,26 +191,16 @@ export const ExperienceSection = () => {
           {/* 1. Base Guide Track Vertical Line */}
           <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-slate-200 dark:bg-slate-800 rounded-full" />
 
-          {/* 2A. Desktop: Glowing Fill Line Mengikuti Scroll Progress */}
+          {/* 2. Glowing Fill Line Mengikuti Scroll Progress (GPU Accelerated with scaleY, 0 Reflows) */}
           <motion.div
             style={{ scaleY: smoothProgress, transformOrigin: "top center" }}
-            className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-transform transform-gpu"
+            className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-transform transform-gpu"
           />
 
-          {/* 2B. HP / Mobile: Garis Vertikal Otomatis 1x Memanjang via InView (0 Scroll CPU Cycles) */}
-          <motion.div
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            style={{ transformOrigin: "top center" }}
-            className="block md:hidden absolute left-4 -translate-x-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-transform transform-gpu"
-          />
-
-          {/* 3A. Desktop: Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll */}
+          {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (Tanpa Ring) */}
           <motion.div
             style={{ top: ringTop }}
-            className="hidden md:flex absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none items-center justify-center will-change-transform transform-gpu"
+            className="absolute left-4 md:left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-center will-change-transform transform-gpu"
           >
             {/* Soft Ambient Halo */}
             <div className="absolute w-8 h-8 rounded-full bg-blue-500/25 dark:bg-blue-400/30 blur-[4px] pointer-events-none" />
@@ -221,13 +211,6 @@ export const ExperienceSection = () => {
             {/* Soft Expanding Pulse Wave */}
             <div className="absolute -inset-1 rounded-full border border-blue-400/50 animate-ping opacity-40 pointer-events-none duration-1000" />
           </motion.div>
-
-          {/* 3B. HP / Mobile: Titik Beacon Berkedip di Tempat via Pure CSS Pulse (Tanpa Meluncur Scroll) */}
-          <div className="block md:hidden absolute left-4 -translate-x-1/2 top-0 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-center">
-            <div className="absolute w-7 h-7 rounded-full bg-blue-500/25 blur-[3px]" />
-            <div className="relative w-3.5 h-3.5 rounded-full bg-blue-600 dark:bg-blue-400 border-2 border-white dark:border-slate-900 shadow-[0_0_8px_#3b82f6] animate-pulse" />
-            <div className="absolute -inset-1 rounded-full border border-blue-400/50 animate-ping opacity-40 duration-1000" />
-          </div>
 
           {/* 4. Render Cards */}
           <div className="relative">

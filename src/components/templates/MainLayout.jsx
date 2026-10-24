@@ -20,12 +20,14 @@ export const MainLayout = ({ children }) => {
 
   const lenisRef = useRef(null);
 
-  // Inisialisasi AOS (Animate On Scroll) dioptimasi khusus untuk performa tinggi di HP & Desktop
+  // Inisialisasi AOS (Animate On Scroll) - Super ringan, 100% GPU CSS transitions
   useEffect(() => {
     AOS.init({
-      once: true,      // Animasi hanya jalan 1x saat di-scroll (tidak diulang saat scroll ke atas)
-      duration: 500,   // Durasi animasi yang singkat dan padat
-      offset: 100,     // Animasi baru terpicu setelah elemen masuk 100px ke layar agar tidak menumpuk
+      duration: 800,
+      easing: "ease-out-cubic",
+      once: true,
+      offset: 50,
+      disableMutationObserver: false,
     });
   }, []);
 
@@ -92,10 +94,10 @@ export const MainLayout = ({ children }) => {
         {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
       </AnimatePresence>
 
-      {/* Global Progress Bar (Hardware Accelerated GPU transform3d) */}
+      {/* Global Progress Bar */}
       <motion.div
         style={{ scaleX: scrollYProgress }}
-        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] pointer-events-none transform-gpu gpu-accelerated-bar"
+        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] pointer-events-none transform-gpu will-change-transform"
       />
 
       <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 transition-colors duration-300 relative z-0 overflow-x-clip">
