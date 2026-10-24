@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { Navbar } from "../organisms/Navbar";
 import { Preloader } from "../organisms/Preloader";
 import { Footer } from "../organisms/Footer";
@@ -24,13 +24,11 @@ export const MainLayout = ({ children }) => {
 
     const lenis = new Lenis({
       autoRaf: true,
-      duration: isMobile ? 1.0 : 1.2,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 1, // Natural 1:1 touch ratio tanpa gredeg
-      syncTouch: true,
-      syncTouchLerp: 0.1, // Gliding sutra ultra-smooth
+      syncTouch: false, // Hilangkan beban virtual touch di HP agar scroll 100% ringan seperti bulu & responsif instan
     });
     window.lenis = lenis;
 
@@ -55,13 +53,8 @@ export const MainLayout = ({ children }) => {
     sessionStorage.setItem("visited", "true");
   };
 
-  // Scroll Progress Bar yang ringan
+  // Scroll Progress Bar super ringan langsung dari scrollYProgress (tanpa overhead useSpring)
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    restDelta: 0.001
-  });
 
   return (
     <>
@@ -71,7 +64,7 @@ export const MainLayout = ({ children }) => {
 
       {/* Global Progress Bar */}
       <motion.div
-        style={{ scaleX }}
+        style={{ scaleX: scrollYProgress }}
         className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] pointer-events-none"
       />
 
