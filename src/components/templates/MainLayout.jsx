@@ -35,9 +35,16 @@ export const MainLayout = ({ children }) => {
       duration: 600,
       easing: "ease-out-cubic",
       once: true,
-      offset: 60,
-      disableMutationObserver: true,
+      offset: 40,
+      disableMutationObserver: false,
     });
+
+    const timer = setTimeout(() => {
+      AOS.refreshHard();
+      ScrollTrigger.refresh();
+    }, 250);
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -89,8 +96,9 @@ export const MainLayout = ({ children }) => {
       if (lenis) lenis.start();
       document.body.style.overflow = "";
       setTimeout(() => {
-        AOS.refresh();
-      }, 100);
+        AOS.refreshHard();
+        ScrollTrigger.refresh();
+      }, 150);
     }
   }, [isLoading]);
 

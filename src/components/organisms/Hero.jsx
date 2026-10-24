@@ -190,8 +190,10 @@ export const Hero = () => {
     };
   }, []);
 
-  // 2. Instant scroll tracking on every frame via Lenis & native scroll
+  // 2. Instant scroll tracking on every frame via Lenis & native scroll (Only needed on Desktop)
   useEffect(() => {
+    if (window.innerWidth < 768) return;
+
     const onScroll = () => {
       scheduleUpdate(activePointer.current.x, activePointer.current.y, true);
     };
