@@ -52,7 +52,8 @@
   }
   
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
     scrollbar-gutter: stable;
   }
 }

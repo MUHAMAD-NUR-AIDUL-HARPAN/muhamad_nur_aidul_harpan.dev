@@ -63,10 +63,10 @@ const ExperienceCard = ({ item, index }) => {
 
       {/* 3. CONTENT CARD */}
       <motion.div
-        initial={{ opacity: 0, y: 50, rotate: isLeft ? -2 : 2 }}
-        whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.05 }}
         className="w-full md:w-5/12 pl-12 md:pl-0"
       >
         <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 group">
@@ -136,7 +136,7 @@ export const ExperienceSection = () => {
       {/* Decorative Text Background (Parallax Restored) */}
       <motion.div 
         style={{ x: bgTextX, y: bgTextY }}
-        className="absolute top-20 left-[-20%] text-[4rem] md:text-[8rem] lg:text-[12rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
+        className="hidden md:block absolute top-20 left-[-20%] text-[4rem] md:text-[8rem] lg:text-[12rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
       >
         EXPERIENCE
       </motion.div>

@@ -28,7 +28,7 @@ export const AboutSection = () => {
       {/* Decorative Text Background (Parallax Restored) */}
       <motion.div 
         style={{ x: bgTextX, y: bgTextY }}
-        className="absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
+        className="hidden md:block absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
       >
         ABOUT ME
       </motion.div>
@@ -37,10 +37,10 @@ export const AboutSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* LEFT COLUMN: Narrative & Stats */}
           <motion.div
-            initial={{ opacity: 0, y: 50, rotate: 2 }}
-            whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600">
@@ -70,10 +70,10 @@ export const AboutSection = () => {
 
           {/* RIGHT COLUMN: Visual & Skills */}
           <motion.div
-            initial={{ opacity: 0, y: 100 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
             className="relative"
           >
             {/* Glassmorphic Card Container */}

@@ -17,6 +17,8 @@ export const EducationSection = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6"
         >
           <div>

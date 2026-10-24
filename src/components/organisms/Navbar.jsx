@@ -11,20 +11,25 @@ export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (location.pathname !== "/") return;
-      const sections = navItems
-        .filter((item) => item.type === "scroll")
-        .map((item) => item.id);
-      const current = sections.find((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top >= -120 && rect.top <= 250;
-        }
-        return false;
+      if (location.pathname !== "/" || ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const sections = navItems
+          .filter((item) => item.type === "scroll")
+          .map((item) => item.id);
+        const current = sections.find((section) => {
+          const element = document.getElementById(section);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            return rect.top >= -120 && rect.top <= 250;
+          }
+          return false;
+        });
+        if (current) setActiveSection(current);
+        ticking = false;
       });
-      if (current) setActiveSection(current);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);

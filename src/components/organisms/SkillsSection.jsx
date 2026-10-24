@@ -54,9 +54,10 @@ export const SkillsSection = () => {
             return (
               <motion.div
                 key={catIndex}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: catIndex * 0.2, duration: 0.5 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ delay: catIndex * 0.08, duration: 0.4, ease: "easeOut" }}
                 whileHover={{ y: -5 }}
                 className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:border-blue-500/30 transition-all duration-300"
               >

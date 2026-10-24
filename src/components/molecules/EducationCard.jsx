@@ -7,10 +7,10 @@ export const EducationCard = ({ item, index }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.2, duration: 0.5 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ delay: index * 0.08, duration: 0.4, ease: "easeOut" }}
       whileHover={{ y: -5 }}
       className="group relative bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-100 dark:border-slate-800 shadow-lg overflow-hidden"
     >
