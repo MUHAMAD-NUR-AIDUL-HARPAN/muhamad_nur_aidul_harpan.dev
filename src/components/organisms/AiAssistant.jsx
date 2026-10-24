@@ -208,24 +208,30 @@ export const AiAssistant = () => {
   const [dynamicProjects, setDynamicProjects] = useState([]);
   const scrollRef = useRef(null);
 
-  // Ambil data terbaru dari Supabase agar chatbot selalu sinkron otomatis
+  // Ambil data terbaru dari Supabase hanya saat chatbot dibuka agar tidak membebani initial load
   useEffect(() => {
-    supabase
-      .from("certificates")
-      .select("*")
-      .then(({ data }) => {
-        if (data && data.length > 0) setDynamicCerts(data);
-      })
-      .catch(() => {});
+    if (!isOpen) return;
 
-    supabase
-      .from("projects")
-      .select("*")
-      .then(({ data }) => {
-        if (data && data.length > 0) setDynamicProjects(data);
-      })
-      .catch(() => {});
-  }, []);
+    if (dynamicCerts.length === 0) {
+      supabase
+        .from("certificates")
+        .select("*")
+        .then(({ data }) => {
+          if (data && data.length > 0) setDynamicCerts(data);
+        })
+        .catch(() => {});
+    }
+
+    if (dynamicProjects.length === 0) {
+      supabase
+        .from("projects")
+        .select("*")
+        .then(({ data }) => {
+          if (data && data.length > 0) setDynamicProjects(data);
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
 
   const initialGreeting = {
     role: "assistant",
@@ -384,7 +390,7 @@ export const AiAssistant = () => {
               className="relative group"
             >
               {/* Outer Glow Ring */}
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none" />
+              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
 
               <button
                 onClick={() => setIsOpen(true)}
