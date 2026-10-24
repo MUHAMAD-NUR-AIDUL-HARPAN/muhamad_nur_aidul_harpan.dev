@@ -4,10 +4,15 @@ import { Download, ArrowRight, Github, Linkedin, Globe, Rocket, FileText, Code2 
 import { useGlobal } from "../../context/GlobalContext";
 import { heroData } from "../../data/content";
 
+// --- COMPONENT: INFINITE MARQUEE ---
 const Marquee = () => {
   return (
-    <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-3 z-20 border-t border-white/10 flex">
-      <div className="animate-marquee-smooth">
+    <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black py-3 z-20 border-t border-white/10">
+      <motion.div
+        className="flex whitespace-nowrap will-change-transform"
+        animate={{ x: "-50%" }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+      >
         {[...Array(6)].map((_, i) => (
           <div key={i} className="flex items-center gap-8 mx-4">
             <span className="text-sm font-bold tracking-[0.2em] uppercase">
@@ -18,9 +23,17 @@ const Marquee = () => {
               Pixel-Perfect UI
             </span>
             <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span className="text-sm font-bold tracking-[0.2em] uppercase">
+              System Architecture
+            </span>
+            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span className="text-sm font-bold tracking-[0.2em] uppercase">
+              Performance Optimization
+            </span>
+            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
           </div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };
