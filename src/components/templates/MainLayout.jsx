@@ -17,16 +17,14 @@ export const MainLayout = ({ children }) => {
   });
 
   useEffect(() => {
-    // Inisialisasi Smooth Scroll Lenis: Halus & responsif di Desktop dan Mobile
+    // Inisialisasi Smooth Scroll Lenis: Silky smooth di Desktop dan responsif 60-120fps di Mobile
     const lenis = new Lenis({
       autoRaf: true,
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      syncTouch: true,
-      syncTouchLerp: 0.08,
-      touchMultiplier: 1,
+      syncTouch: false,
     });
     window.lenis = lenis;
 

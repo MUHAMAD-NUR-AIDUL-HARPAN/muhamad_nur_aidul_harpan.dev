@@ -78,16 +78,45 @@ export const Hero = () => {
 
   const activePointer = useRef({ x: null, y: null, hasMoved: false });
   const { scrollY } = useScroll();
+  const rafId = useRef(null);
 
-  // Core coordinate evaluator: checks if point is within Hero rect and positions ring
+  // Cache Hero geometry without forced synchronous layout thrashing (0 reflows on scroll)
+  const heroDimensionsRef = useRef({ width: 0, height: 0, top: 0 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (heroRef.current) {
+        const rect = heroRef.current.getBoundingClientRect();
+        heroDimensionsRef.current = {
+          width: heroRef.current.offsetWidth || window.innerWidth,
+          height: heroRef.current.offsetHeight || 800,
+          top: rect.top + window.scrollY,
+        };
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions, { passive: true });
+    const timer = setTimeout(updateDimensions, 400);
+
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  // Core coordinate evaluator: checks if point is within Hero bounds using cached geometry
   const updatePosition = (clientX, clientY, isScrollUpdate = false) => {
     if (!heroRef.current) return false;
-    const rect = heroRef.current.getBoundingClientRect();
+    const { width: heroWidth, height: heroHeight, top: heroTop } = heroDimensionsRef.current;
+    const currentScroll = window.scrollY || 0;
+    const rectTop = heroTop - currentScroll;
+    const rectBottom = rectTop + (heroHeight || 800);
     const windowH = window.innerHeight;
 
     // If hero section has scrolled completely out of viewport, fade out smoothly in place
     // NEVER reset x/y back to top so it never jumps or shoots up!
-    if (rect.bottom <= 0 || rect.top >= windowH) {
+    if (rectBottom <= 0 || rectTop >= windowH) {
       opacitySpring.set(0);
       return false;
     }
@@ -95,14 +124,14 @@ export const Hero = () => {
     // Check if pointer is currently inside Hero's visible bounds
     if (clientX !== null && clientY !== null) {
       const isInside = 
-        clientX >= rect.left && 
-        clientX <= rect.right && 
-        clientY >= rect.top && 
-        clientY <= rect.bottom;
+        clientX >= 0 && 
+        clientX <= (heroWidth || window.innerWidth) && 
+        clientY >= rectTop && 
+        clientY <= rectBottom;
 
       if (isInside) {
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
+        const x = clientX;
+        const y = clientY - rectTop;
         const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
         const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
 
@@ -121,13 +150,13 @@ export const Hero = () => {
 
     // On mobile / touch or when scrolling through Hero without active pointer:
     // Move gracefully along the grid rows following scroll progression
-    const heroWidth = rect.width || window.innerWidth;
-    const heroHeight = rect.height || 800;
-    const totalCols = Math.max(4, Math.floor(heroWidth / GRID_SIZE));
-    const totalRows = Math.max(6, Math.floor(heroHeight / GRID_SIZE));
+    const effectiveWidth = heroWidth || window.innerWidth;
+    const effectiveHeight = heroHeight || 800;
+    const totalCols = Math.max(4, Math.floor(effectiveWidth / GRID_SIZE));
+    const totalRows = Math.max(6, Math.floor(effectiveHeight / GRID_SIZE));
     
     // Smooth progress from 0 (top of hero) to 1 (bottom of hero)
-    const scrollProgress = Math.max(0, Math.min(1, -rect.top / (heroHeight * 0.75 || 600)));
+    const scrollProgress = Math.max(0, Math.min(1, -rectTop / (effectiveHeight * 0.75 || 600)));
     const targetCol = Math.floor(totalCols * 0.25) * GRID_SIZE;
     
     // Compute target row without deadzone, smoothly traveling down the grid
@@ -141,11 +170,19 @@ export const Hero = () => {
     return true;
   };
 
+  const scheduleUpdate = (clientX, clientY, isScrollUpdate = false) => {
+    if (rafId.current) return;
+    rafId.current = requestAnimationFrame(() => {
+      rafId.current = null;
+      updatePosition(clientX, clientY, isScrollUpdate);
+    });
+  };
+
   // 1. Direct window-level pointer tracking (guarantees the ring NEVER loses cursor on scroll)
   useEffect(() => {
     const handlePointerMove = (e) => {
       activePointer.current = { x: e.clientX, y: e.clientY, hasMoved: true };
-      updatePosition(e.clientX, e.clientY);
+      scheduleUpdate(e.clientX, e.clientY, false);
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
@@ -156,19 +193,19 @@ export const Hero = () => {
 
   // 2. Instant scroll tracking on every frame via Framer Motion
   useMotionValueEvent(scrollY, "change", () => {
-    updatePosition(activePointer.current.x, activePointer.current.y, true);
+    scheduleUpdate(activePointer.current.x, activePointer.current.y, true);
   });
 
   // 3. Lenis & native scroll sync + Initial load placement
   useEffect(() => {
     const onScroll = () => {
-      updatePosition(activePointer.current.x, activePointer.current.y, true);
+      scheduleUpdate(activePointer.current.x, activePointer.current.y, true);
     };
 
     // Initial placement on load (fades in smoothly at row 2)
     const timer = setTimeout(() => {
       updatePosition(activePointer.current.x, activePointer.current.y, true);
-    }, 100);
+    }, 120);
 
     const attachLenis = () => {
       if (window.lenis) {
@@ -191,6 +228,7 @@ export const Hero = () => {
     return () => {
       clearTimeout(timer);
       if (intervalId) clearInterval(intervalId);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
       if (window.lenis) {
         window.lenis.off("scroll", onScroll);
       }
