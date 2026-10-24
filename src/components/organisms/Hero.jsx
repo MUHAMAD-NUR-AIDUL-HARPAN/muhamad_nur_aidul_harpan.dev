@@ -69,103 +69,110 @@ export const Hero = () => {
 
   const image = t.image;
 
-  // Interactive High-End Grid Box Ring Animation (Instant Zero-Latency Scroll Tracking & Spring Physics)
+  // Interactive High-End Grid Box Ring Animation (Precision Cursor Lock & Silky Smooth Scroll Follow)
   const GRID_SIZE = 48;
-  const springConfig = { stiffness: 300, damping: 28, mass: 0.1 };
+  const springConfig = { stiffness: 180, damping: 25, mass: 0.18 };
   const smoothCellX = useSpring(96, springConfig);
   const smoothCellY = useSpring(96, springConfig);
-  const opacitySpring = useSpring(1, { stiffness: 300, damping: 28 });
+  const opacitySpring = useSpring(0, { stiffness: 180, damping: 25 });
 
-  const lastPointer = useRef({ x: null, y: null, isHovering: false });
+  const activePointer = useRef({ x: null, y: null, hasMoved: false });
   const { scrollY } = useScroll();
 
-  // Instant scroll & cursor updater
-  const handleScrollUpdate = (latestScrollY) => {
-    if (!heroRef.current) return;
+  // Core coordinate evaluator: checks if point is within Hero rect and positions ring
+  const updatePosition = (clientX, clientY, isScrollUpdate = false) => {
+    if (!heroRef.current) return false;
     const rect = heroRef.current.getBoundingClientRect();
     const windowH = window.innerHeight;
 
-    // Fade out only when hero is completely outside the viewport
-    if (rect.bottom < -60 || rect.top > windowH + 60) {
+    // If hero section has scrolled completely out of viewport, fade out smoothly in place
+    // NEVER reset x/y back to top so it never jumps or shoots up!
+    if (rect.bottom <= 0 || rect.top >= windowH) {
       opacitySpring.set(0);
-      return;
+      return false;
     }
 
-    // 1. If mouse or touch is currently active inside Hero, track cursor grid cell directly
-    if (lastPointer.current.isHovering && lastPointer.current.y !== null) {
-      const x = lastPointer.current.x - rect.left;
-      const y = lastPointer.current.y - rect.top;
-      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+    // Check if pointer is currently inside Hero's visible bounds
+    if (clientX !== null && clientY !== null) {
+      const isInside = 
+        clientX >= rect.left && 
+        clientX <= rect.right && 
+        clientY >= rect.top && 
+        clientY <= rect.bottom;
+
+      if (isInside) {
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
         const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
         const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
+
         smoothCellX.set(cellX);
         smoothCellY.set(cellY);
         opacitySpring.set(1);
-        return;
+        return true;
       }
     }
 
-    // 2. Immediate zero-latency scroll tracking
+    // If pointer moved physically outside Hero, fade out in place
+    if (activePointer.current.hasMoved && !isScrollUpdate) {
+      opacitySpring.set(0);
+      return false;
+    }
+
+    // On mobile / touch or when scrolling through Hero without active pointer:
+    // Move gracefully along the grid rows following scroll progression
     const heroWidth = rect.width || window.innerWidth;
+    const heroHeight = rect.height || 800;
     const totalCols = Math.max(4, Math.floor(heroWidth / GRID_SIZE));
-    const baseCol = Math.floor(totalCols * 0.25) * GRID_SIZE;
-    const baseY = GRID_SIZE * 2; // Row 2 (96px)
+    const totalRows = Math.max(6, Math.floor(heroHeight / GRID_SIZE));
+    
+    // Smooth progress from 0 (top of hero) to 1 (bottom of hero)
+    const scrollProgress = Math.max(0, Math.min(1, -rect.top / (heroHeight * 0.75 || 600)));
+    const targetCol = Math.floor(totalCols * 0.25) * GRID_SIZE;
+    
+    // Compute target row without deadzone, smoothly traveling down the grid
+    const startRow = 2;
+    const maxRow = Math.max(startRow, totalRows - 3);
+    const targetY = (startRow + scrollProgress * (maxRow - startRow)) * GRID_SIZE;
 
-    // Tracks every single pixel of scroll immediately without any deadzone
-    const targetY = baseY + latestScrollY * 0.75;
-    const targetX = baseCol + Math.sin(latestScrollY * 0.0035) * (GRID_SIZE * 1.5);
-
-    smoothCellX.set(targetX);
+    smoothCellX.set(targetCol);
     smoothCellY.set(targetY);
     opacitySpring.set(1);
+    return true;
   };
 
-  // Immediate reactive tracking via Framer Motion's internal scroll stream
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    handleScrollUpdate(latest);
+  // 1. Direct window-level pointer tracking (guarantees the ring NEVER loses cursor on scroll)
+  useEffect(() => {
+    const handlePointerMove = (e) => {
+      activePointer.current = { x: e.clientX, y: e.clientY, hasMoved: true };
+      updatePosition(e.clientX, e.clientY);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, []);
+
+  // 2. Instant scroll tracking on every frame via Framer Motion
+  useMotionValueEvent(scrollY, "change", () => {
+    updatePosition(activePointer.current.x, activePointer.current.y, true);
   });
 
-  const updateGridCell = (clientX, clientY) => {
-    if (!heroRef.current) return;
-    const rect = heroRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
-    const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
-
-    smoothCellX.set(cellX);
-    smoothCellY.set(cellY);
-    opacitySpring.set(1);
-  };
-
-  const handleHeroMouseMove = (e) => {
-    lastPointer.current = { x: e.clientX, y: e.clientY, isHovering: true };
-    updateGridCell(e.clientX, e.clientY);
-  };
-
-  const handleHeroTouchMove = (e) => {
-    if (!e.touches || e.touches.length === 0) return;
-    const touch = e.touches[0];
-    lastPointer.current = { x: touch.clientX, y: touch.clientY, isHovering: true };
-    updateGridCell(touch.clientX, touch.clientY);
-  };
-
-  const handleHeroMouseLeave = () => {
-    lastPointer.current.isHovering = false;
-  };
-
-  // Sync with Lenis smooth scroll engine and native window events
+  // 3. Lenis & native scroll sync + Initial load placement
   useEffect(() => {
-    // Initial placement on load
-    handleScrollUpdate(window.scrollY || 0);
-
-    const onLenisScroll = (e) => {
-      handleScrollUpdate(e.scroll ?? window.scrollY ?? 0);
+    const onScroll = () => {
+      updatePosition(activePointer.current.x, activePointer.current.y, true);
     };
+
+    // Initial placement on load (fades in smoothly at row 2)
+    const timer = setTimeout(() => {
+      updatePosition(activePointer.current.x, activePointer.current.y, true);
+    }, 100);
 
     const attachLenis = () => {
       if (window.lenis) {
-        window.lenis.on("scroll", onLenisScroll);
+        window.lenis.on("scroll", onScroll);
         return true;
       }
       return false;
@@ -176,22 +183,27 @@ export const Hero = () => {
       intervalId = setInterval(() => {
         if (attachLenis()) clearInterval(intervalId);
       }, 80);
-      setTimeout(() => clearInterval(intervalId), 2500);
+      setTimeout(() => clearInterval(intervalId), 3000);
     }
 
-    const onNativeScroll = () => {
-      handleScrollUpdate(window.scrollY || 0);
-    };
-    window.addEventListener("scroll", onNativeScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
+      clearTimeout(timer);
       if (intervalId) clearInterval(intervalId);
       if (window.lenis) {
-        window.lenis.off("scroll", onLenisScroll);
+        window.lenis.off("scroll", onScroll);
       }
-      window.removeEventListener("scroll", onNativeScroll);
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
+
+  const handleHeroTouch = (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    const touch = e.touches[0];
+    activePointer.current = { x: touch.clientX, y: touch.clientY, hasMoved: true };
+    updatePosition(touch.clientX, touch.clientY);
+  };
 
   const handleContactClick = () => {
     if (window.lenis) {
@@ -211,10 +223,8 @@ export const Hero = () => {
   return (
     <section 
       ref={heroRef} 
-      onMouseMove={handleHeroMouseMove}
-      onMouseLeave={handleHeroMouseLeave}
-      onTouchStart={handleHeroTouchMove}
-      onTouchMove={handleHeroTouchMove}
+      onTouchStart={handleHeroTouch}
+      onTouchMove={handleHeroTouch}
       className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-20 bg-slate-50 dark:bg-slate-900"
     >
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
