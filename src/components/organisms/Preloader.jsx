@@ -5,41 +5,39 @@ export const Preloader = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
-  // Loading Progress
+  // Loading Progress Cepat & Responsif
   useEffect(() => {
     let currentProgress = 0;
     const interval = setInterval(() => {
-      // Kecepatan loading bervariasi agar terasa lebih nyata
-      currentProgress += Math.floor(Math.random() * 5) + 1;
+      currentProgress += Math.floor(Math.random() * 8) + 5;
       
       if (currentProgress >= 100) {
         setProgress(100);
         clearInterval(interval);
-        // Tahan lebih lama di 100% sebelum memicu animasi selesai
-        setTimeout(() => setIsFinished(true), 600); 
+        setTimeout(() => setIsFinished(true), 120); 
       } else {
         setProgress(currentProgress);
       }
-    }, 80);
+    }, 18);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Trigger Selesai setelah animasi memudar beres
+  // Trigger Selesai
   useEffect(() => {
     if (isFinished) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         onComplete();
-      }, 1600);
+      }, 500);
+      return () => clearTimeout(timer);
     }
   }, [isFinished, onComplete]);
 
-  // Transisi memudar (Cross-fade) yang sangat halus dan mewah
   const overlayVariants = {
     initial: { opacity: 1 },
     exit: { 
       opacity: 0, 
-      transition: { duration: 1.5, ease: "easeInOut" } 
+      transition: { duration: 0.5, ease: "easeOut" } 
     }
   };
 
@@ -47,8 +45,8 @@ export const Preloader = ({ onComplete }) => {
     initial: { opacity: 1, scale: 1 },
     exit: { 
       opacity: 0, 
-      scale: 0.95,
-      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } 
+      scale: 0.98,
+      transition: { duration: 0.4, ease: "easeOut" } 
     }
   };
 
@@ -57,7 +55,7 @@ export const Preloader = ({ onComplete }) => {
       variants={overlayVariants}
       initial="initial"
       animate={isFinished ? "exit" : "initial"}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 overflow-hidden"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 overflow-hidden pointer-events-none"
     >
       <AnimatePresence>
         {!isFinished && (
@@ -67,36 +65,32 @@ export const Preloader = ({ onComplete }) => {
             exit="exit"
             className="relative flex flex-col items-center justify-center w-full px-4"
           >
-            {/* Teks Pengisi (Text Fill Animation) */}
-            <div className="relative text-[4vw] sm:text-[3vw] md:text-3xl lg:text-5xl font-black tracking-[0.15em] uppercase whitespace-nowrap mb-6">
-              
-              {/* Layer Bawah: Teks Pudar (Outline/Track) */}
+            {/* Teks Pengisi */}
+            <div className="relative text-[5vw] sm:text-[3vw] md:text-3xl lg:text-4xl font-black tracking-[0.15em] uppercase whitespace-nowrap mb-6">
+              {/* Layer Bawah: Teks Pudar */}
               <div className="text-slate-200 dark:text-slate-800">
                 MUHAMAD NUR AIDUL HARPAN
               </div>
               
-              {/* Layer Atas: Teks Solid (Mengisi dari Kiri ke Kanan) */}
+              {/* Layer Atas: Teks Solid */}
               <motion.div 
                 className="absolute top-0 left-0 overflow-hidden text-slate-900 dark:text-slate-100 whitespace-nowrap"
                 initial={{ width: "0%" }}
                 animate={{ width: `${progress}%` }}
-                transition={{ ease: "easeOut", duration: 0.3 }}
+                transition={{ ease: "easeOut", duration: 0.1 }}
               >
                 MUHAMAD NUR AIDUL HARPAN
               </motion.div>
             </div>
 
-            {/* Indikator Angka & Elemen Minimalis */}
+            {/* Indikator Angka */}
             <div className="flex items-center gap-4 text-xs font-mono text-slate-400 dark:text-slate-500 tracking-widest">
               <span>LOADING</span>
               <div className="w-12 h-[1px] bg-slate-300 dark:bg-slate-700" />
-              <motion.span 
-                className="w-8 text-right font-bold text-slate-800 dark:text-slate-200"
-              >
+              <span className="w-8 text-right font-bold text-slate-800 dark:text-slate-200">
                 {progress}%
-              </motion.span>
+              </span>
             </div>
-
           </motion.div>
         )}
       </AnimatePresence>

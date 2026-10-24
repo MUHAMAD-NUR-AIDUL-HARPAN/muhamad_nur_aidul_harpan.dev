@@ -182,7 +182,7 @@ export const projectsData = [
     title: "Predictive Maintenance Copilot",
     category: "Web App",
     // Gambar Dashboard Futuristik High-Res
-    image: "/image/projects/turbiq01.jpg",
+    image: "/image/projects/turbiq.webp",
     // image: "/image/projects/turbiq2.png",
     tech: ["React", "Tailwind", "Recharts", "Python", "ML"],
     desc: "Admin dashboard dengan analitik realtime dan dark mode.",

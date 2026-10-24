@@ -1,31 +1,47 @@
 import { useState, useEffect } from "react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { Hand } from "lucide-react";
+import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { Navbar } from "../organisms/Navbar";
 import { Preloader } from "../organisms/Preloader";
 import { Footer } from "../organisms/Footer";
-import { AiAssistant } from "../organisms/AiAssistant"; // <--- 1. JANGAN LUPA IMPORT INI
+import { AiAssistant } from "../organisms/AiAssistant";
 
 export const MainLayout = ({ children }) => {
-  // Selalu tampilkan preloader saat di-refresh sesuai permintaan
-  const [isLoading, setIsLoading] = useState(true);
+  // Hanya tampilkan preloader sekali per sesi agar pengunjung tidak terhambat
+  const [isLoading, setIsLoading] = useState(() => {
+    return !sessionStorage.getItem("visited");
+  });
 
   useEffect(() => {
-    // Inisialisasi Smooth Scroll (Lenis) ultra-smooth tanpa stutter/gredeg
+    // Deteksi apakah perangkat menggunakan layar sentuh / mobile
+    const isTouchDevice =
+      typeof window !== "undefined" &&
+      ("ontouchstart" in window || navigator.maxTouchPoints > 0 || window.innerWidth < 768);
+
+    // Di HP / Layar Sentuh: JANGAN jalankan Lenis virtual touch agar native scroll 120Hz berjalan ringan & mulus
+    if (isTouchDevice) {
+      window.lenis = null;
+      if (isLoading) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+
+    // Inisialisasi Smooth Scroll (Lenis) HANYA untuk Desktop (Mouse/Trackpad)
     const lenis = new Lenis({
       autoRaf: true,
-      duration: 1.2,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 1.5,
-      syncTouch: false, // syncTouch dimatikan agar tidak berbenturan dengan native momentum
     });
     window.lenis = lenis;
 
-    // Logic Kunci Scroll saat Loading Preloader
     if (isLoading) {
       lenis.stop();
       document.body.style.overflow = "hidden";
@@ -46,10 +62,10 @@ export const MainLayout = ({ children }) => {
     sessionStorage.setItem("visited", "true");
   };
 
-  // --- SCROLL PROGRESS BAR LOGIC ---
+  // Scroll Progress Bar yang ringan
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
+    stiffness: 120,
     damping: 30,
     restDelta: 0.001
   });
@@ -63,10 +79,10 @@ export const MainLayout = ({ children }) => {
       {/* Global Progress Bar */}
       <motion.div
         style={{ scaleX }}
-        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] shadow-[0_0_10px_rgba(37,99,235,0.5)] dark:shadow-[0_0_10px_rgba(96,165,250,0.5)]"
+        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] pointer-events-none"
       />
 
-      <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 transition-colors duration-500 relative z-0 overflow-x-clip">
+      <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 transition-colors duration-300 relative z-0 overflow-x-clip">
         <div className="relative z-10">
           <Navbar />
           <main className="relative">{children}</main>

@@ -3,6 +3,17 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  // base: "/muhamad_nur_aidul_harpan.dev/", // 🔥 PENTING
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-framer': ['framer-motion'],
+          'vendor-icons': ['lucide-react', 'react-icons'],
+          'vendor-supabase': ['@supabase/supabase-js']
+        }
+      }
+    }
+  }
 });

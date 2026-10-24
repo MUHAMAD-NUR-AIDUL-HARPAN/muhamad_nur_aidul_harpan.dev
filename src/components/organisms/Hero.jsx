@@ -12,7 +12,7 @@ const Marquee = () => {
         animate={{ x: ["0%", "-50%"] }}
         transition={{ ease: "linear", duration: 80, repeat: Infinity }}
       >
-        {[...Array(12)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <div key={i} className="flex items-center gap-8 mx-4">
             <span className="text-sm font-bold tracking-[0.2em] uppercase">
               Frontend Development
@@ -144,7 +144,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] group-hover/btn:animate-[spin_4s_linear_infinite]" />
                 </div>
 
                 {/* 2. Crisp Traveling Beam Ring */}
@@ -156,7 +156,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] group-hover/btn:animate-[spin_4s_linear_infinite]" />
                 </div>
 
                 {/* 3. Button Body */}
@@ -186,7 +186,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#3b82f6_75%,#60a5fa_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#3b82f6_75%,#60a5fa_85%,#93c5fd_95%,transparent_100%)] group-hover/cv:animate-[spin_4s_linear_infinite]" />
                 </div>
 
                 {/* Crisp Traveling Ring */}
@@ -198,7 +198,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] group-hover/cv:animate-[spin_4s_linear_infinite]" />
                 </div>
 
                 {/* Anchor Body */}
@@ -254,27 +254,21 @@ export const Hero = () => {
         </div>
 
         <div className="lg:col-span-5 flex justify-center lg:justify-end relative mt-10 lg:mt-0">
-          {/* Cahaya di belakang foto agar lebih menyatu (Glowing Aura) */}
-          <motion.div 
-            animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.6, 0.4] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 aspect-square bg-blue-500/20 dark:bg-blue-400/10 rounded-full blur-[80px] pointer-events-none z-0" 
-          />
+          {/* Cahaya di belakang foto - hanya di desktop untuk hemat daya HP */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 aspect-square bg-blue-500/15 dark:bg-blue-400/10 rounded-full blur-[50px] pointer-events-none z-0 hidden sm:block" />
 
-          {/* Wrapper Parallax dihapus agar tidak bentrok dengan Lenis */}
           <div className="relative z-10 w-full max-w-[340px] md:max-w-[400px]">
-            {/* Wrapper Animasi Melayang (Floating Effect) */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="relative w-full aspect-[3/4] group"
-            >
+            {/* Wrapper Foto */}
+            <div className="relative w-full aspect-[3/4] group">
               {/* Clean Elegant Frame with Soft Shadow & Border */}
-              <div className="relative w-full h-full rounded-t-full rounded-b-[40px] overflow-hidden bg-slate-100 dark:bg-slate-900 shadow-2xl border border-slate-200/90 dark:border-slate-800/80 transition-colors duration-500">
+              <div className="relative w-full h-full rounded-t-full rounded-b-[40px] overflow-hidden bg-slate-100 dark:bg-slate-900 shadow-xl border border-slate-200/90 dark:border-slate-800/80 transition-colors duration-300">
                 <img
                   src={image}
                   alt={t.name}
-                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                 />
 
                 {/* Bottom Cinematic Vignette Gradient Overlay (Responsive Light & Dark Mode) */}
@@ -299,7 +293,7 @@ export const Hero = () => {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

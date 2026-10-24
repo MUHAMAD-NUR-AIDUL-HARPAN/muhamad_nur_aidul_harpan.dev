@@ -50,10 +50,10 @@ export const ProjectsSection = () => {
       {/* Background Decor (Dots pattern) */}
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
-      {/* Decorative Text Background (Parallax Restored) */}
+      {/* Decorative Text Background (Parallax Desktop Only) */}
       <motion.div 
         style={{ x: bgTextX, y: bgTextY }}
-        className="absolute top-10 right-[-5%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
+        className="hidden md:block absolute top-10 right-[-5%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
       >
         WORK
       </motion.div>
