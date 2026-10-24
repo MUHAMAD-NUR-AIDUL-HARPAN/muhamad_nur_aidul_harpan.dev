@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useGlobal } from "../../context/GlobalContext";
 import { projectsData, projectCategories } from "../../data/content";
 import { ProjectCard } from "../molecules/ProjectCard";
@@ -12,14 +12,6 @@ export const ProjectsSection = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [projects, setProjects] = useState(projectsData);
   const [categories, setCategories] = useState(projectCategories);
-  const sectionRef = useRef(null);
-
-  // Parallax scroll effect untuk background text "WORK"
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const bgTextX = useTransform(scrollYProgress, [0, 1], ["5%", "-15%"]);
 
   // Fetch projects from Supabase
   useEffect(() => {
@@ -46,24 +38,20 @@ export const ProjectsSection = () => {
       : projects.filter((item) => item.category === activeCategory);
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
       {/* Background Decor (Dots pattern) */}
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
-      {/* Decorative Text Background dengan Parallax Scroll */}
-      <motion.div 
-        style={{ x: bgTextX }}
-        className="hidden md:block absolute top-10 right-[-5%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
+      {/* Decorative Text Background */}
+      <div 
+        className="hidden md:block absolute top-10 right-[-5%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
       >
         WORK
-      </motion.div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+        <div 
+          data-aos="fade-up"
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -86,10 +74,10 @@ export const ProjectsSection = () => {
               ? "Koleksi proyek terpilih yang memperlihatkan keahlian saya dalam menciptakan solusi aplikasi dengan kode yang terstruktur."
               : "A selection of projects that demonstrate my ability to solve complex problems with clean code."}
           </p>
-        </motion.div>
+        </div>
 
         {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
+        <div data-aos="fade-up" data-aos-delay="100" className="flex flex-wrap justify-center gap-2 mb-12">
           {categories.map((cat) => (
             <button
               key={cat}

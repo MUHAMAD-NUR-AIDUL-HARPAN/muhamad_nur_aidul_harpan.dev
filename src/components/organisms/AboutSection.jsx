@@ -1,5 +1,3 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { useGlobal } from "../../context/GlobalContext";
 import { aboutData, skills } from "../../data/content";
 import { StatsGrid } from "../molecules/StatsGrid";
@@ -10,36 +8,24 @@ import { User, Code } from "lucide-react";
 export const AboutSection = () => {
   const { lang } = useGlobal();
   const t = aboutData;
-  const sectionRef = useRef(null);
-
-  // Smooth parallax scroll effect untuk decorative background text
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const bgTextX = useTransform(scrollYProgress, [0, 1], ["5%", "-15%"]);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
+    <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
       {/* Pattern titik-titik halus */}
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
-      {/* Decorative Text Background dengan Smooth Parallax Scroll */}
-      <motion.div 
-        style={{ x: bgTextX }}
-        className="hidden md:block absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
+      {/* Decorative Text Background */}
+      <div 
+        className="hidden md:block absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
       >
         ABOUT ME
-      </motion.div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* LEFT COLUMN: Narrative & Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          {/* LEFT COLUMN: Narrative & Stats (AOS Fade Up) */}
+          <div
+            data-aos="fade-up"
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 shadow-sm">
@@ -62,14 +48,12 @@ export const AboutSection = () => {
             </p>
 
             <StatsGrid />
-          </motion.div>
+          </div>
 
-          {/* RIGHT COLUMN: Visual & Skills */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          {/* RIGHT COLUMN: Visual & Skills (AOS Fade Up Staggered) */}
+          <div
+            data-aos="fade-up"
+            data-aos-delay="150"
             className="relative"
           >
             {/* Glassmorphic Card Container */}
@@ -119,7 +103,7 @@ export const AboutSection = () => {
 
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl -z-10" />
             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/20 rounded-full blur-2xl -z-10" />
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

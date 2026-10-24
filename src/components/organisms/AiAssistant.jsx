@@ -3,9 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, RotateCcw, ArrowRight } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import {
-  heroData,
-  aboutData,
-  skillsData,
   experienceData,
   educationData,
   projectsData,

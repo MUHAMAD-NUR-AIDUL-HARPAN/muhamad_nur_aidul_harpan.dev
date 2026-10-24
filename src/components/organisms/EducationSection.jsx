@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { educationData } from "../../data/content";
 import { EducationCard } from "../molecules/EducationCard";
 import { useGlobal } from "../../context/GlobalContext";
@@ -14,12 +13,9 @@ export const EducationSection = () => {
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+        {/* Title (AOS Fade Up) */}
+        <div
+          data-aos="fade-up"
           className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6"
         >
           <div>
@@ -47,7 +43,7 @@ export const EducationSection = () => {
 
           {/* Decorative Line */}
           <div className="hidden md:block h-px flex-1 bg-slate-200 dark:bg-slate-800 mx-8 mb-4" />
-        </motion.div>
+        </div>
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

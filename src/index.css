@@ -98,4 +98,32 @@
   .dark .scrollbar-thin::-webkit-scrollbar-thumb {
     background-color: var(--color-gray-700);
   }
+
+  /* Ultra-lightweight Hardware-Accelerated Marquee (0 JS Overhead) */
+  @keyframes marquee-scroll {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .animate-marquee-smooth {
+    animation: marquee-scroll 25s linear infinite;
+    will-change: transform;
+  }
+
+  /* GPU-Accelerated Highlighter sweep triggered by AOS */
+  .highlighter-sweep {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+    will-change: transform;
+  }
+  [data-aos].aos-animate .highlighter-sweep,
+  .aos-animate.highlighter-sweep,
+  .highlighter-sweep.is-active {
+    transform: scaleX(1);
+  }
 }

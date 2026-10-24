@@ -22,7 +22,7 @@ export const LoginPage = () => {
       } else {
         setError("Username atau password salah.");
       }
-    } catch (err) {
+    } catch {
       setError("Terjadi kesalahan saat login.");
     } finally {
       setLoading(false);

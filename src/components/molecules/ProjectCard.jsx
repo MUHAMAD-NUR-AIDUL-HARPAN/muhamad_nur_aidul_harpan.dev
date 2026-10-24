@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 
 export const ProjectCard = ({ project, index = 0 }) => {
@@ -12,19 +11,10 @@ export const ProjectCard = ({ project, index = 0 }) => {
   };
 
   return (
-    <motion.div
-      layout="position"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ 
-        duration: 0.75, 
-        delay: (index % 3) * 0.12, 
-        ease: [0.22, 1, 0.36, 1] 
-      }}
-      whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
-      className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300 flex flex-col justify-between"
+    <div
+      data-aos="fade-up"
+      data-aos-delay={(index % 3) * 100}
+      className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
     >
       {/* IMAGE */}
       <div className="h-60 scale-[1.03] overflow-hidden relative">
@@ -125,6 +115,6 @@ export const ProjectCard = ({ project, index = 0 }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

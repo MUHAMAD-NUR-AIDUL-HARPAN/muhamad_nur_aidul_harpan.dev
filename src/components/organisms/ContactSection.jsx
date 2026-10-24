@@ -86,12 +86,9 @@ export const ContactSection = () => {
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-        {/* LEFT COLUMN: Info & Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+        {/* LEFT COLUMN: Info & Title (AOS Fade Up) */}
+        <div
+          data-aos="fade-up"
           className="flex flex-col justify-center h-full"
         >
           <div className="flex items-center gap-2 mb-4">
@@ -115,9 +112,8 @@ export const ContactSection = () => {
 
           <div className="space-y-6">
             {/* Info Cards */}
-            <motion.div 
-              whileHover={{ x: 8, transition: { duration: 0.25 } }}
-              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
+            <div 
+              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg hover:translate-x-2 transition-all"
             >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
                 <Mail size={24} />
@@ -128,11 +124,10 @@ export const ContactSection = () => {
                 </p>
                 <p className="font-medium text-lg">{t.email}</p>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div 
-              whileHover={{ x: 8, transition: { duration: 0.25 } }}
-              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
+            <div 
+              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg hover:translate-x-2 transition-all"
             >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
                 <MessageCircle size={24} />
@@ -143,11 +138,10 @@ export const ContactSection = () => {
                 </p>
                 <p className="font-medium text-lg">{t.whatsappDisplay || t.whatsappNumber}</p>
               </div>
-            </motion.div>
+            </div>
             
-            <motion.div 
-              whileHover={{ x: 8, transition: { duration: 0.25 } }}
-              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
+            <div 
+              className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg hover:translate-x-2 transition-all"
             >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
                 <MapPin size={24} />
@@ -158,16 +152,14 @@ export const ContactSection = () => {
                 </p>
                 <p className="font-medium text-lg">{t.location}</p>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* RIGHT COLUMN: The Complex Form Switcher */}
-        <motion.div
-          initial={{ opacity: 0, y: 55, scale: 0.96 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        {/* RIGHT COLUMN: The Complex Form Switcher (AOS Fade Up) */}
+        <div
+          data-aos="fade-up"
+          data-aos-delay="150"
           className="bg-white dark:bg-slate-900 p-2 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl"
         >
           {/* 1. Toggle Switcher (Tab) */}
@@ -352,7 +344,7 @@ export const ContactSection = () => {
               )}
             </AnimatePresence>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

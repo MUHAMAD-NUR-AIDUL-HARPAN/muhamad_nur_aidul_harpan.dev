@@ -1,17 +1,15 @@
-import { useRef, useState, useEffect } from "react";
-import { motion, useSpring, useMotionValue, AnimatePresence, useScroll, useTransform, useVelocity, wrap, useMotionValueEvent } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { motion, useSpring, useScroll, useMotionValueEvent } from "framer-motion";
 import { Download, ArrowRight, Github, Linkedin, Globe, Rocket, FileText, Code2 } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { heroData } from "../../data/content";
 
-// --- COMPONENT: INFINITE MARQUEE ---
+// --- COMPONENT: INFINITE MARQUEE (Pure Hardware-Accelerated CSS, 0 JS overhead) ---
 const Marquee = () => {
   return (
     <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black py-3 z-20 border-t border-white/10">
-      <motion.div
-        className="flex whitespace-nowrap will-change-transform"
-        animate={{ x: "-50%" }}
-        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+      <div
+        className="flex whitespace-nowrap animate-marquee-smooth will-change-transform"
       >
         {[...Array(6)].map((_, i) => (
           <div key={i} className="flex items-center gap-8 mx-4">
@@ -33,7 +31,7 @@ const Marquee = () => {
             <span className="w-2 h-2 rounded-full bg-blue-500"></span>
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 };

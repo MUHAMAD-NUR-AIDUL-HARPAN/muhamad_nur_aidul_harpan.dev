@@ -62,16 +62,13 @@ const ExperienceCard = ({ item, index }) => {
         </div>
       </div>
 
-      {/* 3. CONTENT CARD */}
-      <motion.div
-        initial={{ opacity: 0, x: isLeft ? -30 : 30, y: 10 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-        whileHover={{ y: -4, transition: { duration: 0.25 } }}
+      {/* 3. CONTENT CARD (AOS Fade In) */}
+      <div
+        data-aos={isLeft ? "fade-right" : "fade-left"}
+        data-aos-delay={index * 100}
         className="w-full md:w-5/12 pl-12 md:pl-0"
       >
-        <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300 group">
+        <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 group">
           {/* Panah dekorasi kecil mengarah ke timeline */}
           <div
             className={`hidden md:block absolute top-6 w-4 h-4 bg-slate-50 dark:bg-slate-800 border-t border-r border-slate-200 dark:border-slate-800 transform rotate-45 ${
@@ -112,7 +109,7 @@ const ExperienceCard = ({ item, index }) => {
             ))}
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
@@ -149,12 +146,9 @@ export const ExperienceSection = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Section Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+        {/* Section Title (AOS Fade Up) */}
+        <div
+          data-aos="fade-up"
           className="text-center mb-20"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -190,7 +184,7 @@ export const ExperienceSection = () => {
             {/* Connecting Vertical Stem */}
             <div className="w-[2px] h-8 bg-gradient-to-b from-blue-500 via-blue-500/50 to-blue-500/20" />
           </div>
-        </motion.div>
+        </div>
 
         {/* Timeline Container */}
         <div ref={timelineRef} className="relative max-w-5xl mx-auto">

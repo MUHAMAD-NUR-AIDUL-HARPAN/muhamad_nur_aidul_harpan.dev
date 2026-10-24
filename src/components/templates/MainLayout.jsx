@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { Navbar } from "../organisms/Navbar";
 import { Preloader } from "../organisms/Preloader";
@@ -17,6 +19,17 @@ export const MainLayout = ({ children }) => {
   });
 
   const lenisRef = useRef(null);
+
+  // Inisialisasi AOS (Animate On Scroll) - Super ringan, 100% GPU CSS transitions
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: "ease-out-cubic",
+      once: true,
+      offset: 50,
+      disableMutationObserver: false,
+    });
+  }, []);
 
   useEffect(() => {
     // Inisialisasi Smooth Scroll Lenis satu kali (Singleton)
@@ -60,6 +73,9 @@ export const MainLayout = ({ children }) => {
     } else {
       lenis.start();
       document.body.style.overflow = "";
+      setTimeout(() => {
+        AOS.refresh();
+      }, 100);
     }
   }, [isLoading]);
 
