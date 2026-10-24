@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { motion, useSpring, useMotionValue, AnimatePresence, useScroll, useTransform, useVelocity, wrap } from "framer-motion";
+import { motion, useSpring, useMotionValue, AnimatePresence, useScroll, useTransform, useVelocity, wrap, useMotionValueEvent } from "framer-motion";
 import { Download, ArrowRight, Github, Linkedin, Globe, Rocket, FileText, Code2 } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { heroData } from "../../data/content";
@@ -69,16 +69,62 @@ export const Hero = () => {
 
   const image = t.image;
 
-  // Interactive High-End Grid Box Ring Animation (Ultra-Smooth Spring Grid Lock & Scroll Follow)
+  // Interactive High-End Grid Box Ring Animation (Instant Zero-Latency Scroll Tracking & Spring Physics)
   const GRID_SIZE = 48;
-  const springConfig = { stiffness: 240, damping: 26, mass: 0.15 };
-  const smoothCellX = useSpring(-200, springConfig);
-  const smoothCellY = useSpring(-200, springConfig);
-  const opacitySpring = useSpring(0, { stiffness: 260, damping: 28 });
+  const springConfig = { stiffness: 300, damping: 28, mass: 0.1 };
+  const smoothCellX = useSpring(96, springConfig);
+  const smoothCellY = useSpring(96, springConfig);
+  const opacitySpring = useSpring(1, { stiffness: 300, damping: 28 });
 
   const lastPointer = useRef({ x: null, y: null, isHovering: false });
+  const { scrollY } = useScroll();
 
-  // Update ring position from coordinate point
+  // Instant scroll & cursor updater
+  const handleScrollUpdate = (latestScrollY) => {
+    if (!heroRef.current) return;
+    const rect = heroRef.current.getBoundingClientRect();
+    const windowH = window.innerHeight;
+
+    // Fade out only when hero is completely outside the viewport
+    if (rect.bottom < -60 || rect.top > windowH + 60) {
+      opacitySpring.set(0);
+      return;
+    }
+
+    // 1. If mouse or touch is currently active inside Hero, track cursor grid cell directly
+    if (lastPointer.current.isHovering && lastPointer.current.y !== null) {
+      const x = lastPointer.current.x - rect.left;
+      const y = lastPointer.current.y - rect.top;
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
+        const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
+        smoothCellX.set(cellX);
+        smoothCellY.set(cellY);
+        opacitySpring.set(1);
+        return;
+      }
+    }
+
+    // 2. Immediate zero-latency scroll tracking
+    const heroWidth = rect.width || window.innerWidth;
+    const totalCols = Math.max(4, Math.floor(heroWidth / GRID_SIZE));
+    const baseCol = Math.floor(totalCols * 0.25) * GRID_SIZE;
+    const baseY = GRID_SIZE * 2; // Row 2 (96px)
+
+    // Tracks every single pixel of scroll immediately without any deadzone
+    const targetY = baseY + latestScrollY * 0.75;
+    const targetX = baseCol + Math.sin(latestScrollY * 0.0035) * (GRID_SIZE * 1.5);
+
+    smoothCellX.set(targetX);
+    smoothCellY.set(targetY);
+    opacitySpring.set(1);
+  };
+
+  // Immediate reactive tracking via Framer Motion's internal scroll stream
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    handleScrollUpdate(latest);
+  });
+
   const updateGridCell = (clientX, clientY) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
@@ -108,74 +154,42 @@ export const Hero = () => {
     lastPointer.current.isHovering = false;
   };
 
-  // Scroll-following listener (tracks smoothly with both Lenis and native scroll)
+  // Sync with Lenis smooth scroll engine and native window events
   useEffect(() => {
-    let rafId = null;
+    // Initial placement on load
+    handleScrollUpdate(window.scrollY || 0);
 
-    const handleScrollFollow = () => {
-      if (!heroRef.current) return;
-      const rect = heroRef.current.getBoundingClientRect();
-      const windowH = window.innerHeight;
-
-      // When hero is completely scrolled away above or below viewport
-      if (rect.bottom < 0 || rect.top > windowH) {
-        opacitySpring.set(0);
-        return;
-      }
-
-      // If user's pointer is currently hovering inside Hero, update cell position relative to cursor
-      if (lastPointer.current.isHovering && lastPointer.current.x !== null) {
-        const x = lastPointer.current.x - rect.left;
-        const y = lastPointer.current.y - rect.top;
-        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-          const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
-          const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
-          smoothCellX.set(cellX);
-          smoothCellY.set(cellY);
-          opacitySpring.set(1);
-          return;
-        }
-      }
-
-      // When scrolling page (or on mobile / without cursor),
-      // the ring travels down dynamically through the grid rows following scroll progression
-      const scrollRatio = Math.max(0, Math.min(1, -rect.top / (rect.height * 0.8 || 600)));
-      const totalCols = Math.max(4, Math.floor(rect.width / GRID_SIZE));
-      const totalRows = Math.max(6, Math.floor(rect.height / GRID_SIZE));
-
-      // Clean focal path across the grid
-      const startCol = Math.floor(totalCols * 0.22);
-      const endCol = Math.floor(totalCols * 0.36);
-      const currentCol = Math.min(totalCols - 2, Math.floor(startCol + scrollRatio * (endCol - startCol)));
-
-      const startRow = 2;
-      const endRow = Math.max(startRow, totalRows - 3);
-      const currentRow = Math.min(totalRows - 2, Math.floor(startRow + scrollRatio * (endRow - startRow)));
-
-      smoothCellX.set(currentCol * GRID_SIZE);
-      smoothCellY.set(currentRow * GRID_SIZE);
-      opacitySpring.set(1);
+    const onLenisScroll = (e) => {
+      handleScrollUpdate(e.scroll ?? window.scrollY ?? 0);
     };
 
-    const onScroll = () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(handleScrollFollow);
+    const attachLenis = () => {
+      if (window.lenis) {
+        window.lenis.on("scroll", onLenisScroll);
+        return true;
+      }
+      return false;
     };
 
-    // Initialize position on load
-    handleScrollFollow();
-
-    if (window.lenis) {
-      window.lenis.on("scroll", onScroll);
+    let intervalId = null;
+    if (!attachLenis()) {
+      intervalId = setInterval(() => {
+        if (attachLenis()) clearInterval(intervalId);
+      }, 80);
+      setTimeout(() => clearInterval(intervalId), 2500);
     }
-    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const onNativeScroll = () => {
+      handleScrollUpdate(window.scrollY || 0);
+    };
+    window.addEventListener("scroll", onNativeScroll, { passive: true });
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
+      if (intervalId) clearInterval(intervalId);
       if (window.lenis) {
-        window.lenis.off("scroll", onScroll);
+        window.lenis.off("scroll", onLenisScroll);
       }
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onNativeScroll);
     };
   }, []);
 
