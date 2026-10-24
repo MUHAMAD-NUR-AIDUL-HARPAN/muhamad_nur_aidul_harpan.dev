@@ -10,16 +10,16 @@ export const StatsGrid = () => {
       {aboutData.stats.map((stat, index) => (
         <motion.div
           key={index}
-          initial={{ opacity: 0, y: 24, scale: 0.95 }}
+          initial={{ opacity: 0, y: 40, scale: 0.92 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{
-            duration: 0.75,
+            duration: 0.8,
             delay: index * 0.12,
             ease: [0.22, 1, 0.36, 1],
           }}
-          whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.25 } }}
-          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-md transition-all cursor-default"
+          whileHover={{ y: -6, scale: 1.03, transition: { duration: 0.25 } }}
+          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all cursor-default"
         >
           <div className="text-3xl font-black text-blue-600 dark:text-blue-400 mb-1">
             {stat.value}

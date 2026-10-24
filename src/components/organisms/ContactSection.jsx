@@ -88,18 +88,18 @@ export const ContactSection = () => {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
         {/* LEFT COLUMN: Info & Title */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col justify-center h-full"
         >
           <div className="flex items-center gap-2 mb-4">
             <motion.div 
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.7, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
             >
               <Mail size={20} />
@@ -116,10 +116,10 @@ export const ContactSection = () => {
             </span>
           </h2>
           <motion.p 
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="text-lg text-slate-500 mb-10 max-w-md"
           >
             {lang === "id" ? t.subtitle.id : t.subtitle.en}
@@ -128,11 +128,11 @@ export const ContactSection = () => {
           <div className="space-y-6">
             {/* Info Cards */}
             <motion.div 
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -45 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ x: 6, transition: { duration: 0.25 } }}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ x: 8, transition: { duration: 0.25 } }}
               className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
             >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
@@ -147,11 +147,11 @@ export const ContactSection = () => {
             </motion.div>
 
             <motion.div 
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -45 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ x: 6, transition: { duration: 0.25 } }}
+              transition={{ duration: 0.8, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ x: 8, transition: { duration: 0.25 } }}
               className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
             >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
@@ -166,11 +166,11 @@ export const ContactSection = () => {
             </motion.div>
             
             <motion.div 
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -45 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ x: 6, transition: { duration: 0.25 } }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ x: 8, transition: { duration: 0.25 } }}
               className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg transition-all"
             >
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
@@ -188,10 +188,10 @@ export const ContactSection = () => {
 
         {/* RIGHT COLUMN: The Complex Form Switcher */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 55, scale: 0.96 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.85, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="bg-white dark:bg-slate-900 p-2 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl"
         >
           {/* 1. Toggle Switcher (Tab) */}

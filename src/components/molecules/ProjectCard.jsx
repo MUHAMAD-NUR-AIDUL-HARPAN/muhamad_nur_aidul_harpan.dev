@@ -14,16 +14,16 @@ export const ProjectCard = ({ project, index = 0 }) => {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
+      initial={{ opacity: 0, y: 60, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ 
-        duration: 0.75, 
-        delay: (index % 3) * 0.12, 
+        duration: 0.85, 
+        delay: (index % 3) * 0.15, 
         ease: [0.22, 1, 0.36, 1] 
       }}
-      whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
+      whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
       className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:border-blue-500/40 transition-all duration-300 flex flex-col justify-between"
     >
       {/* IMAGE */}

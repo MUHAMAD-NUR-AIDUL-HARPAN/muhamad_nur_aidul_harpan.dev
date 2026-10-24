@@ -88,12 +88,12 @@ export const CertificatesPage = () => {
 
   // Animasi Kartu Satuan
   const cardVariants = {
-    hidden: { opacity: 0, y: 25, scale: 0.95 },
+    hidden: { opacity: 0, y: 55, scale: 0.94 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] },
     },
     exit: {
       opacity: 0,

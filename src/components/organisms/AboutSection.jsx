@@ -36,17 +36,17 @@ export const AboutSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* LEFT COLUMN: Narrative & Stats */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="flex items-center gap-3 mb-6">
               <motion.div 
-                initial={{ scale: 0.8, opacity: 0 }}
+                initial={{ scale: 0.7, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
               >
                 <User size={24} />
@@ -60,20 +60,20 @@ export const AboutSection = () => {
             </div>
 
             <motion.h3 
-              initial={{ opacity: 0, x: -16 }}
+              initial={{ opacity: 0, x: -35 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.85, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="text-xl font-medium text-slate-500 mb-6 border-l-4 border-blue-500 pl-4"
             >
               {lang === "id" ? t.subtitle.id : t.subtitle.en}
             </motion.h3>
 
             <motion.p 
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.75, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.85, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-8"
             >
               {lang === "id" ? t.bio.id : t.bio.en}
@@ -84,15 +84,15 @@ export const AboutSection = () => {
 
           {/* RIGHT COLUMN: Visual & Skills */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+            initial={{ opacity: 0, y: 50, scale: 0.96 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
             className="relative"
           >
             {/* Glassmorphic Card Container */}
             <motion.div 
-              whileHover={{ y: -4 }}
+              whileHover={{ y: -6 }}
               transition={{ duration: 0.3 }}
               className="p-8 rounded-3xl bg-white/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-2xl relative z-10 hover:shadow-blue-500/10 transition-shadow duration-300"
             >
@@ -114,10 +114,10 @@ export const AboutSection = () => {
 
               {/* Decorative Code Snippet Style */}
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 35 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 className="mt-8 p-4 rounded-xl bg-slate-900 text-slate-300 font-mono text-xs overflow-hidden border border-slate-800 shadow-md"
               >
                 <div className="flex gap-1.5 mb-3">
