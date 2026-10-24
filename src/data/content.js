@@ -195,7 +195,7 @@ export const projectsData = [
     title: "Klora Studio",
     category: "Mobile",
     // Gambar HP/App High-Res
-    image: "/image/projects/klora1.png",
+    image: "/image/projects/klora1.jpg",
     tech: ["React Native", "Redux"],
     desc: "Aplikasi klora Studio dengan animasi yang smooth.",
     link: "https://klora-studio.vercel.app/",

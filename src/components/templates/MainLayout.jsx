@@ -48,8 +48,17 @@ export const MainLayout = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker
+  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop)
   useEffect(() => {
+    // Pada perangkat sentuh (HP/tablet), jangan pasang listener Lenis agar sentuhan jari
+    // 100% menggunakan native GPU kinetic scroll 120Hz bawaan smartphone tanpa latency JS
+    const isTouch = ('ontouchstart' in window && window.innerWidth < 1024) || (navigator.maxTouchPoints > 0 && window.innerWidth < 1024) || window.innerWidth < 768;
+    if (isTouch) {
+      window.lenis = null;
+      lenisRef.current = null;
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -61,7 +70,7 @@ export const MainLayout = ({ children }) => {
     lenisRef.current = lenis;
     window.lenis = lenis;
 
-    // Sinkronisasi Sempurna Lenis dengan ScrollTrigger via GSAP Ticker
+    // Sinkronisasi Sempurna Lenis dengan ScrollTrigger via GSAP Ticker untuk Desktop
     lenis.on("scroll", ScrollTrigger.update);
     const tickerUpdate = (time) => {
       lenis.raf(time * 1000);

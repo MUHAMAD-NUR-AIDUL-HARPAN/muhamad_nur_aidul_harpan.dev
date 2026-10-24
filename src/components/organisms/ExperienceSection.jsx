@@ -148,18 +148,19 @@ export const ExperienceSection = () => {
         }
       );
 
-      // 2. Titik beacon meluncur turun mengikuti scroll
+      // 2. Titik beacon meluncur turun mengikuti scroll (Pure GPU translate3d)
       gsap.fromTo(
         beaconRef.current,
-        { top: "0%" },
+        { y: 0 },
         {
-          top: "100%",
+          y: () => (timelineRef.current ? timelineRef.current.offsetHeight : 1200),
           ease: "none",
           scrollTrigger: {
             trigger: timelineRef.current,
             start: "top 70%",
             end: "bottom 70%",
             scrub: scrubConfig,
+            invalidateOnRefresh: true,
           },
         }
       );
@@ -233,11 +234,10 @@ export const ExperienceSection = () => {
             className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-transform transform-gpu"
           />
 
-          {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (GSAP ScrollTrigger) */}
+          {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (GSAP ScrollTrigger GPU translate3d) */}
           <div
             ref={beaconRef}
-            style={{ top: "0%" }}
-            className="absolute left-4 md:left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-center will-change-transform transform-gpu"
+            className="absolute left-4 md:left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-center will-change-transform transform-gpu"
           >
             {/* Soft Ambient Halo */}
             <div className="absolute w-8 h-8 rounded-full bg-blue-500/25 dark:bg-blue-400/30 blur-[4px] pointer-events-none" />

@@ -54,7 +54,13 @@
   html {
     scroll-behavior: auto !important;
     -webkit-overflow-scrolling: touch;
-    scrollbar-gutter: stable;
+    touch-action: manipulation;
+  }
+
+  @media (min-width: 768px) {
+    html {
+      scrollbar-gutter: stable;
+    }
   }
 
   html.lenis, html.lenis body {

@@ -180,9 +180,12 @@ export const Hero = () => {
     });
   };
 
-  // 1. Direct window-level pointer tracking (guarantees the ring NEVER loses cursor on scroll)
+  // 1. Direct window-level pointer tracking (Desktop mouse only)
   useEffect(() => {
+    if (window.innerWidth < 768 || ('ontouchstart' in window && window.innerWidth < 1024)) return;
+
     const handlePointerMove = (e) => {
+      if (e.pointerType === 'touch') return;
       activePointer.current = { x: e.clientX, y: e.clientY, hasMoved: true };
       scheduleUpdate(e.clientX, e.clientY, false);
     };
