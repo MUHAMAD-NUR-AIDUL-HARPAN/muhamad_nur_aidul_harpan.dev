@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
@@ -16,17 +16,43 @@ export const MainLayout = ({ children }) => {
     return !sessionStorage.getItem("visited");
   });
 
+  const lenisRef = useRef(null);
+
   useEffect(() => {
-    // Inisialisasi Smooth Scroll Lenis: Silky smooth di Desktop dan responsif 60-120fps di Mobile
+    // Inisialisasi Smooth Scroll Lenis satu kali (Singleton) dengan fluid momentum
     const lenis = new Lenis({
-      autoRaf: true,
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 1,
-      syncTouch: false,
+      wheelMultiplier: 1.1,
+      syncTouch: true,
+      syncTouchLerp: 0.1,
+      touchMultiplier: 1.25,
+      touchInertiaExponent: 1.7,
     });
+    lenisRef.current = lenis;
     window.lenis = lenis;
+
+    let rafId;
+    function raf(time) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      window.lenis = null;
+      lenisRef.current = null;
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // Kontrol stop / start scroll saat preloader aktif tanpa menghancurkan instance Lenis
+  useEffect(() => {
+    const lenis = lenisRef.current;
+    if (!lenis) return;
 
     if (isLoading) {
       lenis.stop();
@@ -35,12 +61,6 @@ export const MainLayout = ({ children }) => {
       lenis.start();
       document.body.style.overflow = "";
     }
-
-    return () => {
-      lenis.destroy();
-      window.lenis = null;
-      document.body.style.overflow = "";
-    };
   }, [isLoading]);
 
   const handlePreloaderComplete = () => {
