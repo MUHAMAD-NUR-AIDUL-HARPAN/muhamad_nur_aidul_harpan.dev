@@ -19,16 +19,16 @@ export const MainLayout = ({ children }) => {
   const lenisRef = useRef(null);
 
   useEffect(() => {
-    // Inisialisasi Smooth Scroll Lenis satu kali (Singleton) dengan fluid momentum
+    // Inisialisasi Smooth Scroll Lenis satu kali (Singleton)
+    // Desktop: Silky smooth wheel scroll
+    // Mobile / Touch: Native hardware momentum (0 lag, 60-120fps fluid scroll & stutter-free animations)
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1.1,
-      syncTouch: true,
-      syncTouchLerp: 0.1,
-      touchMultiplier: 1.25,
-      touchInertiaExponent: 1.7,
+      syncTouch: false,
+      smoothTouch: false,
     });
     lenisRef.current = lenis;
     window.lenis = lenis;

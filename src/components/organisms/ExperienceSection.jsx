@@ -134,7 +134,6 @@ export const ExperienceSection = () => {
     restDelta: 0.001,
   });
 
-  const lineHeight = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
   const ringTop = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
   return (
@@ -198,10 +197,10 @@ export const ExperienceSection = () => {
           {/* 1. Base Guide Track Vertical Line */}
           <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-slate-200 dark:bg-slate-800 rounded-full" />
 
-          {/* 2. Glowing Fill Line Mengikuti Scroll Progress */}
+          {/* 2. Glowing Fill Line Mengikuti Scroll Progress (GPU Accelerated with scaleY, 0 Reflows) */}
           <motion.div
-            style={{ height: lineHeight }}
-            className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-[height]"
+            style={{ scaleY: smoothProgress, transformOrigin: "top center" }}
+            className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-transform transform-gpu"
           />
 
           {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (Tanpa Ring) */}

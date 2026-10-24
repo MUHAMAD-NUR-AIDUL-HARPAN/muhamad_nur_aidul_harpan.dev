@@ -236,13 +236,6 @@ export const Hero = () => {
     };
   }, []);
 
-  const handleHeroTouch = (e) => {
-    if (!e.touches || e.touches.length === 0) return;
-    const touch = e.touches[0];
-    activePointer.current = { x: touch.clientX, y: touch.clientY, hasMoved: true };
-    updatePosition(touch.clientX, touch.clientY);
-  };
-
   const handleContactClick = () => {
     if (window.lenis) {
       window.lenis.scrollTo("#contact", {
@@ -261,8 +254,6 @@ export const Hero = () => {
   return (
     <section 
       ref={heroRef} 
-      onTouchStart={handleHeroTouch}
-      onTouchMove={handleHeroTouch}
       className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-20 bg-slate-50 dark:bg-slate-900"
     >
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
