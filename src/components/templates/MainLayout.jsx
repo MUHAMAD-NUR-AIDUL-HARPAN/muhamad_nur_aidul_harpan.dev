@@ -17,14 +17,16 @@ export const MainLayout = ({ children }) => {
   });
 
   useEffect(() => {
-    // Inisialisasi Lenis: Smooth wheel scroll untuk desktop & 100% native hardware momentum scroll di mobile tanpa loncat/glitch
+    // Inisialisasi Smooth Scroll Lenis: Halus & responsif di Desktop dan Mobile
     const lenis = new Lenis({
       autoRaf: true,
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      syncTouch: false, // Menjamin scroll di HP natural, responsif, stabil dan bebas dari bug loncat section
+      syncTouch: true,
+      syncTouchLerp: 0.08,
+      touchMultiplier: 1,
     });
     window.lenis = lenis;
 

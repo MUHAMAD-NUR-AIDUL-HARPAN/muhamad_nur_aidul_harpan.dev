@@ -69,6 +69,22 @@ export const Hero = () => {
 
   const image = t.image;
 
+  // Interactive Hover Ring on Hero Grid Background
+  const [isGridHovered, setIsGridHovered] = useState(false);
+  const mouseX = useMotionValue(-1000);
+  const mouseY = useMotionValue(-1000);
+
+  const springConfig = { damping: 25, stiffness: 200, mass: 0.2 };
+  const smoothMouseX = useSpring(mouseX, springConfig);
+  const smoothMouseY = useSpring(mouseY, springConfig);
+
+  const handleHeroMouseMove = (e) => {
+    if (!heroRef.current) return;
+    const rect = heroRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  };
+
   const handleContactClick = () => {
     if (window.lenis) {
       window.lenis.scrollTo("#contact", {
@@ -85,10 +101,58 @@ export const Hero = () => {
   };
 
   return (
-    <section ref={heroRef} className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-20 bg-slate-50 dark:bg-slate-900">
-      <div className="absolute inset-0 z-0 pointer-events-none">
+    <section 
+      ref={heroRef} 
+      onMouseMove={handleHeroMouseMove}
+      onMouseEnter={() => setIsGridHovered(true)}
+      onMouseLeave={() => setIsGridHovered(false)}
+      className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-20 bg-slate-50 dark:bg-slate-900"
+    >
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)]" />
+
+        {/* Interactive Luxury Grid Hover Ring Animation */}
+        <motion.div
+          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300 z-0"
+          style={{
+            left: smoothMouseX,
+            top: smoothMouseY,
+            opacity: isGridHovered ? 1 : 0,
+          }}
+        >
+          {/* Soft Radial Ambient Spotlight illuminating the grid */}
+          <div className="w-[320px] h-[320px] rounded-full bg-blue-500/15 dark:bg-blue-400/10 blur-[45px] pointer-events-none" />
+
+          {/* Outer Traveling Glow Ring */}
+          <div 
+            className="absolute inset-[30px] rounded-full p-[2px] overflow-hidden opacity-75 blur-[4px] pointer-events-none"
+            style={{
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude",
+            }}
+          >
+            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_5s_linear_infinite]" />
+          </div>
+
+          {/* Crisp High-Tech Concentric Ring Beam */}
+          <div 
+            className="absolute inset-[30px] rounded-full p-[1.5px] overflow-hidden shadow-lg shadow-blue-500/20 pointer-events-none"
+            style={{
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude",
+            }}
+          >
+            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_5s_linear_infinite]" />
+          </div>
+
+          {/* Inner Subtle Pulsing Center Target Dot */}
+          <div className="absolute inset-[85px] rounded-full border border-blue-400/30 dark:border-blue-300/20 flex items-center justify-center pointer-events-none">
+            <div className="w-2.5 h-2.5 rounded-full bg-blue-500 dark:bg-blue-400 animate-pulse shadow-[0_0_10px_#3b82f6]" />
+          </div>
+        </motion.div>
       </div>
 
 
@@ -149,7 +213,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] group-hover/btn:animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
                 </div>
 
                 {/* 2. Crisp Traveling Beam Ring */}
@@ -161,7 +225,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] group-hover/btn:animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
                 </div>
 
                 {/* 3. Button Body */}
@@ -191,7 +255,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#3b82f6_75%,#60a5fa_85%,#93c5fd_95%,transparent_100%)] group-hover/cv:animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#3b82f6_75%,#60a5fa_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
                 </div>
 
                 {/* Crisp Traveling Ring */}
@@ -203,7 +267,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] group-hover/cv:animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
                 </div>
 
                 {/* Anchor Body */}
