@@ -177,36 +177,11 @@ export const ExperienceSection = () => {
               : "My journey in building digital products and deepening technical expertise."}
           </p>
 
-          {/* Connector Beacon with Animated Ring leading downwards into timeline */}
+          {/* Connector Beacon leading downwards into timeline */}
           <div className="hidden md:flex flex-col items-center justify-center mt-8 -mb-12">
-            <div className="relative w-8 h-8 rounded-full flex items-center justify-center">
-              {/* Outer Glow */}
-              <div 
-                className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-60 blur-[4px] pointer-events-none transform-gpu"
-                style={{
-                  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                  WebkitMaskComposite: "xor",
-                  maskComposite: "exclude",
-                }}
-              >
-                <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_6s_linear_infinite] transform-gpu will-change-transform" />
-              </div>
-
-              {/* Crisp Animated Ring */}
-              <div 
-                className="absolute -inset-[1.5px] rounded-full p-[1.5px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/25 transform-gpu"
-                style={{
-                  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                  WebkitMaskComposite: "xor",
-                  maskComposite: "exclude",
-                }}
-              >
-                <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_6s_linear_infinite] transform-gpu will-change-transform" />
-              </div>
-
-              {/* Core Center */}
-              <div className="w-7 h-7 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shadow-sm">
-                <div className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+            <div className="relative w-6 h-6 rounded-full flex items-center justify-center">
+              <div className="w-5 h-5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shadow-sm">
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-400 shadow-[0_0_8px_#3b82f6]" />
               </div>
             </div>
 
@@ -226,28 +201,16 @@ export const ExperienceSection = () => {
             className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-[height]"
           />
 
-          {/* 3. Traveling Animated Ring yang Mengikuti Posisi Scroll */}
+          {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (Tanpa Ring) */}
           <motion.div
             style={{ top: ringTop }}
             className="absolute left-4 md:left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-center will-change-transform transform-gpu"
           >
             {/* Soft Ambient Halo */}
-            <div className="absolute w-12 h-12 rounded-full bg-blue-500/25 dark:bg-blue-400/30 blur-[6px] pointer-events-none" />
+            <div className="absolute w-8 h-8 rounded-full bg-blue-500/25 dark:bg-blue-400/30 blur-[4px] pointer-events-none" />
 
-            {/* Inscribed Rotating Conic Traveling Light Beam Ring */}
-            <div 
-              className="relative w-8 h-8 rounded-full p-[2px] overflow-hidden shadow-[0_0_12px_rgba(59,130,246,0.5)]"
-              style={{
-                WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                WebkitMaskComposite: "xor",
-                maskComposite: "exclude",
-              }}
-            >
-              <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_30%,#1d4ed8_60%,#3b82f6_78%,#38bdf8_90%,#ffffff_98%,transparent_100%)] animate-[spin_2.5s_linear_infinite]" />
-            </div>
-
-            {/* Center Glowing Core Beacon */}
-            <div className="absolute w-3 h-3 rounded-full bg-blue-600 dark:bg-blue-400 border border-white dark:border-slate-900 animate-pulse shadow-[0_0_8px_#3b82f6]" />
+            {/* Center Glowing Core Beacon Dot */}
+            <div className="relative w-3.5 h-3.5 rounded-full bg-blue-600 dark:bg-blue-400 border-2 border-white dark:border-slate-900 shadow-[0_0_10px_#3b82f6]" />
 
             {/* Soft Expanding Pulse Wave */}
             <div className="absolute -inset-1 rounded-full border border-blue-400/50 animate-ping opacity-40 pointer-events-none duration-1000" />
