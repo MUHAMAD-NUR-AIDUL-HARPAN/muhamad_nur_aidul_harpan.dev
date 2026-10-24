@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useGlobal } from "../../context/GlobalContext";
 import { projectsData, projectCategories } from "../../data/content";
 import { ProjectCard } from "../molecules/ProjectCard";
@@ -78,40 +77,30 @@ export const ProjectsSection = () => {
 
         {/* Filter Buttons */}
         <div data-aos="fade-up" data-aos-delay="100" className="flex flex-wrap justify-center gap-2 mb-12">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`relative px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 
-                ${
-                  activeCategory === cat
-                    ? "text-white"
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`relative px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer ${
+                  isActive
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
                     : "text-slate-500 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800"
                 }`}
-            >
-              {activeCategory === cat && (
-                <motion.div
-                  layoutId="activeFilter"
-                  className="absolute inset-0 bg-blue-600 rounded-full"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10">{cat}</span>
-            </button>
-          ))}
+              >
+                <span className="relative z-10">{cat}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Projects Grid with Animation */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProjects.map((project, index) => (
+            <ProjectCard key={project.id} project={project} index={index} />
+          ))}
+        </div>
 
         {filteredProjects.length === 0 && (
           <div className="text-center py-20 text-slate-500">

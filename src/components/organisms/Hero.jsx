@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { motion, useSpring, useScroll, useMotionValueEvent } from "framer-motion";
+import gsap from "gsap";
 import { Download, ArrowRight, Github, Linkedin, Globe, Rocket, FileText, Code2 } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { heroData } from "../../data/content";
@@ -8,9 +8,7 @@ import { heroData } from "../../data/content";
 const Marquee = () => {
   return (
     <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black py-3 z-20 border-t border-white/10">
-      <div
-        className="flex whitespace-nowrap animate-marquee-smooth will-change-transform"
-      >
+      <div className="flex whitespace-nowrap animate-marquee-smooth will-change-transform">
         {[...Array(6)].map((_, i) => (
           <div key={i} className="flex items-center gap-8 mx-4">
             <span className="text-sm font-bold tracking-[0.2em] uppercase">
@@ -41,45 +39,49 @@ export const Hero = () => {
   const t = heroData;
 
   const heroRef = useRef(null);
-  
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
-  };
+  const ringRef = useRef(null);
+  const heroContentRef = useRef(null);
+  const heroImageRef = useRef(null);
 
-  const item = {
-    hidden: { y: 30, opacity: 0 },
-    show: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.65,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
-
-  const image = t.image;
-
-  // Interactive High-End Grid Box Ring Animation (Precision Cursor Lock & Silky Smooth Scroll Follow)
-  const GRID_SIZE = 48;
-  const springConfig = { stiffness: 180, damping: 25, mass: 0.18 };
-  const smoothCellX = useSpring(96, springConfig);
-  const smoothCellY = useSpring(96, springConfig);
-  const opacitySpring = useSpring(0, { stiffness: 180, damping: 25 });
+  const xTo = useRef(null);
+  const yTo = useRef(null);
+  const opacityTo = useRef(null);
 
   const activePointer = useRef({ x: null, y: null, hasMoved: false });
-  const { scrollY } = useScroll();
   const rafId = useRef(null);
 
-  // Cache Hero geometry without forced synchronous layout thrashing (0 reflows on scroll)
+  // GSAP QuickTo for Ultra-High Performance Cursor & Scroll Tracking
+  const GRID_SIZE = 48;
   const heroDimensionsRef = useRef({ width: 0, height: 0, top: 0 });
+
+  useEffect(() => {
+    if (ringRef.current) {
+      gsap.set(ringRef.current, { x: 96, y: 96, opacity: 0 });
+      xTo.current = gsap.quickTo(ringRef.current, "x", { duration: 0.35, ease: "power2.out" });
+      yTo.current = gsap.quickTo(ringRef.current, "y", { duration: 0.35, ease: "power2.out" });
+      opacityTo.current = gsap.quickTo(ringRef.current, "opacity", { duration: 0.3, ease: "power2.out" });
+    }
+  }, []);
+
+  // Hero Entrance Animations via GSAP Timeline when Preloader completes
+  useEffect(() => {
+    if (isPreloaderDone && heroContentRef.current) {
+      const tl = gsap.timeline();
+      tl.fromTo(
+        heroContentRef.current.querySelectorAll(".hero-fade-item"),
+        { y: 35, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: "power3.out" }
+      );
+      if (heroImageRef.current) {
+        tl.fromTo(
+          heroImageRef.current,
+          { scale: 0.95, opacity: 0, y: 30 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+          "-=0.5"
+        );
+      }
+    }
+  }, [isPreloaderDone]);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -113,9 +115,8 @@ export const Hero = () => {
     const windowH = window.innerHeight;
 
     // If hero section has scrolled completely out of viewport, fade out smoothly in place
-    // NEVER reset x/y back to top so it never jumps or shoots up!
     if (rectBottom <= 0 || rectTop >= windowH) {
-      opacitySpring.set(0);
+      opacityTo.current?.(0);
       return false;
     }
 
@@ -133,20 +134,20 @@ export const Hero = () => {
         const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
         const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
 
-        smoothCellX.set(cellX);
-        smoothCellY.set(cellY);
-        opacitySpring.set(1);
+        xTo.current?.(cellX);
+        yTo.current?.(cellY);
+        opacityTo.current?.(1);
         return true;
       }
     }
 
     // If pointer moved physically outside Hero, fade out in place
     if (activePointer.current.hasMoved && !isScrollUpdate) {
-      opacitySpring.set(0);
+      opacityTo.current?.(0);
       return false;
     }
 
-    // On mobile / touch or when scrolling through Hero without active pointer:
+    // When scrolling through Hero without active pointer:
     // Move gracefully along the grid rows following scroll progression
     const effectiveWidth = heroWidth || window.innerWidth;
     const effectiveHeight = heroHeight || 800;
@@ -162,9 +163,9 @@ export const Hero = () => {
     const maxRow = Math.max(startRow, totalRows - 3);
     const targetY = (startRow + scrollProgress * (maxRow - startRow)) * GRID_SIZE;
 
-    smoothCellX.set(targetCol);
-    smoothCellY.set(targetY);
-    opacitySpring.set(1);
+    xTo.current?.(targetCol);
+    yTo.current?.(targetY);
+    opacityTo.current?.(1);
     return true;
   };
 
@@ -189,12 +190,7 @@ export const Hero = () => {
     };
   }, []);
 
-  // 2. Instant scroll tracking on every frame via Framer Motion
-  useMotionValueEvent(scrollY, "change", () => {
-    scheduleUpdate(activePointer.current.x, activePointer.current.y, true);
-  });
-
-  // 3. Lenis & native scroll sync + Initial load placement
+  // 2. Instant scroll tracking on every frame via Lenis & native scroll
   useEffect(() => {
     const onScroll = () => {
       scheduleUpdate(activePointer.current.x, activePointer.current.y, true);
@@ -259,12 +255,10 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808018_1px,transparent_1px),linear-gradient(to_bottom,#80808018_1px,transparent_1px)] bg-[size:48px_48px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)]" />
 
-        {/* Ultra-Smooth High-Tech Animated Ring Snapped into Kotak-Kotak Grid */}
-        <motion.div
+        {/* Ultra-Smooth High-Tech Animated Ring Snapped into Kotak-Kotak Grid (GSAP QuickTo GPU Engine) */}
+        <div
+          ref={ringRef}
           style={{
-            x: smoothCellX,
-            y: smoothCellY,
-            opacity: opacitySpring,
             width: `${GRID_SIZE}px`,
             height: `${GRID_SIZE}px`,
           }}
@@ -307,59 +301,44 @@ export const Hero = () => {
           <div className="absolute -bottom-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
           <div className="absolute -left-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
           <div className="absolute -right-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
-        </motion.div>
+        </div>
       </div>
 
 
       <div className="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
         <div className="lg:col-span-7 flex flex-col justify-center">
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate={isPreloaderDone ? "show" : "hidden"}
+          <div
+            ref={heroContentRef}
             className="overflow-hidden mb-6"
           >
             <div className="overflow-hidden">
-              <motion.p
-                variants={item}
-                className="text-blue-600 font-mono text-sm tracking-widest uppercase mb-4 flex items-center gap-2"
-              >
+              <p className="hero-fade-item text-blue-600 font-mono text-sm tracking-widest uppercase mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />{" "}
                 {lang === "id" ? "Portofolio Resmi" : "Software Engineer"}
-              </motion.p>
+              </p>
             </div>
 
             <div className="overflow-hidden">
-              <motion.h1
-                variants={item}
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-slate-900 dark:text-slate-200 leading-[1] md:leading-[0.9] mb-2"
-              >
+              <h1 className="hero-fade-item text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-slate-900 dark:text-slate-200 leading-[1] md:leading-[0.9] mb-2">
                 {t.name}
-              </motion.h1>
+              </h1>
             </div>
 
             <div className="overflow-hidden">
-              <motion.h2
-                variants={item}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-500 dark:text-slate-500 tracking-tight mb-6 md:mb-8"
-              >
+              <h2 className="hero-fade-item text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-500 dark:text-slate-500 tracking-tight mb-6 md:mb-8">
                 {t.role}
-              </motion.h2>
+              </h2>
             </div>
 
             <div className="overflow-hidden">
-              <motion.p
-                variants={item}
-                className="text-lg text-slate-700 dark:text-slate-400 max-w-lg leading-relaxed mb-10 border-l-2 border-slate-300 dark:border-slate-700 pl-6"
-              >
+              <p className="hero-fade-item text-lg text-slate-700 dark:text-slate-400 max-w-lg leading-relaxed mb-10 border-l-2 border-slate-300 dark:border-slate-700 pl-6">
                 {lang === "id" ? t.desc.id : t.desc.en}
-              </motion.p>
+              </p>
             </div>
 
-            <motion.div variants={item} className="flex flex-wrap gap-5 items-center">
-              {/* PRIMARY BUTTON: Mulai Proyek (Dengan Animasi Ring Cahaya Saat Hover) */}
+            <div className="hero-fade-item flex flex-wrap gap-5 items-center">
+              {/* PRIMARY BUTTON: Mulai Proyek */}
               <div className="relative group/btn cursor-pointer">
-                {/* 1. Animated Conic Glow Ring (Muncul & Berputar Halus Saat Hover) */}
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/btn:opacity-100 blur-[4px] transition-all duration-500 pointer-events-none"
                   style={{
@@ -371,7 +350,6 @@ export const Hero = () => {
                   <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
                 </div>
 
-                {/* 2. Crisp Traveling Beam Ring */}
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/btn:opacity-100 transition-all duration-500 pointer-events-none z-10"
                   style={{
@@ -383,7 +361,6 @@ export const Hero = () => {
                   <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
                 </div>
 
-                {/* 3. Button Body */}
                 <button
                   onClick={handleContactClick}
                   className="relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-slate-900 dark:bg-white px-8 font-medium text-white dark:text-slate-900 shadow-xl transition-all duration-300 group-hover/btn:shadow-2xl group-hover/btn:shadow-blue-500/25 group-hover/btn:-translate-y-0.5 active:translate-y-0 cursor-pointer z-0"
@@ -399,9 +376,8 @@ export const Hero = () => {
                 </button>
               </div>
 
-              {/* SECONDARY BUTTON: CV Saya (Dengan Ring Outline Glow Saat Hover) */}
+              {/* SECONDARY BUTTON: CV Saya */}
               <div className="relative group/cv cursor-pointer">
-                {/* Animated Conic Glow Ring */}
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/cv:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
                   style={{
@@ -413,7 +389,6 @@ export const Hero = () => {
                   <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#3b82f6_75%,#60a5fa_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
                 </div>
 
-                {/* Crisp Traveling Ring */}
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/cv:opacity-100 transition-all duration-500 pointer-events-none z-10"
                   style={{
@@ -425,7 +400,6 @@ export const Hero = () => {
                   <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
                 </div>
 
-                {/* Anchor Body */}
                 <a
                   href="/CV MUHAMAD NUR AIDUL HARPAN.pdf"
                   download="CV MUHAMAD NUR AIDUL HARPAN.pdf"
@@ -440,50 +414,43 @@ export const Hero = () => {
                   </span>
                 </a>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              variants={item}
-              className="mt-12 flex gap-6 text-slate-500 dark:text-slate-400"
-            >
+            <div className="hero-fade-item mt-12 flex gap-6 text-slate-500 dark:text-slate-400">
               <a
                 href="https://github.com/MUHAMAD-NUR-AIDUL-HARPAN"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-slate-900 dark:hover:text-white transition-colors"
-                title="GitHub Profile"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors transform hover:scale-110 duration-200"
               >
-                <Github size={20} />
+                <Github size={22} />
               </a>
               <a
-                href="https://linkedin.com/in/muhamad-nur-aidul-harpan"
+                href="https://linkedin.com/in/aidul-harpan"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-blue-600 transition-colors"
-                title="LinkedIn Profile"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors transform hover:scale-110 duration-200"
               >
-                <Linkedin size={20} />
+                <Linkedin size={22} />
               </a>
               <a
-                href="https://instagram.com/aidl_harpan08"
+                href="https://aidulharpan.my.id"
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-pink-500 transition-colors"
-                title="Instagram Profile"
+                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors transform hover:scale-110 duration-200"
               >
-                <Globe size={20} />
+                <Globe size={22} />
               </a>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 30 }}
-          animate={isPreloaderDone ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.95, y: 30 }}
-          transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        {/* RIGHT COLUMN: Foto Profil */}
+        <div
+          ref={heroImageRef}
           className="lg:col-span-5 flex justify-center lg:justify-end relative mt-10 lg:mt-0"
         >
-          {/* Cahaya di belakang foto - hanya di desktop untuk hemat daya HP */}
+          {/* Cahaya di belakang foto */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 aspect-square bg-blue-500/15 dark:bg-blue-400/10 rounded-full blur-[50px] pointer-events-none z-0 hidden sm:block" />
 
           <div className="relative z-10 w-full max-w-[340px] md:max-w-[400px]">
@@ -492,7 +459,7 @@ export const Hero = () => {
               {/* Clean Elegant Frame with Soft Shadow & Border */}
               <div className="relative w-full h-full rounded-t-full rounded-b-[40px] overflow-hidden bg-slate-100 dark:bg-slate-900 shadow-xl border border-slate-200/90 dark:border-slate-800/80 transition-colors duration-300">
                 <img
-                  src={image}
+                  src={t.image}
                   alt={t.name}
                   loading="eager"
                   fetchPriority="high"
@@ -500,14 +467,12 @@ export const Hero = () => {
                   className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                 />
 
-                {/* Bottom Cinematic Vignette Gradient Overlay (Responsive Light & Dark Mode) */}
+                {/* Bottom Cinematic Vignette Gradient Overlay */}
                 <div className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-slate-100 via-slate-100/90 to-transparent dark:from-slate-950 dark:via-slate-950/85 dark:to-transparent flex flex-col items-center justify-end pb-7 px-6 text-center pointer-events-none select-none z-10 transition-colors duration-500">
-                  {/* Name in Luxury Serif Typography */}
                   <h3 className="font-serif text-2xl sm:text-[26px] font-normal tracking-[0.22em] uppercase text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] transition-colors duration-500">
                     -
                   </h3>
 
-                  {/* Gradient Hairline Divider with Tech Emblem */}
                   <div className="flex items-center justify-center gap-3 w-full max-w-[210px] my-2.5">
                     <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-indigo-500 opacity-80" />
                     <div className="flex items-center justify-center text-blue-600 dark:text-blue-400 transition-colors duration-500">
@@ -516,7 +481,6 @@ export const Hero = () => {
                     <div className="flex-1 h-[1px] bg-gradient-to-r from-indigo-500 via-blue-500 to-transparent opacity-80" />
                   </div>
 
-                  {/* Spaced Monospace Role Title */}
                   <p className="text-[10px] sm:text-[11px] font-mono tracking-[0.38em] uppercase text-slate-600 dark:text-slate-300 font-semibold drop-shadow-sm dark:drop-shadow transition-colors duration-500">
                     SOFTWARE ENGINEER
                   </p>
@@ -524,7 +488,7 @@ export const Hero = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <Marquee />

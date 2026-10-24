@@ -1,20 +1,11 @@
-import { motion } from "framer-motion";
-
-export const TechTag = ({ label, index }) => {
+export const TechTag = ({ label, index = 0 }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ delay: index * 0.05, type: "spring" }}
-      whileHover={{
-        scale: 1.1,
-        rotate: 2,
-        backgroundColor: "#3b82f6",
-        color: "#fff",
-      }}
-      className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-semibold border border-slate-200 dark:border-slate-700 cursor-default transition-colors duration-300"
+    <div
+      data-aos="fade-up"
+      data-aos-delay={index * 50}
+      className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-semibold border border-slate-200 dark:border-slate-700 cursor-default transition-all duration-300 hover:scale-105 hover:rotate-1 hover:bg-blue-600 hover:text-white hover:border-transparent select-none"
     >
       {label}
-    </motion.div>
+    </div>
   );
 };

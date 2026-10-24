@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, RotateCcw, ArrowRight } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import {
@@ -104,7 +103,7 @@ STATUS KETERSEDIAAN KERJA (AVAILABILITY):
 PROYEK UNGGULAN & PENGALAMAN SPESIFIK:
 =========================================
 - Latar Belakang: Memiliki dasar yang kuat dalam desain visual & UI/UX. Sangat mahir menerjemahkan desain antarmuka dari Figma menjadi kode website interaktif yang presisi (pixel-perfect).
-- Tantangan & Pembelajaran: Salah satu tantangan utama yang dihadapi adalah pembuatan animasi website yang kompleks dan interaktif. Harpan terus belajar dan mendalami teknik animasi modern (Framer Motion, CSS transform-gpu, GSAP, Lenis Smooth Scroll) demi menghadirkan User Experience (UX) yang mulus tanpa lag.
+- Tantangan & Pembelajaran: Salah satu tantangan utama yang dihadapi adalah pembuatan animasi website yang kompleks dan interaktif. Harpan mendalami teknik animasi modern tingkat tinggi (GSAP, CSS transform-gpu, Lenis Smooth Scroll) demi menghadirkan User Experience (UX) yang mulus 60-120fps tanpa lag.
 - Proyek Referensi Utama:
   1. "Predictive Maintenance Copilot (TurbIQ)":
      - Solusi web app industri AI & IoT untuk memprediksi perawatan mesin otomatis.
@@ -142,7 +141,7 @@ ${certsFormatted}
 =========================================
 KEAHLIAN TEKNIS (SKILLSET) & PRODUCTIVITY:
 =========================================
-- Frontend Specialist: HTML5, CSS3, Tailwind CSS, JavaScript (ES6+), React.js, Framer Motion, Responsive & Pixel-Perfect Design.
+- Frontend Specialist: HTML5, CSS3, Tailwind CSS, JavaScript (ES6+), React.js, GSAP Animation, Responsive & Pixel-Perfect Design.
 - Backend & Database: Node.js, Express.js, REST API, MongoDB, PostgreSQL, SQLite.
 - Tooling & Workspace: Git & GitHub, VS Code, Figma (UI/UX).
 - Mahir Microsoft Office (Word, Excel, PowerPoint):
@@ -377,62 +376,45 @@ export const AiAssistant = () => {
     <>
       {/* === FLOATING TRIGGER BUTTON === */}
       <div className="fixed bottom-6 right-6 z-40">
-        <AnimatePresence>
-          {!isOpen && (
-            <motion.div
-              initial={{ scale: 0, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0, opacity: 0, y: 20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="relative group"
-            >
-              {/* Outer Glow Ring */}
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
+        {!isOpen && (
+          <div className="relative group transition-all duration-300">
+            {/* Outer Glow Ring */}
+            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
 
-              <button
-                onClick={() => setIsOpen(true)}
-                className="relative flex items-center gap-3 px-5 py-3.5 rounded-full bg-slate-900/90 dark:bg-slate-800/90 text-white backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300"
-              >
-                <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md">
-                  <AiIcon size={16} className="group-hover:scale-110 transition-transform duration-300" />
-                  <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border border-slate-900"></span>
-                  </span>
-                </div>
-                <div className="text-left hidden sm:block">
-                  <p className="text-xs font-bold leading-tight tracking-wide">Tanya Harpan AI</p>
-                  <p className="text-[10px] text-blue-300/80 leading-tight">Online • Siap membantu</p>
-                </div>
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            <button
+              onClick={() => setIsOpen(true)}
+              className="relative flex items-center gap-3 px-5 py-3.5 rounded-full bg-slate-900/90 dark:bg-slate-800/90 text-white backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            >
+              <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md">
+                <AiIcon size={16} className="group-hover:scale-110 transition-transform duration-300" />
+                <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border border-slate-900"></span>
+                </span>
+              </div>
+              <div className="text-left hidden sm:block">
+                <p className="text-xs font-bold leading-tight tracking-wide">Tanya Harpan AI</p>
+                <p className="text-[10px] text-blue-300/80 leading-tight">Online • Siap membantu</p>
+              </div>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* === CHAT MODAL WINDOW === */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Backdrop: mengunci interaksi di luar dan menutup saat diklik */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setIsOpen(false)}
-              data-lenis-prevent="true"
-              className="fixed inset-0 z-40 bg-black/40"
-            />
+      {isOpen && (
+        <>
+          {/* Backdrop: mengunci interaksi di luar dan menutup saat diklik */}
+          <div
+            onClick={() => setIsOpen(false)}
+            data-lenis-prevent="true"
+            className="fixed inset-0 z-40 bg-black/40 transition-opacity duration-200"
+          />
 
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 30, scale: 0.95 }}
-              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              data-lenis-prevent="true"
-              className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[580px] max-h-[85vh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden will-change-transform transform-gpu"
-            >
+          <div
+            data-lenis-prevent="true"
+            className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[580px] max-h-[85vh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden will-change-transform transform-gpu"
+          >
               {/* --- HEADER --- */}
               <div className="shrink-0 p-4 px-5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -519,20 +501,17 @@ export const AiAssistant = () => {
                     <AiIcon size={13} />
                   </div>
                   <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-white dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700/60 shadow-sm flex items-center gap-1.5">
-                    <motion.span
-                      animate={{ y: [0, -4, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-                      className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
+                    <span
+                      style={{ animationDelay: "0ms" }}
+                      className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-bounce"
                     />
-                    <motion.span
-                      animate={{ y: [0, -4, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-                      className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
+                    <span
+                      style={{ animationDelay: "150ms" }}
+                      className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-bounce"
                     />
-                    <motion.span
-                      animate={{ y: [0, -4, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-                      className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
+                    <span
+                      style={{ animationDelay: "300ms" }}
+                      className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-bounce"
                     />
                   </div>
                 </div>
@@ -588,10 +567,9 @@ export const AiAssistant = () => {
                 AI Assistant dapat memberikan jawaban otomatis seputar profil Harpan.
               </p>
             </div>
-          </motion.div>
+          </div>
         </>
       )}
-    </AnimatePresence>
     </>
   );
 };

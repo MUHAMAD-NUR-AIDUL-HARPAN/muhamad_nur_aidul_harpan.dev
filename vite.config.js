@@ -9,7 +9,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-framer': ['framer-motion'],
+          'vendor-gsap': ['gsap', '@gsap/react'],
           'vendor-icons': ['lucide-react', 'react-icons'],
           'vendor-supabase': ['@supabase/supabase-js']
         }

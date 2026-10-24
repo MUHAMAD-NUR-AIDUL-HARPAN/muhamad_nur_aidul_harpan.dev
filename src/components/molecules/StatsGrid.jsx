@@ -1,34 +1,25 @@
-import { motion } from "framer-motion";
 import { aboutData } from "../../data/content";
-import { useGlobal } from "../../context/GlobalContext"; // Import context
+import { useGlobal } from "../../context/GlobalContext";
 
 export const StatsGrid = () => {
-  const { lang } = useGlobal(); // Ambil bahasa
+  const { lang } = useGlobal();
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
       {aboutData.stats.map((stat, index) => (
-        <motion.div
+        <div
           key={index}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{
-            duration: 0.75,
-            delay: index * 0.1,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          whileHover={{ y: -4, transition: { duration: 0.25 } }}
-          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all cursor-default"
+          data-aos="fade-up"
+          data-aos-delay={index * 100}
+          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 hover:-translate-y-1 transition-all duration-300 cursor-default"
         >
           <div className="text-3xl font-black text-blue-600 dark:text-blue-400 mb-1">
             {stat.value}
           </div>
-          {/* LOGIC BARU: Pilih label berdasarkan bahasa */}
           <div className="text-sm text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wide">
             {lang === "id" ? stat.label.id : stat.label.en}
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

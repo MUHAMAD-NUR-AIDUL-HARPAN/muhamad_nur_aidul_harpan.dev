@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Plus, Award, Building, Calendar, Tag, Link as LinkIcon, UploadCloud, AlertCircle, LayoutDashboard, Briefcase, Trash2, X, Github, Monitor, Edit2, Search, Filter, ArrowUpRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../lib/supabaseClient";
 
 export const AdminPage = () => {
@@ -285,16 +284,15 @@ export const AdminPage = () => {
         </div>
 
         {error && (
-          <motion.div initial={{opacity:0, y:-10}} animate={{opacity:1, y:0}} className="mb-8 p-4 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-xl flex items-center gap-3 max-w-3xl mx-auto">
+          <div className="mb-8 p-4 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-xl flex items-center gap-3 max-w-3xl mx-auto">
             <AlertCircle size={20} className="flex-shrink-0" />
             <p className="text-sm font-medium">{error}</p>
-          </motion.div>
+          </div>
         )}
 
-        <AnimatePresence mode="wait">
-          {/* ======================= TAB: CERTIFICATES ======================= */}
-          {activeTab === "certificates" && (
-            <motion.div key="certificates" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* ======================= TAB: CERTIFICATES ======================= */}
+        {activeTab === "certificates" && (
+          <div key="certificates" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               
               {/* Form Sertifikat */}
               <div className="lg:col-span-5">
@@ -504,12 +502,12 @@ export const AdminPage = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {/* ======================= TAB: PROJECTS ======================= */}
           {activeTab === "projects" && (
-            <motion.div key="projects" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div key="projects" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               
               {/* Form Tambah Proyek */}
               <div className="lg:col-span-5">
@@ -724,9 +722,8 @@ export const AdminPage = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
       </div>
     </div>

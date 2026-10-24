@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-
 export const Button = ({
   children,
   onClick,
@@ -39,13 +37,13 @@ export const Button = ({
       )}
 
       {/* 3. Button Element */}
-      <motion.button
+      <button
         type={type}
         disabled={disabled}
-        whileHover={!disabled ? { scale: 1.02 } : {}}
-        whileTap={!disabled ? { scale: 0.98 } : {}}
         onClick={onClick}
         className={`relative z-0 px-7 py-3.5 rounded-full font-bold text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden ${
+          !disabled ? "hover:scale-[1.02] active:scale-[0.98]" : ""
+        } ${
           variant === "primary"
             ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl group-hover/btn:shadow-2xl group-hover/btn:shadow-blue-500/25"
             : variant === "blue"
@@ -57,7 +55,7 @@ export const Button = ({
           <span className="absolute inset-0 w-full h-full bg-gradient-to-tr from-blue-600 via-blue-500 to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 -z-10" />
         )}
         {children}
-      </motion.button>
+      </button>
     </div>
   );
 };

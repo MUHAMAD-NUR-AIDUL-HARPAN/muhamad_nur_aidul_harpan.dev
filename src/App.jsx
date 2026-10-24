@@ -5,7 +5,6 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
 import { GlobalProvider } from "./context/GlobalContext";
 import { MainLayout } from "./components/templates/MainLayout";
 import ProtectedRoute from "./components/utilities/ProtectedRoute";
@@ -31,21 +30,19 @@ const AnimatedRoutes = () => {
   return (
     <MainLayout>
       <Suspense fallback={<RouteLoader />}>
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/certificates" element={<CertificatesPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route 
-              path="/admin" 
-              element={
-                <ProtectedRoute>
-                  <AdminPage />
-                </ProtectedRoute>
-              } 
-            />
-          </Routes>
-        </AnimatePresence>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/certificates" element={<CertificatesPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
       </Suspense>
     </MainLayout>
   );

@@ -3,12 +3,15 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { AnimatePresence, motion, useScroll } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Navbar } from "../organisms/Navbar";
 import { Preloader } from "../organisms/Preloader";
 import { Footer } from "../organisms/Footer";
 import { AiAssistant } from "../organisms/AiAssistant";
 import { useGlobal } from "../../context/GlobalContext";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const MainLayout = ({ children }) => {
   const { setIsPreloaderDone } = useGlobal();
@@ -19,11 +22,12 @@ export const MainLayout = ({ children }) => {
   });
 
   const lenisRef = useRef(null);
+  const progressBarRef = useRef(null);
 
   // Inisialisasi AOS (Animate On Scroll) - Super ringan, 100% GPU CSS transitions
   useEffect(() => {
     AOS.init({
-      duration: 800,
+      duration: 700,
       easing: "ease-out-cubic",
       once: true,
       offset: 50,
@@ -32,9 +36,7 @@ export const MainLayout = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Inisialisasi Smooth Scroll Lenis satu kali (Singleton)
-    // Desktop: Silky smooth wheel scroll
-    // Mobile / Touch: Native hardware momentum (0 lag, 60-120fps fluid scroll & stutter-free animations)
+    // Inisialisasi Smooth Scroll Lenis satu kali (Singleton) terhubung dengan GSAP Ticker
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -46,15 +48,16 @@ export const MainLayout = ({ children }) => {
     lenisRef.current = lenis;
     window.lenis = lenis;
 
-    let rafId;
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
+    // Sinkronisasi Sempurna Lenis dengan GSAP Ticker (Standar Industri Awwwards)
+    lenis.on("scroll", ScrollTrigger.update);
+    const tickerUpdate = (time) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(tickerUpdate);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(tickerUpdate);
       lenis.destroy();
       window.lenis = null;
       lenisRef.current = null;
@@ -85,19 +88,30 @@ export const MainLayout = ({ children }) => {
     sessionStorage.setItem("visited", "true");
   };
 
-  // Scroll Progress Bar super ringan langsung dari scrollYProgress (tanpa overhead useSpring)
-  const { scrollYProgress } = useScroll();
+  // Scroll Progress Bar super cepat & ringan langsung via GPU transform3d (0 overhead)
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollY = window.scrollY || 0;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? Math.min(1, Math.max(0, scrollY / docHeight)) : 0;
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = `scaleX(${progress})`;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
-      </AnimatePresence>
+      {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
 
-      {/* Global Progress Bar */}
-      <motion.div
-        style={{ scaleX: scrollYProgress }}
-        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 origin-left z-[9999] pointer-events-none transform-gpu will-change-transform"
+      {/* Global Progress Bar (100% GPU Hardware Accelerated) */}
+      <div
+        ref={progressBarRef}
+        style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
+        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 z-[9999] pointer-events-none will-change-transform transform-gpu"
       />
 
       <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 transition-colors duration-300 relative z-0 overflow-x-clip">

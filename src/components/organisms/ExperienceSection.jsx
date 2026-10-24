@@ -1,9 +1,12 @@
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { experienceData } from "../../data/content";
 import { useGlobal } from "../../context/GlobalContext";
-import { Briefcase, GraduationCap, Calendar, ArrowRight } from "lucide-react";
+import { Briefcase, GraduationCap, Calendar } from "lucide-react";
 import { TextHighlighter } from "../atoms/TextHighlighter";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // --- SUB-COMPONENT: EXPERIENCE CARD ---
 const ExperienceCard = ({ item, index }) => {
@@ -118,20 +121,49 @@ const ExperienceCard = ({ item, index }) => {
 export const ExperienceSection = () => {
   const { lang } = useGlobal();
   const timelineRef = useRef(null);
+  const fillLineRef = useRef(null);
+  const beaconRef = useRef(null);
 
-  // Animasi Ring Mengikuti Posisi Scroll di Timeline
-  const { scrollYProgress } = useScroll({
-    target: timelineRef,
-    offset: ["start 65%", "end 65%"],
-  });
+  // Animasi GSAP ScrollTrigger untuk Timeline: 100% GPU Hardware Accelerated
+  useEffect(() => {
+    if (!timelineRef.current || !fillLineRef.current || !beaconRef.current) return;
 
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 160,
-    damping: 24,
-    restDelta: 0.001,
-  });
+    const ctx = gsap.context(() => {
+      // 1. Garis vertikal terisi memanjang mengikuti scroll
+      gsap.fromTo(
+        fillLineRef.current,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: timelineRef.current,
+            start: "top 65%",
+            end: "bottom 65%",
+            scrub: 0.5,
+          },
+        }
+      );
 
-  const ringTop = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+      // 2. Titik beacon meluncur turun mengikuti scroll
+      gsap.fromTo(
+        beaconRef.current,
+        { top: "0%" },
+        {
+          top: "100%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: timelineRef.current,
+            start: "top 65%",
+            end: "bottom 65%",
+            scrub: 0.5,
+          },
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
@@ -191,15 +223,17 @@ export const ExperienceSection = () => {
           {/* 1. Base Guide Track Vertical Line */}
           <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-slate-200 dark:bg-slate-800 rounded-full" />
 
-          {/* 2. Glowing Fill Line Mengikuti Scroll Progress (GPU Accelerated with scaleY, 0 Reflows) */}
-          <motion.div
-            style={{ scaleY: smoothProgress, transformOrigin: "top center" }}
+          {/* 2. Glowing Fill Line Mengikuti Scroll Progress (GSAP ScrollTrigger GPU scaleY) */}
+          <div
+            ref={fillLineRef}
+            style={{ transform: "scaleY(0)", transformOrigin: "top center" }}
             className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-transform transform-gpu"
           />
 
-          {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (Tanpa Ring) */}
-          <motion.div
-            style={{ top: ringTop }}
+          {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (GSAP ScrollTrigger) */}
+          <div
+            ref={beaconRef}
+            style={{ top: "0%" }}
             className="absolute left-4 md:left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-center will-change-transform transform-gpu"
           >
             {/* Soft Ambient Halo */}
@@ -210,7 +244,7 @@ export const ExperienceSection = () => {
 
             {/* Soft Expanding Pulse Wave */}
             <div className="absolute -inset-1 rounded-full border border-blue-400/50 animate-ping opacity-40 pointer-events-none duration-1000" />
-          </motion.div>
+          </div>
 
           {/* 4. Render Cards */}
           <div className="relative">

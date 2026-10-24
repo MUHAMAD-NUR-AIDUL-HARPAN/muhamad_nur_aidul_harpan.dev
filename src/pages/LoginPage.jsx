@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, User, AlertCircle, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -34,12 +33,7 @@ export const LoginPage = () => {
       {/* Decorative Background */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-[100px] pointer-events-none" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-slate-800 p-8 rounded-3xl shadow-2xl relative z-10"
-      >
+      <div className="w-full max-w-md bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-slate-800 p-8 rounded-3xl shadow-2xl relative z-10 transition-all duration-500">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Lock size={32} />
@@ -89,13 +83,13 @@ export const LoginPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-6 py-3 px-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white transition-all disabled:opacity-70 group"
+            className="w-full mt-6 py-3 px-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white transition-all disabled:opacity-70 group cursor-pointer"
           >
             {loading ? "Memverifikasi..." : "Masuk ke Dashboard"}
             {!loading && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
           </button>
         </form>
-      </motion.div>
+      </div>
     </div>
   );
 };
