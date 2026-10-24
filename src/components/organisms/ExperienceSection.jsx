@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
 import { experienceData } from "../../data/content";
 import { useGlobal } from "../../context/GlobalContext";
@@ -13,48 +13,48 @@ const ExperienceCard = ({ item, index }) => {
 
   return (
     <div
-      className={`flex justify-between items-center w-full mb-8 md:mb-12 ${
+      className={`group flex justify-between items-center w-full mb-8 md:mb-12 ${
         isLeft ? "md:flex-row-reverse" : "md:flex-row"
       }`}
     >
       {/* 1. SPACE KOSONG (Untuk menyeimbangkan grid di desktop) */}
       <div className="hidden md:block w-5/12" />
 
-      {/* 2. TIMELINE DOT (Titik Tengah dengan Animated Ring) */}
+      {/* 2. TIMELINE DOT (Titik Tengah dengan Animated Ring Aktif & Jelas) */}
       <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20">
-        <div className="relative w-10 h-10 rounded-full flex items-center justify-center">
-          {/* Animated Ring Glow */}
+        <div className="relative w-11 h-11 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          {/* Animated Ring Glow (Soft Ambient Halo) */}
           <div 
-            className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-60 blur-[4px] pointer-events-none transform-gpu"
+            className="absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-75 group-hover:opacity-100 blur-[4px] pointer-events-none transition-opacity duration-300"
             style={{
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
               maskComposite: "exclude",
             }}
           >
-            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_6s_linear_infinite] will-change-transform transform-gpu" />
+            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_40%,#1d4ed8_65%,#3b82f6_80%,#60a5fa_90%,#ffffff_98%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
           </div>
 
-          {/* Animated Crisp Ring */}
+          {/* Crisp Concentric Traveling Ring Beam */}
           <div 
-            className="absolute -inset-[1.5px] rounded-full p-[1.5px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/20 transform-gpu"
+            className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/30"
             style={{
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
               maskComposite: "exclude",
             }}
           >
-            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_6s_linear_infinite] will-change-transform transform-gpu" />
+            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_40%,#2563eb_65%,#38bdf8_82%,#93c5fd_92%,#ffffff_98%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
           </div>
 
-          {/* Inner Node Core */}
-          <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center z-10 shadow-sm">
+          {/* Inner Node Core Icon Container */}
+          <div className="w-9 h-9 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center z-10 shadow-sm transition-all duration-300 group-hover:border-blue-500/50 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.3)]">
             {item.category === "work" ? (
-              <Briefcase size={14} className="text-blue-600 dark:text-blue-400" />
+              <Briefcase size={15} className="text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
             ) : (
               <GraduationCap
-                size={14}
-                className="text-blue-600 dark:text-blue-400"
+                size={15}
+                className="text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300"
               />
             )}
           </div>
@@ -118,6 +118,22 @@ const ExperienceCard = ({ item, index }) => {
 // --- MAIN COMPONENT ---
 export const ExperienceSection = () => {
   const { lang } = useGlobal();
+  const timelineRef = useRef(null);
+
+  // Animasi Ring Mengikuti Posisi Scroll di Timeline
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 65%", "end 65%"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 160,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
+  const lineHeight = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+  const ringTop = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
   return (
     <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
@@ -200,17 +216,44 @@ export const ExperienceSection = () => {
         </motion.div>
 
         {/* Timeline Container */}
-        <div className="relative max-w-5xl mx-auto">
-          {/* Vertical Line (Garis Tengah) dengan Animasi Light Beam */}
-          <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-            <motion.div
-              animate={{ y: ["-100%", "250%"] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
-              className="w-full h-48 bg-gradient-to-b from-transparent via-blue-500 to-transparent"
-            />
-          </div>
+        <div ref={timelineRef} className="relative max-w-5xl mx-auto">
+          {/* 1. Base Guide Track Vertical Line */}
+          <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-slate-200 dark:bg-slate-800 rounded-full" />
 
-          {/* Render Cards */}
+          {/* 2. Glowing Fill Line Mengikuti Scroll Progress */}
+          <motion.div
+            style={{ height: lineHeight }}
+            className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-[height]"
+          />
+
+          {/* 3. Traveling Animated Ring yang Mengikuti Posisi Scroll */}
+          <motion.div
+            style={{ top: ringTop }}
+            className="absolute left-4 md:left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-center will-change-transform transform-gpu"
+          >
+            {/* Soft Ambient Halo */}
+            <div className="absolute w-12 h-12 rounded-full bg-blue-500/25 dark:bg-blue-400/30 blur-[6px] pointer-events-none" />
+
+            {/* Inscribed Rotating Conic Traveling Light Beam Ring */}
+            <div 
+              className="relative w-8 h-8 rounded-full p-[2px] overflow-hidden shadow-[0_0_12px_rgba(59,130,246,0.5)]"
+              style={{
+                WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                WebkitMaskComposite: "xor",
+                maskComposite: "exclude",
+              }}
+            >
+              <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_30%,#1d4ed8_60%,#3b82f6_78%,#38bdf8_90%,#ffffff_98%,transparent_100%)] animate-[spin_2.5s_linear_infinite]" />
+            </div>
+
+            {/* Center Glowing Core Beacon */}
+            <div className="absolute w-3 h-3 rounded-full bg-blue-600 dark:bg-blue-400 border border-white dark:border-slate-900 animate-pulse shadow-[0_0_8px_#3b82f6]" />
+
+            {/* Soft Expanding Pulse Wave */}
+            <div className="absolute -inset-1 rounded-full border border-blue-400/50 animate-ping opacity-40 pointer-events-none duration-1000" />
+          </motion.div>
+
+          {/* 4. Render Cards */}
           <div className="relative">
             {experienceData.map((item, index) => (
               <ExperienceCard key={item.id} item={item} index={index} />
