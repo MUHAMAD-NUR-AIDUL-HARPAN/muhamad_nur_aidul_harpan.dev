@@ -129,6 +129,9 @@ export const ExperienceSection = () => {
     if (!timelineRef.current || !fillLineRef.current || !beaconRef.current) return;
 
     const ctx = gsap.context(() => {
+      const isMobile = window.innerWidth < 768;
+      const scrubConfig = isMobile ? true : 0.5;
+
       // 1. Garis vertikal terisi memanjang mengikuti scroll
       gsap.fromTo(
         fillLineRef.current,
@@ -138,9 +141,9 @@ export const ExperienceSection = () => {
           ease: "none",
           scrollTrigger: {
             trigger: timelineRef.current,
-            start: "top 65%",
-            end: "bottom 65%",
-            scrub: 0.5,
+            start: "top 70%",
+            end: "bottom 70%",
+            scrub: scrubConfig,
           },
         }
       );
@@ -154,9 +157,9 @@ export const ExperienceSection = () => {
           ease: "none",
           scrollTrigger: {
             trigger: timelineRef.current,
-            start: "top 65%",
-            end: "bottom 65%",
-            scrub: 0.5,
+            start: "top 70%",
+            end: "bottom 70%",
+            scrub: scrubConfig,
           },
         }
       );

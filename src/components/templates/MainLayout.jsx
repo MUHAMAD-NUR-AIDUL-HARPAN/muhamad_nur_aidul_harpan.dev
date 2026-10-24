@@ -24,19 +24,32 @@ export const MainLayout = ({ children }) => {
   const lenisRef = useRef(null);
   const progressBarRef = useRef(null);
 
+  // Optimasi ScrollTrigger untuk Mobile: Mencegah jitter/recalculating saat address bar HP muncul/hilang
+  useEffect(() => {
+    ScrollTrigger.config({ ignoreMobileResize: true });
+  }, []);
+
   // Inisialisasi AOS (Animate On Scroll) - Super ringan, 100% GPU CSS transitions
   useEffect(() => {
     AOS.init({
-      duration: 700,
+      duration: 600,
       easing: "ease-out-cubic",
       once: true,
-      offset: 50,
-      disableMutationObserver: false,
+      offset: 60,
+      disableMutationObserver: true,
     });
   }, []);
 
   useEffect(() => {
-    // Inisialisasi Smooth Scroll Lenis satu kali (Singleton) terhubung dengan GSAP Ticker
+    // Di Mobile (< 768px): Matikan Lenis total agar 100% menggunakan native scroll GPU bawaan HP
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      window.lenis = null;
+      lenisRef.current = null;
+      return;
+    }
+
+    // Inisialisasi Smooth Scroll Lenis hanya untuk Desktop
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -48,7 +61,7 @@ export const MainLayout = ({ children }) => {
     lenisRef.current = lenis;
     window.lenis = lenis;
 
-    // Sinkronisasi Sempurna Lenis dengan GSAP Ticker (Standar Industri Awwwards)
+    // Sinkronisasi Sempurna Lenis dengan GSAP Ticker untuk Desktop
     lenis.on("scroll", ScrollTrigger.update);
     const tickerUpdate = (time) => {
       lenis.raf(time * 1000);
@@ -65,16 +78,15 @@ export const MainLayout = ({ children }) => {
     };
   }, []);
 
-  // Kontrol stop / start scroll saat preloader aktif tanpa menghancurkan instance Lenis
+  // Kontrol stop / start scroll saat preloader aktif
   useEffect(() => {
     const lenis = lenisRef.current;
-    if (!lenis) return;
 
     if (isLoading) {
-      lenis.stop();
+      if (lenis) lenis.stop();
       document.body.style.overflow = "hidden";
     } else {
-      lenis.start();
+      if (lenis) lenis.start();
       document.body.style.overflow = "";
       setTimeout(() => {
         AOS.refresh();
@@ -88,19 +100,19 @@ export const MainLayout = ({ children }) => {
     sessionStorage.setItem("visited", "true");
   };
 
-  // Scroll Progress Bar super cepat & ringan langsung via GPU transform3d (0 overhead)
+  // Scroll Progress Bar langsung via ScrollTrigger (Zero Layout Reflow)
   useEffect(() => {
-    const onScroll = () => {
-      const scrollY = window.scrollY || 0;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? Math.min(1, Math.max(0, scrollY / docHeight)) : 0;
-      if (progressBarRef.current) {
-        progressBarRef.current.style.transform = `scaleX(${progress})`;
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    if (!progressBarRef.current) return;
+    const st = ScrollTrigger.create({
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (self) => {
+        if (progressBarRef.current) {
+          progressBarRef.current.style.transform = `scaleX(${self.progress})`;
+        }
+      },
+    });
+    return () => st.kill();
   }, []);
 
   return (
