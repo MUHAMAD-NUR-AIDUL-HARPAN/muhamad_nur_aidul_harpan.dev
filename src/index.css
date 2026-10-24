@@ -52,17 +52,9 @@
   }
   
   html {
-    scroll-behavior: auto !important;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-gutter: stable;
-  }
-  
-  html.lenis, html.lenis body {
-    height: auto;
-  }
-
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
   }
 }
 

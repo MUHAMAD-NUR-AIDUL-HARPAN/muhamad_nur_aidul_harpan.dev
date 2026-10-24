@@ -1,17 +1,16 @@
 import { useState, useEffect, useRef } from "react";
-import Lenis from "lenis";
-import "lenis/dist/lenis.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { Navbar } from "../organisms/Navbar";
 import { Preloader } from "../organisms/Preloader";
 import { Footer } from "../organisms/Footer";
 import { AiAssistant } from "../organisms/AiAssistant";
 import { useGlobal } from "../../context/GlobalContext";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 export const MainLayout = ({ children }) => {
   const { setIsPreloaderDone } = useGlobal();
@@ -21,10 +20,9 @@ export const MainLayout = ({ children }) => {
     return !sessionStorage.getItem("visited");
   });
 
-  const lenisRef = useRef(null);
   const progressBarRef = useRef(null);
 
-  // Optimasi ScrollTrigger untuk Mobile: Mencegah jitter/recalculating saat address bar HP muncul/hilang
+  // Optimasi ScrollTrigger untuk Mobile: Mencegah jitter saat address bar HP muncul/hilang
   useEffect(() => {
     ScrollTrigger.config({ ignoreMobileResize: true });
   }, []);
@@ -47,53 +45,11 @@ export const MainLayout = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    // Di Mobile (< 768px): Matikan Lenis total agar 100% menggunakan native scroll GPU bawaan HP
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      window.lenis = null;
-      lenisRef.current = null;
-      return;
-    }
-
-    // Inisialisasi Smooth Scroll Lenis hanya untuk Desktop
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      wheelMultiplier: 1.1,
-      syncTouch: false,
-      smoothTouch: false,
-    });
-    lenisRef.current = lenis;
-    window.lenis = lenis;
-
-    // Sinkronisasi Sempurna Lenis dengan GSAP Ticker untuk Desktop
-    lenis.on("scroll", ScrollTrigger.update);
-    const tickerUpdate = (time) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(tickerUpdate);
-    gsap.ticker.lagSmoothing(0);
-
-    return () => {
-      gsap.ticker.remove(tickerUpdate);
-      lenis.destroy();
-      window.lenis = null;
-      lenisRef.current = null;
-      document.body.style.overflow = "";
-    };
-  }, []);
-
   // Kontrol stop / start scroll saat preloader aktif
   useEffect(() => {
-    const lenis = lenisRef.current;
-
     if (isLoading) {
-      if (lenis) lenis.stop();
       document.body.style.overflow = "hidden";
     } else {
-      if (lenis) lenis.start();
       document.body.style.overflow = "";
       setTimeout(() => {
         AOS.refreshHard();
@@ -127,7 +83,7 @@ export const MainLayout = ({ children }) => {
     <>
       {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
 
-      {/* Global Progress Bar (100% GPU Hardware Accelerated) */}
+      {/* Global Progress Bar (100% GPU Hardware Accelerated via GSAP) */}
       <div
         ref={progressBarRef}
         style={{ transform: "scaleX(0)", transformOrigin: "left center" }}

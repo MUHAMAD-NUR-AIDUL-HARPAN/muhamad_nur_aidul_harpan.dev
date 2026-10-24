@@ -1,8 +1,11 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { Download, ArrowRight, Github, Linkedin, Globe, Rocket, FileText, Code2 } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { heroData } from "../../data/content";
+
+gsap.registerPlugin(ScrollToPlugin);
 
 // --- COMPONENT: INFINITE MARQUEE (Pure Hardware-Accelerated CSS, 0 JS overhead) ---
 const Marquee = () => {
@@ -190,7 +193,7 @@ export const Hero = () => {
     };
   }, []);
 
-  // 2. Instant scroll tracking on every frame via Lenis & native scroll (Only needed on Desktop)
+  // 2. Instant scroll tracking on every frame (Only needed on Desktop)
   useEffect(() => {
     if (window.innerWidth < 768) return;
 
@@ -203,47 +206,24 @@ export const Hero = () => {
       updatePosition(activePointer.current.x, activePointer.current.y, true);
     }, 120);
 
-    const attachLenis = () => {
-      if (window.lenis) {
-        window.lenis.on("scroll", onScroll);
-        return true;
-      }
-      return false;
-    };
-
-    let intervalId = null;
-    if (!attachLenis()) {
-      intervalId = setInterval(() => {
-        if (attachLenis()) clearInterval(intervalId);
-      }, 80);
-      setTimeout(() => clearInterval(intervalId), 3000);
-    }
-
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       clearTimeout(timer);
-      if (intervalId) clearInterval(intervalId);
       if (rafId.current) cancelAnimationFrame(rafId.current);
-      if (window.lenis) {
-        window.lenis.off("scroll", onScroll);
-      }
       window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
   const handleContactClick = () => {
-    if (window.lenis) {
-      window.lenis.scrollTo("#contact", {
-        offset: -80,
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      gsap.to(window, {
+        duration: 1.1,
+        scrollTo: { y: contactSection, offsetY: 80 },
+        ease: "power2.inOut",
+        overwrite: "auto",
       });
-    } else {
-      const contactSection = document.getElementById("contact");
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: "smooth" });
-      }
     }
   };
 

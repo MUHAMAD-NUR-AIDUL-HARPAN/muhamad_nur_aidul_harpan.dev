@@ -103,7 +103,7 @@ STATUS KETERSEDIAAN KERJA (AVAILABILITY):
 PROYEK UNGGULAN & PENGALAMAN SPESIFIK:
 =========================================
 - Latar Belakang: Memiliki dasar yang kuat dalam desain visual & UI/UX. Sangat mahir menerjemahkan desain antarmuka dari Figma menjadi kode website interaktif yang presisi (pixel-perfect).
-- Tantangan & Pembelajaran: Salah satu tantangan utama yang dihadapi adalah pembuatan animasi website yang kompleks dan interaktif. Harpan mendalami teknik animasi modern tingkat tinggi (GSAP, CSS transform-gpu, Lenis Smooth Scroll) demi menghadirkan User Experience (UX) yang mulus 60-120fps tanpa lag.
+- Tantangan & Pembelajaran: Salah satu tantangan utama yang dihadapi adalah pembuatan animasi website yang kompleks dan interaktif. Harpan mendalami teknik animasi modern tingkat tinggi (GSAP, AOS, CSS GPU Acceleration) demi menghadirkan User Experience (UX) yang mulus 60-120fps tanpa lag.
 - Proyek Referensi Utama:
   1. "Predictive Maintenance Copilot (TurbIQ)":
      - Solusi web app industri AI & IoT untuk memprediksi perawatan mesin otomatis.
@@ -240,12 +240,10 @@ export const AiAssistant = () => {
   // Kunci scroll halaman ketika modal chatbot dibuka
   useEffect(() => {
     if (isOpen) {
-      window.lenis?.stop();
       const originalBodyOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
 
       return () => {
-        window.lenis?.start();
         document.body.style.overflow = originalBodyOverflow;
       };
     }
@@ -407,12 +405,10 @@ export const AiAssistant = () => {
           {/* Backdrop: mengunci interaksi di luar dan menutup saat diklik */}
           <div
             onClick={() => setIsOpen(false)}
-            data-lenis-prevent="true"
             className="fixed inset-0 z-40 bg-black/40 transition-opacity duration-200"
           />
 
           <div
-            data-lenis-prevent="true"
             className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[580px] max-h-[85vh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden will-change-transform transform-gpu"
           >
               {/* --- HEADER --- */}
@@ -459,9 +455,6 @@ export const AiAssistant = () => {
               {/* --- MESSAGES CONTAINER --- */}
               <div
                 ref={scrollRef}
-                data-lenis-prevent="true"
-                data-lenis-prevent-wheel="true"
-                data-lenis-prevent-touch="true"
                 className="flex-1 min-h-0 p-4 sm:p-5 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/40 overscroll-contain select-text"
                 style={{
                   overflowY: "auto",

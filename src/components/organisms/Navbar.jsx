@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ThemeToggle } from "../molecules/ThemeToggle";
 import { navItems } from "../../data/content";
+
+gsap.registerPlugin(ScrollToPlugin);
 
 export const Navbar = () => {
   const location = useLocation();
@@ -47,20 +50,24 @@ export const Navbar = () => {
   }, [location.pathname]);
 
   const scrollToTarget = (targetId) => {
-    const targetElement = targetId === "home" ? 0 : document.getElementById(targetId);
-    if (window.lenis) {
-      window.lenis.scrollTo(targetElement, {
-        offset: targetId === "home" ? 0 : -80,
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    if (targetId === "home") {
+      gsap.to(window, {
+        duration: 1.1,
+        scrollTo: { y: 0 },
+        ease: "power2.inOut",
+        overwrite: "auto",
       });
-    } else {
-      if (targetId === "home") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else if (targetElement) {
-        const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
+      return;
+    }
+
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      gsap.to(window, {
+        duration: 1.1,
+        scrollTo: { y: targetElement, offsetY: 80 },
+        ease: "power2.inOut",
+        overwrite: "auto",
+      });
     }
   };
 

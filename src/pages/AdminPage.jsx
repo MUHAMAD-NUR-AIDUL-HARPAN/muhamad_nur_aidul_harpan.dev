@@ -419,9 +419,8 @@ export const AdminPage = () => {
                     </div>
                   </div>
 
-                  {/* Scrollable Container with data-lenis-prevent and overscroll-contain */}
+                  {/* Scrollable Container with overscroll-contain */}
                   <div
-                    data-lenis-prevent="true"
                     className="space-y-3 max-h-[580px] overflow-y-auto overscroll-contain pr-2 scrollbar-thin"
                   >
                     {filteredCertificates.map((cert) => (
@@ -641,9 +640,8 @@ export const AdminPage = () => {
                     </div>
                   </div>
 
-                  {/* Scrollable Container with data-lenis-prevent and overscroll-contain */}
+                  {/* Scrollable Container with overscroll-contain */}
                   <div
-                    data-lenis-prevent="true"
                     className="space-y-3 max-h-[580px] overflow-y-auto overscroll-contain pr-2 scrollbar-thin"
                   >
                     {filteredProjects.map((proj) => (
