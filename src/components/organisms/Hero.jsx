@@ -169,6 +169,8 @@ export const Hero = () => {
   };
 
   const scheduleUpdate = (clientX, clientY, isScrollUpdate = false) => {
+    // Di layar mobile HP, skip kalkulasi scroll JS agar 0 CPU load (ditangani pure CSS floating)
+    if (window.innerWidth < 768 && isScrollUpdate) return;
     if (rafId.current) return;
     rafId.current = requestAnimationFrame(() => {
       rafId.current = null;
@@ -259,7 +261,46 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808018_1px,transparent_1px),linear-gradient(to_bottom,#80808018_1px,transparent_1px)] bg-[size:48px_48px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)]" />
 
-        {/* Ultra-Smooth High-Tech Animated Ring Snapped into Kotak-Kotak Grid */}
+        {/* 1A. HP / Mobile: Pure CSS Hardware-Accelerated Floating Ring (0 Scroll JS Overhead) */}
+        <div
+          style={{
+            width: `${GRID_SIZE}px`,
+            height: `${GRID_SIZE}px`,
+          }}
+          className="flex md:hidden absolute top-[96px] left-[24px] pointer-events-none z-0 items-center justify-center animate-hero-ring-float"
+        >
+          {/* Ambient Glow */}
+          <div className="absolute -inset-6 bg-blue-500/10 dark:bg-blue-400/15 rounded-2xl blur-lg pointer-events-none" />
+
+          {/* Frame */}
+          <div className="absolute inset-0 bg-blue-500/[0.08] dark:bg-blue-400/[0.12] border border-blue-500/50 dark:border-blue-400/60 rounded-md shadow-[0_0_20px_rgba(59,130,246,0.3)]" />
+
+          {/* Crosshairs */}
+          <div className="absolute -top-[1px] -left-[1px] w-2 h-2 border-t-2 border-l-2 border-blue-600 dark:border-blue-400 rounded-tl-sm" />
+          <div className="absolute -top-[1px] -right-[1px] w-2 h-2 border-t-2 border-r-2 border-blue-600 dark:border-blue-400 rounded-tr-sm" />
+          <div className="absolute -bottom-[1px] -left-[1px] w-2 h-2 border-b-2 border-l-2 border-blue-600 dark:border-blue-400 rounded-bl-sm" />
+          <div className="absolute -bottom-[1px] -right-[1px] w-2 h-2 border-b-2 border-r-2 border-blue-600 dark:border-blue-400 rounded-br-sm" />
+
+          {/* Traveling Ring */}
+          <div 
+            className="absolute w-[38px] h-[38px] rounded-full p-[1.5px] overflow-hidden shadow-[0_0_10px_rgba(56,189,248,0.35)]"
+            style={{
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude",
+            }}
+          >
+            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_40%,#1d4ed8_65%,#3b82f6_80%,#38bdf8_92%,#ffffff_98%,transparent_100%)] animate-[spin_3s_linear_infinite]" />
+          </div>
+
+          {/* Beacon */}
+          <div className="w-[20px] h-[20px] rounded-full border border-dashed border-blue-400/50 dark:border-blue-300/40 animate-[spin_8s_linear_infinite_reverse] flex items-center justify-center pointer-events-none">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse shadow-[0_0_8px_#3b82f6]" />
+          </div>
+          <div className="absolute -inset-1 rounded-lg border border-blue-500/30 animate-ping opacity-35 pointer-events-none duration-1000" />
+        </div>
+
+        {/* 1B. Desktop (MD+): Interactive Precision Cursor Lock & Silky Smooth Scroll Follow */}
         <motion.div
           style={{
             x: smoothCellX,
@@ -268,7 +309,7 @@ export const Hero = () => {
             width: `${GRID_SIZE}px`,
             height: `${GRID_SIZE}px`,
           }}
-          className="absolute top-0 left-0 pointer-events-none z-0 flex items-center justify-center will-change-transform transform-gpu"
+          className="hidden md:flex absolute top-0 left-0 pointer-events-none z-0 items-center justify-center will-change-transform transform-gpu"
         >
           {/* 1. Soft Ambient Radial Glow beneath the active grid square */}
           <div className="absolute -inset-6 bg-blue-500/10 dark:bg-blue-400/15 rounded-2xl blur-lg pointer-events-none" />
