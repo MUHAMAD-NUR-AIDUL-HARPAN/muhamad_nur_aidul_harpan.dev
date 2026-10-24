@@ -69,18 +69,21 @@ export const Hero = () => {
 
   const image = t.image;
 
-  // Interactive High-End Grid Box Ring Animation (Ultra-Smooth Spring Grid Lock)
+  // Interactive High-End Grid Box Ring Animation (Ultra-Smooth Spring Grid Lock & Scroll Follow)
   const GRID_SIZE = 48;
   const springConfig = { stiffness: 240, damping: 26, mass: 0.15 };
   const smoothCellX = useSpring(-200, springConfig);
   const smoothCellY = useSpring(-200, springConfig);
-  const opacitySpring = useSpring(0, { stiffness: 280, damping: 28 });
+  const opacitySpring = useSpring(0, { stiffness: 260, damping: 28 });
 
-  const handleHeroMouseMove = (e) => {
+  const lastPointer = useRef({ x: null, y: null, isHovering: false });
+
+  // Update ring position from coordinate point
+  const updateGridCell = (clientX, clientY) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
     const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
     const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
 
@@ -89,9 +92,92 @@ export const Hero = () => {
     opacitySpring.set(1);
   };
 
-  const handleHeroMouseLeave = () => {
-    opacitySpring.set(0);
+  const handleHeroMouseMove = (e) => {
+    lastPointer.current = { x: e.clientX, y: e.clientY, isHovering: true };
+    updateGridCell(e.clientX, e.clientY);
   };
+
+  const handleHeroTouchMove = (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    const touch = e.touches[0];
+    lastPointer.current = { x: touch.clientX, y: touch.clientY, isHovering: true };
+    updateGridCell(touch.clientX, touch.clientY);
+  };
+
+  const handleHeroMouseLeave = () => {
+    lastPointer.current.isHovering = false;
+  };
+
+  // Scroll-following listener (tracks smoothly with both Lenis and native scroll)
+  useEffect(() => {
+    let rafId = null;
+
+    const handleScrollFollow = () => {
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      const windowH = window.innerHeight;
+
+      // When hero is completely scrolled away above or below viewport
+      if (rect.bottom < 0 || rect.top > windowH) {
+        opacitySpring.set(0);
+        return;
+      }
+
+      // If user's pointer is currently hovering inside Hero, update cell position relative to cursor
+      if (lastPointer.current.isHovering && lastPointer.current.x !== null) {
+        const x = lastPointer.current.x - rect.left;
+        const y = lastPointer.current.y - rect.top;
+        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+          const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
+          const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
+          smoothCellX.set(cellX);
+          smoothCellY.set(cellY);
+          opacitySpring.set(1);
+          return;
+        }
+      }
+
+      // When scrolling page (or on mobile / without cursor),
+      // the ring travels down dynamically through the grid rows following scroll progression
+      const scrollRatio = Math.max(0, Math.min(1, -rect.top / (rect.height * 0.8 || 600)));
+      const totalCols = Math.max(4, Math.floor(rect.width / GRID_SIZE));
+      const totalRows = Math.max(6, Math.floor(rect.height / GRID_SIZE));
+
+      // Clean focal path across the grid
+      const startCol = Math.floor(totalCols * 0.22);
+      const endCol = Math.floor(totalCols * 0.36);
+      const currentCol = Math.min(totalCols - 2, Math.floor(startCol + scrollRatio * (endCol - startCol)));
+
+      const startRow = 2;
+      const endRow = Math.max(startRow, totalRows - 3);
+      const currentRow = Math.min(totalRows - 2, Math.floor(startRow + scrollRatio * (endRow - startRow)));
+
+      smoothCellX.set(currentCol * GRID_SIZE);
+      smoothCellY.set(currentRow * GRID_SIZE);
+      opacitySpring.set(1);
+    };
+
+    const onScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(handleScrollFollow);
+    };
+
+    // Initialize position on load
+    handleScrollFollow();
+
+    if (window.lenis) {
+      window.lenis.on("scroll", onScroll);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      if (window.lenis) {
+        window.lenis.off("scroll", onScroll);
+      }
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   const handleContactClick = () => {
     if (window.lenis) {
@@ -113,6 +199,8 @@ export const Hero = () => {
       ref={heroRef} 
       onMouseMove={handleHeroMouseMove}
       onMouseLeave={handleHeroMouseLeave}
+      onTouchStart={handleHeroTouchMove}
+      onTouchMove={handleHeroTouchMove}
       className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-20 bg-slate-50 dark:bg-slate-900"
     >
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
