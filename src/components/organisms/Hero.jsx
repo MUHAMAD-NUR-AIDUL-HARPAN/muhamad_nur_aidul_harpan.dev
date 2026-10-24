@@ -69,20 +69,26 @@ export const Hero = () => {
 
   const image = t.image;
 
-  // Interactive Hover Ring on Hero Grid Background
-  const [isGridHovered, setIsGridHovered] = useState(false);
-  const mouseX = useMotionValue(-1000);
-  const mouseY = useMotionValue(-1000);
-
-  const springConfig = { damping: 25, stiffness: 200, mass: 0.2 };
-  const smoothMouseX = useSpring(mouseX, springConfig);
-  const smoothMouseY = useSpring(mouseY, springConfig);
+  // Interactive High-End Grid Box Ring Animation (Snaps to Kotak-Kotak Grid)
+  const GRID_SIZE = 48;
+  const [hoveredCell, setHoveredCell] = useState(null);
 
   const handleHeroMouseMove = (e) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
-    mouseX.set(e.clientX - rect.left);
-    mouseY.set(e.clientY - rect.top);
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
+    const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
+
+    setHoveredCell((prev) => {
+      if (prev && prev.x === cellX && prev.y === cellY) return prev;
+      return { x: cellX, y: cellY };
+    });
+  };
+
+  const handleHeroMouseLeave = () => {
+    setHoveredCell(null);
   };
 
   const handleContactClick = () => {
@@ -104,55 +110,61 @@ export const Hero = () => {
     <section 
       ref={heroRef} 
       onMouseMove={handleHeroMouseMove}
-      onMouseEnter={() => setIsGridHovered(true)}
-      onMouseLeave={() => setIsGridHovered(false)}
+      onMouseLeave={handleHeroMouseLeave}
       className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-20 bg-slate-50 dark:bg-slate-900"
     >
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
+        {/* Clean 48px Precision Kotak-Kotak Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808018_1px,transparent_1px),linear-gradient(to_bottom,#80808018_1px,transparent_1px)] bg-[size:48px_48px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)]" />
 
-        {/* Interactive Luxury Grid Hover Ring Animation */}
-        <motion.div
-          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300 z-0"
-          style={{
-            left: smoothMouseX,
-            top: smoothMouseY,
-            opacity: isGridHovered ? 1 : 0,
-          }}
-        >
-          {/* Soft Radial Ambient Spotlight illuminating the grid */}
-          <div className="w-[320px] h-[320px] rounded-full bg-blue-500/15 dark:bg-blue-400/10 blur-[45px] pointer-events-none" />
-
-          {/* Outer Traveling Glow Ring */}
-          <div 
-            className="absolute inset-[30px] rounded-full p-[2px] overflow-hidden opacity-75 blur-[4px] pointer-events-none"
+        {/* High-Tech Animated Ring Snapped Exactly into the Active Grid Box (Kotak) */}
+        {hoveredCell && (
+          <div
             style={{
-              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
+              left: `${hoveredCell.x}px`,
+              top: `${hoveredCell.y}px`,
+              width: `${GRID_SIZE}px`,
+              height: `${GRID_SIZE}px`,
             }}
+            className="absolute pointer-events-none transition-all duration-100 ease-out z-0 flex items-center justify-center animate-in fade-in zoom-in-95"
           >
-            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_5s_linear_infinite]" />
-          </div>
+            {/* 1. Highlighted Grid Box Frame */}
+            <div className="absolute inset-0 bg-blue-500/10 dark:bg-blue-400/15 border border-blue-500/50 dark:border-blue-400/60 rounded-md shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-colors duration-200" />
 
-          {/* Crisp High-Tech Concentric Ring Beam */}
-          <div 
-            className="absolute inset-[30px] rounded-full p-[1.5px] overflow-hidden shadow-lg shadow-blue-500/20 pointer-events-none"
-            style={{
-              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-            }}
-          >
-            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_5s_linear_infinite]" />
-          </div>
+            {/* 2. Precision Corner Target Ticks on the Box */}
+            <div className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t-2 border-l-2 border-blue-600 dark:border-blue-400" />
+            <div className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t-2 border-r-2 border-blue-600 dark:border-blue-400" />
+            <div className="absolute -bottom-[1px] -left-[1px] w-1.5 h-1.5 border-b-2 border-l-2 border-blue-600 dark:border-blue-400" />
+            <div className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b-2 border-r-2 border-blue-600 dark:border-blue-400" />
 
-          {/* Inner Subtle Pulsing Center Target Dot */}
-          <div className="absolute inset-[85px] rounded-full border border-blue-400/30 dark:border-blue-300/20 flex items-center justify-center pointer-events-none">
-            <div className="w-2.5 h-2.5 rounded-full bg-blue-500 dark:bg-blue-400 animate-pulse shadow-[0_0_10px_#3b82f6]" />
+            {/* 3. Inscribed Rotating Conic Traveling Light Beam Ring */}
+            <div 
+              className="absolute w-[36px] h-[36px] rounded-full p-[1.5px] overflow-hidden"
+              style={{
+                WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                WebkitMaskComposite: "xor",
+                maskComposite: "exclude",
+              }}
+            >
+              <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_45%,#2563eb_70%,#38bdf8_88%,#ffffff_98%,transparent_100%)] animate-[spin_2.5s_linear_infinite]" />
+            </div>
+
+            {/* 4. Concentric Inner Ring with Center Pulsing Dot */}
+            <div className="w-5 h-5 rounded-full border border-blue-400/40 dark:border-blue-300/30 flex items-center justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse shadow-[0_0_6px_#3b82f6]" />
+            </div>
+
+            {/* 5. Expanding Soft Radar Ripple Ring */}
+            <div className="absolute -inset-1 rounded-lg border border-blue-500/30 animate-ping opacity-40 pointer-events-none duration-1000" />
+
+            {/* 6. Subtle Neighboring Box Accents (HUD Crosshair Extension) */}
+            <div className="absolute -top-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/5 rounded-sm pointer-events-none opacity-40" />
+            <div className="absolute -bottom-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/5 rounded-sm pointer-events-none opacity-40" />
+            <div className="absolute -left-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/5 rounded-sm pointer-events-none opacity-40" />
+            <div className="absolute -right-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/5 rounded-sm pointer-events-none opacity-40" />
           </div>
-        </motion.div>
+        )}
       </div>
 
 
