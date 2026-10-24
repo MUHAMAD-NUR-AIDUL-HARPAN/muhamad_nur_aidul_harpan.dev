@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { experienceData } from "../../data/content";
 import { useGlobal } from "../../context/GlobalContext";
 import { Briefcase, GraduationCap, Calendar, ArrowRight } from "lucide-react";
+import { TextHighlighter } from "../atoms/TextHighlighter";
 
 // --- SUB-COMPONENT: EXPERIENCE CARD ---
 const ExperienceCard = ({ item, index }) => {
@@ -63,10 +64,10 @@ const ExperienceCard = ({ item, index }) => {
 
       {/* 3. CONTENT CARD */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, x: isLeft ? -24 : 24, y: 15 }}
+        whileInView={{ opacity: 1, x: 0, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.05 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
         className="w-full md:w-5/12 pl-12 md:pl-0"
       >
         <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 group">
@@ -150,22 +151,29 @@ export const ExperienceSection = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Section Title */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-20"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
+            >
               <Briefcase size={20} />
-            </div>
+            </motion.div>
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
               {lang === "id" ? "Jejak Karir" : "Career Path"}
             </span>
           </div>
           <div className="w-full">
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 relative inline-block z-10">
-              <span className="absolute inset-0 bg-blue-200 dark:bg-blue-800/50 transform -skew-x-6 rounded-sm -z-10 shadow-sm"></span>
+              <TextHighlighter />
               <span className="relative px-2 text-slate-900 dark:text-white">
                 {lang === "id" ? "Pengalaman Profesional" : "Professional Experience"}
               </span>

@@ -11,6 +11,7 @@ import {
 import { useGlobal } from "../../context/GlobalContext";
 import { contactData } from "../../data/content";
 import { InputGroup } from "../atoms/InputGroup";
+import { TextHighlighter } from "../atoms/TextHighlighter";
 
 export const ContactSection = () => {
   const { lang } = useGlobal();
@@ -87,23 +88,29 @@ export const ContactSection = () => {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
         {/* LEFT COLUMN: Info & Title */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col justify-center h-full"
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
+            >
               <Mail size={20} />
-            </div>
+            </motion.div>
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
               {lang === "id" ? "Hubungi Saya" : "Get In Touch"}
             </span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 relative inline-block z-10 self-start">
-            <span className="absolute inset-0 bg-blue-200 dark:bg-blue-800/50 transform -skew-x-6 rounded-sm -z-10 shadow-sm"></span>
+            <TextHighlighter />
             <span className="relative px-2 text-slate-900 dark:text-white">
               {lang === "id" ? t.title.id : t.title.en}
             </span>

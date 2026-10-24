@@ -1,8 +1,9 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useGlobal } from "../../context/GlobalContext";
 import { projectsData, projectCategories } from "../../data/content";
 import { ProjectCard } from "../molecules/ProjectCard";
+import { TextHighlighter } from "../atoms/TextHighlighter";
 import { Filter } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -11,6 +12,14 @@ export const ProjectsSection = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [projects, setProjects] = useState(projectsData);
   const [categories, setCategories] = useState(projectCategories);
+  const sectionRef = useRef(null);
+
+  // Parallax scroll effect untuk background text "WORK"
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const bgTextX = useTransform(scrollYProgress, [0, 1], ["5%", "-15%"]);
 
   // Fetch projects from Supabase
   useEffect(() => {
@@ -37,30 +46,43 @@ export const ProjectsSection = () => {
       : projects.filter((item) => item.category === activeCategory);
 
   return (
-    <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
+    <section ref={sectionRef} className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
       {/* Background Decor (Dots pattern) */}
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
-      {/* Decorative Text Background */}
-      <div 
-        className="hidden md:block absolute top-10 right-[-5%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
+      {/* Decorative Text Background dengan Parallax Scroll */}
+      <motion.div 
+        style={{ x: bgTextX }}
+        className="hidden md:block absolute top-10 right-[-5%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
       >
         WORK
-      </div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-16"
+        >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
+            >
               <Filter size={20} />
-            </div>
+            </motion.div>
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
               {lang === "id" ? "Koleksi Proyek" : "Featured Projects"}
             </span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 relative inline-block z-10">
-            <span className="absolute inset-0 bg-blue-200 dark:bg-blue-800/50 transform -skew-x-6 rounded-sm -z-10 shadow-sm"></span>
+            <TextHighlighter />
             <span className="relative px-2 text-slate-900 dark:text-white">
               {lang === "id" ? "Proyek Pilihan" : "Featured Work"}
             </span>
@@ -70,7 +92,7 @@ export const ProjectsSection = () => {
               ? "Koleksi proyek terpilih yang memperlihatkan keahlian saya dalam menciptakan solusi aplikasi dengan kode yang terstruktur."
               : "A selection of projects that demonstrate my ability to solve complex problems with clean code."}
           </p>
-        </div>
+        </motion.div>
 
         {/* Filter Buttons */}
         <div className="flex flex-wrap justify-center gap-2 mb-12">

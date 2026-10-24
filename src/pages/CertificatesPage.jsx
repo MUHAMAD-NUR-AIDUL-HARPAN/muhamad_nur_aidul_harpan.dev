@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ExternalLink, Award, Calendar, AlertCircle, Filter, X, ZoomIn } from "lucide-react";
 import { useGlobal } from "../context/GlobalContext";
 import { supabase } from "../lib/supabaseClient";
+import { TextHighlighter } from "../components/atoms/TextHighlighter";
 
 export const CertificatesPage = () => {
   const { lang } = useGlobal();
@@ -129,7 +130,7 @@ export const CertificatesPage = () => {
         </div>
 
         <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 relative inline-block z-10">
-          <span className="absolute inset-0 bg-blue-200 dark:bg-blue-800/50 transform -skew-x-6 rounded-sm -z-10 shadow-sm"></span>
+          <TextHighlighter />
           <span className="relative px-2 text-slate-900 dark:text-white">
             {lang === "id" ? "Sertifikasi & Penghargaan" : "Professional Certificates"}
           </span>

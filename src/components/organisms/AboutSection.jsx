@@ -1,41 +1,58 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useGlobal } from "../../context/GlobalContext";
 import { aboutData, skills } from "../../data/content";
 import { StatsGrid } from "../molecules/StatsGrid";
 import { TechTag } from "../atoms/TechTag";
+import { TextHighlighter } from "../atoms/TextHighlighter";
 import { User, Code } from "lucide-react";
 
 export const AboutSection = () => {
   const { lang } = useGlobal();
   const t = aboutData;
+  const sectionRef = useRef(null);
+
+  // Smooth parallax scroll effect untuk decorative background text
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const bgTextX = useTransform(scrollYProgress, [0, 1], ["5%", "-15%"]);
 
   return (
-    <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
+    <section ref={sectionRef} className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
       {/* Pattern titik-titik halus */}
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
-      {/* Decorative Text Background */}
-      <div 
-        className="hidden md:block absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
+      {/* Decorative Text Background dengan Smooth Parallax Scroll */}
+      <motion.div 
+        style={{ x: bgTextX }}
+        className="hidden md:block absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform transform-gpu"
       >
         ABOUT ME
-      </div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* LEFT COLUMN: Narrative & Stats */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+              <motion.div 
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
+              >
                 <User size={24} />
-              </div>
+              </motion.div>
               <h2 className="text-4xl md:text-5xl font-black tracking-tight relative inline-block z-10">
-                <span className="absolute inset-0 bg-blue-200 dark:bg-blue-800/50 transform -skew-x-6 rounded-sm -z-10 shadow-sm"></span>
+                <TextHighlighter />
                 <span className="relative px-2">
                   {lang === "id" ? t.title.id : t.title.en}
                 </span>
@@ -55,10 +72,10 @@ export const AboutSection = () => {
 
           {/* RIGHT COLUMN: Visual & Skills */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
             className="relative"
           >
             {/* Glassmorphic Card Container */}

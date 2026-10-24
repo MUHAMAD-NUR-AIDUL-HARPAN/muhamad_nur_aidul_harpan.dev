@@ -3,6 +3,7 @@ import { skillsData } from "../../data/content";
 import { SkillBar } from "../molecules/SkillBar";
 import { Layout, Server, Settings, Cpu, Layers } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
+import { TextHighlighter } from "../atoms/TextHighlighter";
 
 // Helper untuk mapping string icon ke Komponen Lucide
 const iconMap = {
@@ -21,21 +22,29 @@ export const SkillsSection = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
+            >
               <Layers size={20} />
-            </div>
+            </motion.div>
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
               {lang === "id" ? "Keahlian Teknis" : "Skillset & Tools"}
             </span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 relative inline-block z-10">
-            <span className="absolute inset-0 bg-blue-200 dark:bg-blue-800/50 transform -skew-x-6 rounded-sm -z-10 shadow-sm"></span>
+            <TextHighlighter />
             <span className="relative px-2 text-slate-900 dark:text-white">
               {lang === "id" ? "Kemampuan Teknis" : "Technical Proficiency"}
             </span>
@@ -54,10 +63,10 @@ export const SkillsSection = () => {
             return (
               <motion.div
                 key={catIndex}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 35 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
-                transition={{ delay: catIndex * 0.08, duration: 0.4, ease: "easeOut" }}
+                transition={{ delay: catIndex * 0.12, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -5 }}
                 className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:border-blue-500/30 transition-all duration-300"
               >
