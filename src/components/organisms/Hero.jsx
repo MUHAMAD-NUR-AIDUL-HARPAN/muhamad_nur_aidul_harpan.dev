@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { Github, Linkedin, Globe, Rocket, FileText, Code2 } from "lucide-react";
+import { Github, Linkedin, Globe, Rocket, Eye, Download, Code2 } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { heroData } from "../../data/content";
 
@@ -255,12 +255,8 @@ export const Hero = () => {
     } else {
       const contactSection = document.getElementById("contact");
       if (contactSection) {
-        gsap.to(window, {
-          duration: 1.1,
-          scrollTo: { y: contactSection, offsetY: 80 },
-          ease: "power2.inOut",
-          overwrite: "auto",
-        });
+        const top = contactSection.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
       }
     }
   };
@@ -333,7 +329,7 @@ export const Hero = () => {
               </p>
             </div>
 
-            <div className="hero-fade-item flex flex-wrap gap-5 items-center">
+            <div className="hero-fade-item flex flex-wrap gap-4 items-center">
               <div className="relative group/btn cursor-pointer">
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/btn:opacity-100 blur-[4px] transition-all duration-500 pointer-events-none"
@@ -351,10 +347,10 @@ export const Hero = () => {
 
                 <button
                   onClick={handleContactClick}
-                  className="relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-slate-900 dark:bg-white px-8 font-medium text-white dark:text-slate-900 shadow-xl transition-all duration-300 group-hover/btn:shadow-2xl group-hover/btn:shadow-blue-500/25 group-hover/btn:-translate-y-0.5 active:translate-y-0 cursor-pointer z-0"
+                  className="relative inline-flex h-13 sm:h-14 items-center justify-center overflow-hidden rounded-full bg-slate-900 dark:bg-white px-7 sm:px-8 font-medium text-white dark:text-slate-900 shadow-xl transition-all duration-300 group-hover/btn:shadow-2xl group-hover/btn:shadow-blue-500/25 group-hover/btn:-translate-y-0.5 active:translate-y-0 cursor-pointer z-0"
                 >
                   <span className="absolute inset-0 w-full h-full bg-gradient-to-tr from-blue-600 via-blue-500 to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500" />
-                  <span className="relative flex items-center gap-2 group-hover/btn:text-white transition-colors duration-300 font-semibold tracking-wide text-sm md:text-base">
+                  <span className="relative flex items-center gap-2 group-hover/btn:text-white transition-colors duration-300 font-semibold tracking-wide text-sm sm:text-base">
                     {lang === "id" ? "Mulai Proyek" : "Start a Project"}
                     <Rocket
                       size={18}
@@ -364,16 +360,16 @@ export const Hero = () => {
                 </button>
               </div>
 
-              <div className="relative group/cv cursor-pointer">
+              <div className="relative group/viewcv cursor-pointer">
                 <div
-                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/cv:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
+                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/viewcv:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
                   style={maskStyle}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-sky-400 rounded-full" />
                 </div>
 
                 <div
-                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/cv:opacity-100 transition-all duration-500 pointer-events-none z-10"
+                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/viewcv:opacity-100 transition-all duration-500 pointer-events-none z-10"
                   style={maskStyle}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-300 rounded-full" />
@@ -381,15 +377,48 @@ export const Hero = () => {
 
                 <a
                   href="/CV MUHAMAD NUR AIDUL HARPAN.pdf"
-                  download="CV MUHAMAD NUR AIDUL HARPAN.pdf"
-                  className="relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full border border-slate-300/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-8 font-medium text-slate-700 dark:text-slate-300 transition-all duration-300 group-hover/cv:border-transparent group-hover/cv:text-blue-600 dark:group-hover/cv:text-blue-400 group-hover/cv:shadow-lg group-hover/cv:shadow-blue-500/15 group-hover/cv:-translate-y-0.5 active:translate-y-0 cursor-pointer z-0"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="relative inline-flex h-13 sm:h-14 items-center justify-center overflow-hidden rounded-full border border-slate-300/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 sm:px-7 font-medium text-slate-700 dark:text-slate-300 transition-all duration-300 group-hover/viewcv:border-transparent group-hover/viewcv:text-blue-600 dark:group-hover/viewcv:text-blue-400 group-hover/viewcv:shadow-lg group-hover/viewcv:shadow-blue-500/15 group-hover/viewcv:-translate-y-0.5 active:translate-y-0 cursor-pointer z-0"
+                  title={lang === "id" ? "Lihat file PDF CV langsung" : "View CV in new tab"}
                 >
-                  <span className="relative flex items-center gap-2 font-semibold tracking-wide text-sm md:text-base">
-                    <FileText 
+                  <span className="relative flex items-center gap-2 font-semibold tracking-wide text-sm sm:text-base">
+                    <Eye 
                       size={18} 
-                      className="group-hover/cv:scale-110 group-hover/cv:rotate-6 transition-transform duration-300"
+                      className="group-hover/viewcv:scale-110 group-hover/viewcv:rotate-6 transition-transform duration-300 text-blue-600 dark:text-blue-400"
                     /> 
-                    {lang === "id" ? "Lihat CV Saya" : "View Resume"}
+                    {lang === "id" ? "Lihat CV" : "View CV"}
+                  </span>
+                </a>
+              </div>
+
+              <div className="relative group/dlcv cursor-pointer">
+                <div
+                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/dlcv:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
+                  style={maskStyle}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" />
+                </div>
+
+                <div
+                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/dlcv:opacity-100 transition-all duration-500 pointer-events-none z-10"
+                  style={maskStyle}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full" />
+                </div>
+
+                <a
+                  href="/CV MUHAMAD NUR AIDUL HARPAN.pdf"
+                  download="CV MUHAMAD NUR AIDUL HARPAN.pdf"
+                  className="relative inline-flex h-13 sm:h-14 items-center justify-center overflow-hidden rounded-full border border-slate-300/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-5 sm:px-6 font-medium text-slate-700 dark:text-slate-300 transition-all duration-300 group-hover/dlcv:border-transparent group-hover/dlcv:text-emerald-600 dark:group-hover/dlcv:text-emerald-400 group-hover/dlcv:shadow-lg group-hover/dlcv:shadow-emerald-500/15 group-hover/dlcv:-translate-y-0.5 active:translate-y-0 cursor-pointer z-0"
+                  title={lang === "id" ? "Unduh file PDF CV" : "Download CV file"}
+                >
+                  <span className="relative flex items-center gap-2 font-semibold tracking-wide text-sm sm:text-base">
+                    <Download 
+                      size={18} 
+                      className="group-hover/dlcv:translate-y-0.5 transition-transform duration-300 text-emerald-600 dark:text-emerald-400"
+                    /> 
+                    {lang === "id" ? "Unduh CV" : "Download CV"}
                   </span>
                 </a>
               </div>
@@ -418,7 +447,7 @@ export const Hero = () => {
           ref={heroImageRef}
           className="lg:col-span-5 flex justify-center lg:justify-end relative mt-10 lg:mt-0"
         >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 aspect-square bg-blue-500/15 dark:bg-blue-400/10 rounded-full blur-[50px] pointer-events-none z-0 hidden sm:block" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 aspect-square bg-blue-500/15 dark:bg-blue-400/10 rounded-full blur-[50px] pointer-events-none z-0 block" />
 
           <div className="relative z-10 w-full max-w-[340px] md:max-w-[400px]">
             <div className="relative w-full aspect-[3/4] group">

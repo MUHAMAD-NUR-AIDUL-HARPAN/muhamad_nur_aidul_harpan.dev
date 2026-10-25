@@ -76,7 +76,7 @@
   }
 
   @media (max-width: 768px) {
-    *, ::before, ::after {
+    *:not(.fixed):not(.fixed *) {
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
     }

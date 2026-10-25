@@ -10,7 +10,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ExperienceCard = ({ item, index }) => {
   const { lang } = useGlobal();
-
   const isLeft = index % 2 === 0;
 
   return (
@@ -19,14 +18,12 @@ const ExperienceCard = ({ item, index }) => {
         isLeft ? "md:flex-row-reverse" : "md:flex-row"
       }`}
     >
-
       <div className="hidden md:block w-5/12" />
 
       <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20">
         <div className="relative w-11 h-11 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-
           <div 
-            className="hidden md:block absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-75 group-hover:opacity-100 blur-[4px] pointer-events-none transition-opacity duration-300"
+            className="absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-75 group-hover:opacity-100 blur-[4px] pointer-events-none transition-opacity duration-300"
             style={{
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
@@ -37,7 +34,7 @@ const ExperienceCard = ({ item, index }) => {
           </div>
 
           <div 
-            className="hidden md:block absolute -inset-[2px] rounded-full p-[2px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/30"
+            className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/30"
             style={{
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
@@ -66,7 +63,6 @@ const ExperienceCard = ({ item, index }) => {
         className="w-full md:w-5/12 pl-12 md:pl-0"
       >
         <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 group">
-
           <div
             className={`hidden md:block absolute top-6 w-4 h-4 bg-slate-50 dark:bg-slate-800 border-t border-r border-slate-200 dark:border-slate-800 transform rotate-45 ${
               isLeft
@@ -117,11 +113,6 @@ export const ExperienceSection = () => {
   useEffect(() => {
     if (!timelineRef.current || !fillLineRef.current || !beaconRef.current) return;
 
-    if (window.innerWidth < 768) {
-      if (fillLineRef.current) fillLineRef.current.style.transform = "scaleY(1)";
-      return;
-    }
-
     const ctx = gsap.context(() => {
       gsap.fromTo(
         fillLineRef.current,
@@ -161,8 +152,7 @@ export const ExperienceSection = () => {
 
   return (
     <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
-
-      <div className="hidden md:block absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       <div 
         className="hidden md:block absolute top-20 left-[-20%] text-[4rem] md:text-[8rem] lg:text-[12rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
@@ -171,11 +161,7 @@ export const ExperienceSection = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-
-        <div
-          data-aos="fade-up"
-          className="text-center mb-20"
-        >
+        <div data-aos="fade-up" className="text-center mb-20">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 shadow-sm">
               <Briefcase size={20} />
@@ -198,7 +184,7 @@ export const ExperienceSection = () => {
               : "My journey in building digital products and deepening technical expertise."}
           </p>
 
-          <div className="hidden md:flex flex-col items-center justify-center mt-8 -mb-12">
+          <div className="flex flex-col items-center justify-center mt-8 -mb-12">
             <div className="relative w-6 h-6 rounded-full flex items-center justify-center">
               <div className="w-5 h-5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shadow-sm">
                 <div className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-400 shadow-[0_0_8px_#3b82f6]" />
@@ -218,7 +204,7 @@ export const ExperienceSection = () => {
           />
           <div
             ref={beaconRef}
-            className="hidden md:flex absolute left-4 md:left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none items-center justify-center will-change-transform transform-gpu"
+            className="flex absolute left-4 md:left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none items-center justify-center will-change-transform transform-gpu"
           >
             <div className="absolute w-8 h-8 rounded-full bg-blue-500/25 dark:bg-blue-400/30 blur-[4px] pointer-events-none" />
             <div className="relative w-3.5 h-3.5 rounded-full bg-blue-600 dark:bg-blue-400 border-2 border-white dark:border-slate-900 shadow-[0_0_10px_#3b82f6]" />

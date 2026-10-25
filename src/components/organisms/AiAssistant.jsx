@@ -363,43 +363,44 @@ export const AiAssistant = () => {
   return (
     <>
 
-      <div className="fixed bottom-6 right-6 z-40">
-        {!isOpen && (
-          <div className="relative group transition-all duration-300">
+      <div className={`fixed bottom-6 right-6 z-40 transition-all duration-300 ${isOpen ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100 pointer-events-auto"}`}>
+        <div className="relative group transition-all duration-300">
+          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
 
-            <div className="hidden md:block absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
-
-            <button
-              onClick={() => setIsOpen(true)}
-              className="relative flex items-center gap-3 px-5 py-3.5 rounded-full bg-slate-900/90 dark:bg-slate-800/90 text-white backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
-            >
-              <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md">
-                <AiIcon size={16} className="group-hover:scale-110 transition-transform duration-300" />
-                <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border border-slate-900"></span>
-                </span>
-              </div>
-              <div className="text-left hidden sm:block">
-                <p className="text-xs font-bold leading-tight tracking-wide">Tanya Harpan AI</p>
-                <p className="text-[10px] text-blue-300/80 leading-tight">Online • Siap membantu</p>
-              </div>
-            </button>
-          </div>
-        )}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="relative flex items-center gap-3 px-5 py-3.5 rounded-full bg-slate-900/90 dark:bg-slate-800/90 text-white backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+          >
+            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md">
+              <AiIcon size={16} className="group-hover:scale-110 transition-transform duration-300" />
+              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border border-slate-900"></span>
+              </span>
+            </div>
+            <div className="text-left hidden sm:block">
+              <p className="text-xs font-bold leading-tight tracking-wide">Tanya Harpan AI</p>
+              <p className="text-[10px] text-blue-300/80 leading-tight">Online • Siap membantu</p>
+            </div>
+          </button>
+        </div>
       </div>
 
-      {isOpen && (
-        <>
+      <div
+        onClick={() => setIsOpen(false)}
+        className={`fixed inset-0 z-40 bg-slate-950/50 backdrop-blur-md transition-all duration-300 ease-out cursor-pointer ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        aria-label="Tutup chatbot"
+      />
 
-          <div
-            onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-40 bg-black/40 transition-opacity duration-200"
-          />
-
-          <div
-            className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[580px] max-h-[85vh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden will-change-transform transform-gpu"
-          >
+      <div
+        className={`fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[580px] max-h-[85vh] rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden will-change-transform transform-gpu transition-all duration-300 ease-out ${
+          isOpen
+            ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 scale-95 translate-y-4 pointer-events-none"
+        }`}
+      >
 
               <div className="shrink-0 p-4 px-5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -546,8 +547,6 @@ export const AiAssistant = () => {
               </p>
             </div>
           </div>
-        </>
-      )}
     </>
   );
 };

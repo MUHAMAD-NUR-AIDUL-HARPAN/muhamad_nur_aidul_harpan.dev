@@ -37,7 +37,7 @@ export const Navbar = () => {
   const desktopNavRef = useRef(null);
 
   useEffect(() => {
-    if (!desktopNavRef.current || window.innerWidth < 768) return;
+    if (!desktopNavRef.current) return;
     gsap.fromTo(
       desktopNavRef.current,
       { y: -60, opacity: 0 },
@@ -86,12 +86,12 @@ export const Navbar = () => {
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
     } else if (targetElement !== null) {
-      gsap.to(window, {
-        duration: 1.1,
-        scrollTo: { y: targetElement, offsetY: targetId === "home" ? 0 : 80 },
-        ease: "power2.inOut",
-        overwrite: "auto",
-      });
+      if (targetId === "home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
     }
   };
 
@@ -127,13 +127,13 @@ export const Navbar = () => {
   return (
     <>
       <div
-        className={`fixed inset-0 w-full h-[100dvh] bg-slate-50 dark:bg-slate-900 z-40 flex flex-col justify-center items-center md:hidden transition-all duration-300 transform-gpu ${
-          isMobileMenuOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-98 pointer-events-none"
+        className={`fixed inset-0 w-full h-[100dvh] bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-2xl z-40 flex flex-col justify-center items-center md:hidden transition-all duration-400 ease-out transform-gpu ${
+          isMobileMenuOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"
         }`}
       >
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
-        <div className="flex flex-col items-center gap-6 z-10 w-full px-8">
+        <div className="flex flex-col items-center gap-5 z-10 w-full px-8">
           {navItems.map((item, i) => {
             const isActive = location.pathname === "/" ? activeSection === item.id : location.pathname === item.path;
             return (
@@ -141,20 +141,38 @@ export const Navbar = () => {
                 key={item.id}
                 style={{ transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms" }}
                 onClick={() => handleNavClick(item)}
-                className={`group relative flex items-center justify-center w-full transition-all duration-300 transform ${
+                className={`group relative flex items-center justify-center w-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer ${
                   isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
-                {isActive && <div className="absolute inset-0 bg-blue-100/50 dark:bg-blue-900/20 rounded-2xl -z-10 transition-all" />}
-                <span className={`text-4xl font-black tracking-tight transition-colors py-3 ${isActive ? "text-blue-600" : "text-slate-900 dark:text-slate-200"}`}>
+                {isActive && <div className="absolute inset-0 bg-blue-100/60 dark:bg-blue-900/30 rounded-2xl -z-10 transition-all" />}
+                <span className={`text-3xl font-black tracking-tight transition-colors py-2.5 ${isActive ? "text-blue-600" : "text-slate-900 dark:text-slate-200 group-hover:text-blue-500"}`}>
                   {item.label}
                 </span>
               </button>
             );
           })}
+
+          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-200/60 dark:border-slate-800/80 w-full max-w-xs justify-center">
+            <a
+              href="/CV MUHAMAD NUR AIDUL HARPAN.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="flex-1 text-center py-2.5 px-4 rounded-xl text-xs font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800/60 hover:scale-105 active:scale-95 transition-all shadow-xs"
+            >
+              Lihat CV
+            </a>
+            <a
+              href="/CV MUHAMAD NUR AIDUL HARPAN.pdf"
+              download="CV MUHAMAD NUR AIDUL HARPAN.pdf"
+              className="flex-1 text-center py-2.5 px-4 rounded-xl text-xs font-bold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 hover:scale-105 active:scale-95 transition-all shadow-xs"
+            >
+              Unduh CV
+            </a>
+          </div>
         </div>
 
-        <div className={`absolute bottom-12 z-10 transition-all duration-500 delay-300 transform ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+        <div className={`absolute bottom-10 z-10 transition-all duration-500 delay-300 transform ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
           <ThemeToggle />
         </div>
       </div>
@@ -183,7 +201,7 @@ export const Navbar = () => {
           <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 p-1.5 rounded-full flex items-center justify-between w-full shadow-sm z-20">
             <div
               onClick={() => handleNavClick({ id: "home", type: "scroll" })}
-              className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold cursor-pointer shadow-lg hover:shadow-blue-500/30 transition-all hover:scale-105"
+              className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold cursor-pointer shadow-lg hover:shadow-blue-500/30 transition-all hover:scale-105 active:scale-95"
             >
               <LogoIcon sizeClass="w-5 h-5" />
             </div>
@@ -197,7 +215,7 @@ export const Navbar = () => {
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className="cursor-pointer relative group/item px-2 py-2 rounded-full flex items-center justify-center transition-all flex-shrink-0"
+                    className="cursor-pointer relative group/item px-2 py-2 rounded-full flex items-center justify-center transition-all flex-shrink-0 hover:scale-105 active:scale-95"
                   >
                     <div className="relative z-10 flex items-center gap-1.5">
                       <div className="relative flex items-center justify-center w-8 h-8 rounded-full">
@@ -244,9 +262,9 @@ export const Navbar = () => {
                 handleNavClick({ id: "home", type: "scroll" });
                 setIsMobileMenuOpen(false);
               }}
-              className="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer shadow-lg transition-colors duration-500 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] active:scale-95"
+              className="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] hover:scale-105 active:scale-95"
             >
-              <div className="flex items-center justify-center w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold">
+              <div className="flex items-center justify-center w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold shadow-md shadow-blue-500/20">
                 <LogoIcon sizeClass="w-4 h-4" />
               </div>
             </div>
@@ -256,11 +274,11 @@ export const Navbar = () => {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Menu"
-              className="group relative flex flex-col justify-center items-center w-12 h-12 gap-[5px] rounded-full cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] active:scale-95"
+              className="group relative flex flex-col justify-center items-center w-12 h-12 gap-[5px] rounded-full cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] hover:scale-105 active:scale-95"
             >
+              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 origin-center ${isMobileMenuOpen ? "w-5 rotate-45 translate-y-[7px]" : "w-5"}`} />
               <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"}`} />
-              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-5.5" : "w-5"}`} />
-              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"}`} />
+              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 origin-center ${isMobileMenuOpen ? "w-5 -rotate-45 -translate-y-[7px]" : "w-5"}`} />
             </button>
           </div>
         </div>
