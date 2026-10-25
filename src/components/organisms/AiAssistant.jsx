@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageSquare, X, Send, RotateCcw, ArrowRight } from "lucide-react";
+import { X, Send, RotateCcw, ArrowRight } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import {
   experienceData,

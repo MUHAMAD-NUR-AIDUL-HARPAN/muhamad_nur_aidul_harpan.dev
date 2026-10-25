@@ -27,8 +27,4 @@ dist-ssr
 *.sln
 *.sw?
 
-# Backend local database and uploads
-backend/node_modules
-backend/portfolio.db
-backend/uploads
-scripts/
+
