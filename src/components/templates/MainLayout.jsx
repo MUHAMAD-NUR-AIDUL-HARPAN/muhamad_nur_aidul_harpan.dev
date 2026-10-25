@@ -48,9 +48,9 @@ export const MainLayout = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop & Mobile)
+  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop & Mobile - Opsi B)
   useEffect(() => {
-    // Lenis Smooth Scroll terkalibrasi: Luncuran inersia halus, terkontrol, dan tidak lompat liar di HP
+    // Lenis Smooth Scroll dengan interpolasi sentuhan kontinu (Opsi B: haluskan saat jari menempel & saat dilepas)
     const lenis = new Lenis({
       duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -60,11 +60,21 @@ export const MainLayout = ({ children }) => {
       wheelMultiplier: 1.0,
       // Konfigurasi Touch / Mobile:
       syncTouch: true,
-      syncTouchLerp: 0.065,
+      syncTouchLerp: 0.06,
       touchInertiaExponent: 1.85,
       touchMultiplier: 1.0,
       autoResize: true,
     });
+
+    // Opsi B: Haluskan pergerakan bahkan saat jari masih menempel menggeser layar (Fluid Touch Dragging)
+    const originalScrollTo = lenis.scrollTo.bind(lenis);
+    lenis.scrollTo = (target, options = {}) => {
+      if (options && options.programmatic === false && options.lerp === 1 && lenis.isTouching) {
+        options.lerp = 0.08; // Memberikan kelembutan elastis halus saat jari menggeser layar
+      }
+      return originalScrollTo(target, options);
+    };
+
     lenisRef.current = lenis;
     window.lenis = lenis;
 
