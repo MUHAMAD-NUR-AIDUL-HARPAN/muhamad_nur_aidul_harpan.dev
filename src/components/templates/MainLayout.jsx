@@ -50,7 +50,9 @@ export const MainLayout = ({ children }) => {
 
   // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop & Mobile - Opsi B)
   useEffect(() => {
-    // Lenis Smooth Scroll dengan interpolasi sentuhan kontinu (Opsi B: haluskan saat jari menempel & saat dilepas)
+    // Filter digital low-pass (EMA) untuk menyaring getaran sensor sentuh smartphone
+    let smoothedDelta = 0;
+
     const lenis = new Lenis({
       duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -61,16 +63,28 @@ export const MainLayout = ({ children }) => {
       // Konfigurasi Touch / Mobile:
       syncTouch: true,
       syncTouchLerp: 0.075,
-      touchInertiaExponent: 1.8,
+      touchInertiaExponent: 1.75,
       touchMultiplier: 1.0,
       autoResize: true,
+      // Menyaring noise getaran jari mentah sebelum diproses oleh Lenis
+      virtualScroll: (data) => {
+        if (data.event && data.event.type === "touchstart") {
+          smoothedDelta = 0;
+          return true;
+        }
+        if (data.event && data.event.type.includes("touch")) {
+          smoothedDelta = smoothedDelta * 0.35 + data.deltaY * 0.65;
+          data.deltaY = smoothedDelta;
+        }
+        return true;
+      },
     });
 
-    // Opsi B Terkalibrasi: Hilangkan efek "ngegeredeg" (subpixel jitter) saat jari menempel
+    // Meredam lonjakan fraksional piksel saat jari menempel tanpa lag
     const originalScrollTo = lenis.scrollTo.bind(lenis);
     lenis.scrollTo = (target, options = {}) => {
       if (options && options.programmatic === false && options.lerp === 1 && lenis.isTouching) {
-        options.lerp = 0.22; // Meredam getaran jari tanpa menimbulkan jeda fraksional piksel yang terasa seperti geredeg
+        options.lerp = 0.35; // Kecepatan interpolasi ideal: mulus total tanpa getaran subpixel
       }
       return originalScrollTo(target, options);
     };
