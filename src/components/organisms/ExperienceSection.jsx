@@ -149,11 +149,12 @@ export const ExperienceSection = () => {
       );
 
       // 2. Titik beacon meluncur turun mengikuti scroll (Pure GPU translate3d)
+      const targetBeaconY = timelineRef.current ? timelineRef.current.offsetHeight : 1200;
       gsap.fromTo(
         beaconRef.current,
         { y: 0 },
         {
-          y: () => (timelineRef.current ? timelineRef.current.offsetHeight : 1200),
+          y: targetBeaconY,
           ease: "none",
           scrollTrigger: {
             trigger: timelineRef.current,

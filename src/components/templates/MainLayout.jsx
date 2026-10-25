@@ -60,17 +60,17 @@ export const MainLayout = ({ children }) => {
       wheelMultiplier: 1.0,
       // Konfigurasi Touch / Mobile:
       syncTouch: true,
-      syncTouchLerp: 0.06,
-      touchInertiaExponent: 1.85,
+      syncTouchLerp: 0.075,
+      touchInertiaExponent: 1.8,
       touchMultiplier: 1.0,
       autoResize: true,
     });
 
-    // Opsi B: Haluskan pergerakan bahkan saat jari masih menempel menggeser layar (Fluid Touch Dragging)
+    // Opsi B Terkalibrasi: Hilangkan efek "ngegeredeg" (subpixel jitter) saat jari menempel
     const originalScrollTo = lenis.scrollTo.bind(lenis);
     lenis.scrollTo = (target, options = {}) => {
       if (options && options.programmatic === false && options.lerp === 1 && lenis.isTouching) {
-        options.lerp = 0.08; // Memberikan kelembutan elastis halus saat jari menggeser layar
+        options.lerp = 0.22; // Meredam getaran jari tanpa menimbulkan jeda fraksional piksel yang terasa seperti geredeg
       }
       return originalScrollTo(target, options);
     };
