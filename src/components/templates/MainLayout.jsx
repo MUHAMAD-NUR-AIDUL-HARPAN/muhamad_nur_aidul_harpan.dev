@@ -33,6 +33,10 @@ export const MainLayout = ({ children }) => {
     const lenis = new Lenis({
       lerp: 0.085,
       smoothWheel: true,
+      syncTouch: true,
+      syncTouchLerp: 0.08,
+      touchMultiplier: 1.0,
+      touchInertiaExponent: 1.5,
       autoResize: true,
     });
 

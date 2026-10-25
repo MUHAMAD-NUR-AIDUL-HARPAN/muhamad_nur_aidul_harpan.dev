@@ -15,7 +15,7 @@ export const Navbar = () => {
   const desktopNavRef = useRef(null);
 
   useEffect(() => {
-    if (!desktopNavRef.current) return;
+    if (!desktopNavRef.current || window.innerWidth < 768) return;
     gsap.fromTo(
       desktopNavRef.current,
       { y: -60, opacity: 0 },

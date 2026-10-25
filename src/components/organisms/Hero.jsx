@@ -18,7 +18,21 @@ const Marquee = () => {
       duration: 25,
       ease: "none",
     });
-    return () => tween.kill();
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        tween.play();
+      } else {
+        tween.pause();
+      }
+    });
+
+    observer.observe(marqueeRef.current);
+
+    return () => {
+      observer.disconnect();
+      tween.kill();
+    };
   }, []);
   return (
     <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black py-3 z-20 border-t border-white/10">
