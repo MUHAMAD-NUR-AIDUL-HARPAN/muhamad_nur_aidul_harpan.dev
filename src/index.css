@@ -71,6 +71,15 @@
   .lenis.lenis-smooth {
     scroll-behavior: auto !important;
   }
+
+  /* Optimasi Performa GPU Mobile: Mencegah FPS drop akibat Gaussian blur berat saat scroll di HP */
+  @media (max-width: 768px) {
+    .backdrop-blur-xl,
+    .backdrop-blur-lg {
+      backdrop-filter: blur(6px) !important;
+      -webkit-backdrop-filter: blur(6px) !important;
+    }
+  }
 }
 
 @layer components {

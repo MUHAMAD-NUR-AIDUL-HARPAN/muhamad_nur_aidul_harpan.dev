@@ -50,19 +50,19 @@ export const MainLayout = ({ children }) => {
 
   // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop & Mobile)
   useEffect(() => {
-    // Lenis Smooth Scroll dengan tuning khusus agar super halus dan responsif di HP/Mobile
+    // Lenis Smooth Scroll dengan momentum inersia tinggi agar luncuran Lenis benar-benar terasa di HP
     const lenis = new Lenis({
-      duration: 1.0,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      // Optimasi Touch / Mobile: sinkronisasi inersia sentuhan jari tanpa lag
+      // Optimasi Touch / Mobile: luncuran inersia panjang & deselerasi lembut (Awwwards feel)
       syncTouch: true,
-      syncTouchLerp: 0.08,
-      touchInertiaExponent: 1.6,
-      touchMultiplier: 1.25,
+      syncTouchLerp: 0.045,
+      touchInertiaExponent: 2.2,
+      touchMultiplier: 1.6,
       autoResize: true,
     });
     lenisRef.current = lenis;
