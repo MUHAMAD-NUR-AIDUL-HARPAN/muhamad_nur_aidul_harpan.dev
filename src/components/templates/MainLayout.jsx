@@ -53,15 +53,16 @@ export const MainLayout = ({ children }) => {
     const isMobile = window.innerWidth < 768;
 
     const lenis = new Lenis({
-      duration: isMobile ? 0.9 : 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      lerp: 0.085, // Damping lerp fisik yang sangat lembut dan halus untuk mouse wheel & trackpad
+      wheelMultiplier: 1.05, // Respons wheel natural tanpa terasa berat
+      touchMultiplier: 1.4, // Respon sentuhan jari lebih lincah dan berbobot di mobile
+      smoothWheel: true,
+      syncTouch: true, // Sinkronisasi sentuhan mobile dengan frame GSAP Ticker
+      syncTouchLerp: 0.075, // Golden sweet spot inersia sentuh: meluncur halus (glide) saat jari dilepas
+      touchInertiaExponent: 1.85, // Efek inersia kinetik yang elegan saat flick scroll
+      stopInertiaOnNavigate: true, // Mencegah benturan inersia saat klik link internal
       orientation: "vertical",
       gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.15,
-      syncTouch: true,
-      syncTouchLerp: 0.12,
       autoResize: true,
     });
 
@@ -100,9 +101,13 @@ export const MainLayout = ({ children }) => {
       if (lenis) lenis.stop();
       document.body.style.overflow = "hidden";
     } else {
-      if (lenis) lenis.start();
+      if (lenis) {
+        lenis.start();
+        lenis.resize();
+      }
       document.body.style.overflow = "";
       setTimeout(() => {
+        if (lenis) lenis.resize();
         AOS.refreshHard();
         ScrollTrigger.refresh();
       }, 150);
