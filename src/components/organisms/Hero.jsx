@@ -1,11 +1,44 @@
 import { useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { Download, ArrowRight, Github, Linkedin, Globe, Rocket, FileText, Code2 } from "lucide-react";
+import { Github, Linkedin, Globe, Rocket, FileText, Code2 } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { heroData } from "../../data/content";
 
 gsap.registerPlugin(ScrollToPlugin);
+
+const maskStyle = {
+  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+  WebkitMaskComposite: "xor",
+  maskComposite: "exclude",
+};
+
+const marqueePhrases = [
+  "Frontend Development",
+  "Pixel-Perfect UI",
+  "System Architecture",
+  "Performance Optimization",
+];
+
+const cornerClasses = [
+  "-top-[1px] -left-[1px] border-t-2 border-l-2 rounded-tl-sm",
+  "-top-[1px] -right-[1px] border-t-2 border-r-2 rounded-tr-sm",
+  "-bottom-[1px] -left-[1px] border-b-2 border-l-2 rounded-bl-sm",
+  "-bottom-[1px] -right-[1px] border-b-2 border-r-2 rounded-br-sm",
+];
+
+const surroundClasses = [
+  "-top-[48px] inset-x-0 h-[48px]",
+  "-bottom-[48px] inset-x-0 h-[48px]",
+  "-left-[48px] inset-y-0 w-[48px]",
+  "-right-[48px] inset-y-0 w-[48px]",
+];
+
+const socials = [
+  { href: "https://github.com/MUHAMAD-NUR-AIDUL-HARPAN", icon: Github },
+  { href: "https://linkedin.com/in/aidul-harpan", icon: Linkedin },
+  { href: "https://aidulharpan.my.id", icon: Globe },
+];
 
 const Marquee = () => {
   const marqueeRef = useRef(null);
@@ -28,33 +61,23 @@ const Marquee = () => {
     });
 
     observer.observe(marqueeRef.current);
-
     return () => {
       observer.disconnect();
       tween.kill();
     };
   }, []);
+
   return (
     <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black py-3 z-20 border-t border-white/10">
       <div ref={marqueeRef} className="flex whitespace-nowrap will-change-transform">
         {[...Array(6)].map((_, i) => (
           <div key={i} className="flex items-center gap-8 mx-4">
-            <span className="text-sm font-bold tracking-[0.2em] uppercase">
-              Frontend Development
-            </span>
-            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-            <span className="text-sm font-bold tracking-[0.2em] uppercase">
-              Pixel-Perfect UI
-            </span>
-            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-            <span className="text-sm font-bold tracking-[0.2em] uppercase">
-              System Architecture
-            </span>
-            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-            <span className="text-sm font-bold tracking-[0.2em] uppercase">
-              Performance Optimization
-            </span>
-            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+            {marqueePhrases.map((phrase, idx) => (
+              <span key={idx} className="flex items-center gap-8">
+                <span className="text-sm font-bold tracking-[0.2em] uppercase">{phrase}</span>
+                <span className="w-2 h-2 rounded-full bg-blue-500" />
+              </span>
+            ))}
           </div>
         ))}
       </div>
@@ -77,7 +100,6 @@ export const Hero = () => {
 
   const activePointer = useRef({ x: null, y: null, hasMoved: false });
   const rafId = useRef(null);
-
   const GRID_SIZE = 48;
   const heroDimensionsRef = useRef({ width: 0, height: 0, top: 0 });
 
@@ -145,18 +167,15 @@ export const Hero = () => {
     }
 
     if (clientX !== null && clientY !== null) {
-      const isInside = 
-        clientX >= 0 && 
-        clientX <= (heroWidth || window.innerWidth) && 
-        clientY >= rectTop && 
+      const isInside =
+        clientX >= 0 &&
+        clientX <= (heroWidth || window.innerWidth) &&
+        clientY >= rectTop &&
         clientY <= rectBottom;
 
       if (isInside) {
-        const x = clientX;
-        const y = clientY - rectTop;
-        const cellX = Math.floor(x / GRID_SIZE) * GRID_SIZE;
-        const cellY = Math.floor(y / GRID_SIZE) * GRID_SIZE;
-
+        const cellX = Math.floor(clientX / GRID_SIZE) * GRID_SIZE;
+        const cellY = Math.floor((clientY - rectTop) / GRID_SIZE) * GRID_SIZE;
         xTo.current?.(cellX);
         yTo.current?.(cellY);
         opacityTo.current?.(1);
@@ -173,10 +192,8 @@ export const Hero = () => {
     const effectiveHeight = heroHeight || 800;
     const totalCols = Math.max(4, Math.floor(effectiveWidth / GRID_SIZE));
     const totalRows = Math.max(6, Math.floor(effectiveHeight / GRID_SIZE));
-
     const scrollProgress = Math.max(0, Math.min(1, -rectTop / (effectiveHeight * 0.75 || 600)));
     const targetCol = Math.floor(totalCols * 0.25) * GRID_SIZE;
-
     const startRow = 2;
     const maxRow = Math.max(startRow, totalRows - 3);
     const targetY = (startRow + scrollProgress * (maxRow - startRow)) * GRID_SIZE;
@@ -205,9 +222,7 @@ export const Hero = () => {
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-    };
+    return () => window.removeEventListener("pointermove", handlePointerMove);
   }, [scheduleUpdate]);
 
   useEffect(() => {
@@ -256,35 +271,24 @@ export const Hero = () => {
       className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-20 bg-slate-50 dark:bg-slate-900"
     >
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808018_1px,transparent_1px),linear-gradient(to_bottom,#80808018_1px,transparent_1px)] bg-[size:48px_48px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)]" />
 
         <div
           ref={ringRef}
-          style={{
-            width: `${GRID_SIZE}px`,
-            height: `${GRID_SIZE}px`,
-          }}
+          style={{ width: `${GRID_SIZE}px`, height: `${GRID_SIZE}px` }}
           className="hidden md:flex absolute top-0 left-0 pointer-events-none z-0 items-center justify-center will-change-transform transform-gpu"
         >
-
           <div className="absolute -inset-6 bg-blue-500/10 dark:bg-blue-400/15 rounded-2xl blur-lg pointer-events-none" />
-
           <div className="absolute inset-0 bg-blue-500/[0.08] dark:bg-blue-400/[0.12] border border-blue-500/50 dark:border-blue-400/60 rounded-md shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-colors duration-300" />
 
-          <div className="absolute -top-[1px] -left-[1px] w-2 h-2 border-t-2 border-l-2 border-blue-600 dark:border-blue-400 rounded-tl-sm" />
-          <div className="absolute -top-[1px] -right-[1px] w-2 h-2 border-t-2 border-r-2 border-blue-600 dark:border-blue-400 rounded-tr-sm" />
-          <div className="absolute -bottom-[1px] -left-[1px] w-2 h-2 border-b-2 border-l-2 border-blue-600 dark:border-blue-400 rounded-bl-sm" />
-          <div className="absolute -bottom-[1px] -right-[1px] w-2 h-2 border-b-2 border-r-2 border-blue-600 dark:border-blue-400 rounded-br-sm" />
+          {cornerClasses.map((cls, idx) => (
+            <div key={idx} className={`absolute w-2 h-2 border-blue-600 dark:border-blue-400 ${cls}`} />
+          ))}
 
           <div 
             className="absolute w-[38px] h-[38px] rounded-full p-[1.5px] overflow-hidden shadow-[0_0_10px_rgba(56,189,248,0.35)]"
-            style={{
-              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-            }}
+            style={maskStyle}
           >
             <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_40%,#1d4ed8_65%,#3b82f6_80%,#38bdf8_92%,#ffffff_98%,transparent_100%)] animate-[spin_3s_linear_infinite]" />
           </div>
@@ -295,19 +299,15 @@ export const Hero = () => {
 
           <div className="absolute -inset-1 rounded-lg border border-blue-500/30 animate-ping opacity-35 pointer-events-none duration-1000" />
 
-          <div className="absolute -top-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
-          <div className="absolute -bottom-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
-          <div className="absolute -left-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
-          <div className="absolute -right-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
+          {surroundClasses.map((cls, idx) => (
+            <div key={idx} className={`absolute border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity ${cls}`} />
+          ))}
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
         <div className="lg:col-span-7 flex flex-col justify-center">
-          <div
-            ref={heroContentRef}
-            className="overflow-hidden mb-6"
-          >
+          <div ref={heroContentRef} className="overflow-hidden mb-6">
             <div className="overflow-hidden">
               <p className="hero-fade-item text-blue-600 font-mono text-sm tracking-widest uppercase mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />{" "}
@@ -334,26 +334,17 @@ export const Hero = () => {
             </div>
 
             <div className="hero-fade-item flex flex-wrap gap-5 items-center">
-
               <div className="relative group/btn cursor-pointer">
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/btn:opacity-100 blur-[4px] transition-all duration-500 pointer-events-none"
-                  style={{
-                    WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                    WebkitMaskComposite: "xor",
-                    maskComposite: "exclude",
-                  }}
+                  style={maskStyle}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full" />
                 </div>
 
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/btn:opacity-100 transition-all duration-500 pointer-events-none z-10"
-                  style={{
-                    WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                    WebkitMaskComposite: "xor",
-                    maskComposite: "exclude",
-                  }}
+                  style={maskStyle}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full" />
                 </div>
@@ -376,22 +367,14 @@ export const Hero = () => {
               <div className="relative group/cv cursor-pointer">
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/cv:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
-                  style={{
-                    WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                    WebkitMaskComposite: "xor",
-                    maskComposite: "exclude",
-                  }}
+                  style={maskStyle}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-sky-400 rounded-full" />
                 </div>
 
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/cv:opacity-100 transition-all duration-500 pointer-events-none z-10"
-                  style={{
-                    WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                    WebkitMaskComposite: "xor",
-                    maskComposite: "exclude",
-                  }}
+                  style={maskStyle}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-300 rounded-full" />
                 </div>
@@ -413,30 +396,20 @@ export const Hero = () => {
             </div>
 
             <div className="hero-fade-item mt-12 flex gap-6 text-slate-500 dark:text-slate-400">
-              <a
-                href="https://github.com/MUHAMAD-NUR-AIDUL-HARPAN"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors transform hover:scale-110 duration-200"
-              >
-                <Github size={22} />
-              </a>
-              <a
-                href="https://linkedin.com/in/aidul-harpan"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors transform hover:scale-110 duration-200"
-              >
-                <Linkedin size={22} />
-              </a>
-              <a
-                href="https://aidulharpan.my.id"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors transform hover:scale-110 duration-200"
-              >
-                <Globe size={22} />
-              </a>
+              {socials.map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <a
+                    key={idx}
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors transform hover:scale-110 duration-200"
+                  >
+                    <Icon size={22} />
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -445,13 +418,10 @@ export const Hero = () => {
           ref={heroImageRef}
           className="lg:col-span-5 flex justify-center lg:justify-end relative mt-10 lg:mt-0"
         >
-
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 aspect-square bg-blue-500/15 dark:bg-blue-400/10 rounded-full blur-[50px] pointer-events-none z-0 hidden sm:block" />
 
           <div className="relative z-10 w-full max-w-[340px] md:max-w-[400px]">
-
             <div className="relative w-full aspect-[3/4] group">
-
               <div className="relative w-full h-full rounded-t-full rounded-b-[40px] overflow-hidden bg-slate-100 dark:bg-slate-900 shadow-xl border border-slate-200/90 dark:border-slate-800/80 transition-colors duration-300">
                 <img
                   src={t.image}

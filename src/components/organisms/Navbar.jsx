@@ -7,6 +7,28 @@ import { navItems } from "../../data/content";
 
 gsap.registerPlugin(ScrollToPlugin);
 
+const maskStyle = {
+  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+  WebkitMaskComposite: "xor",
+  maskComposite: "exclude",
+};
+
+const LogoIcon = ({ sizeClass = "w-5 h-5" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={sizeClass}
+  >
+    <polyline points="16 18 22 12 16 6" />
+    <polyline points="8 6 2 12 8 18" />
+  </svg>
+);
+
 export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -48,14 +70,10 @@ export const Navbar = () => {
           setActiveSection(visibleSection.target.id);
         }
       },
-      {
-        rootMargin: "-20% 0px -55% 0px",
-        threshold: 0,
-      }
+      { rootMargin: "-20% 0px -55% 0px", threshold: 0 }
     );
 
     sections.forEach((section) => observer.observe(section));
-
     return () => observer.disconnect();
   }, [location.pathname]);
 
@@ -83,9 +101,7 @@ export const Navbar = () => {
     } else {
       if (location.pathname !== "/") {
         navigate("/");
-        setTimeout(() => {
-          scrollToTarget(item.id);
-        }, 150);
+        setTimeout(() => scrollToTarget(item.id), 150);
       } else {
         scrollToTarget(item.id);
       }
@@ -112,42 +128,25 @@ export const Navbar = () => {
     <>
       <div
         className={`fixed inset-0 w-full h-[100dvh] bg-slate-50 dark:bg-slate-900 z-40 flex flex-col justify-center items-center md:hidden transition-all duration-300 transform-gpu ${
-          isMobileMenuOpen
-            ? "opacity-100 scale-100 pointer-events-auto"
-            : "opacity-0 scale-98 pointer-events-none"
+          isMobileMenuOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-98 pointer-events-none"
         }`}
       >
-
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
         <div className="flex flex-col items-center gap-6 z-10 w-full px-8">
           {navItems.map((item, i) => {
-            const isActive =
-              location.pathname === "/"
-                ? activeSection === item.id
-                : location.pathname === item.path;
-
+            const isActive = location.pathname === "/" ? activeSection === item.id : location.pathname === item.path;
             return (
               <button
                 key={item.id}
-                style={{
-                  transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms",
-                }}
+                style={{ transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms" }}
                 onClick={() => handleNavClick(item)}
                 className={`group relative flex items-center justify-center w-full transition-all duration-300 transform ${
-                  isMobileMenuOpen
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
+                  isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
-                {isActive && (
-                  <div className="absolute inset-0 bg-blue-100/50 dark:bg-blue-900/20 rounded-2xl -z-10 transition-all" />
-                )}
-                <span
-                  className={`text-4xl font-black tracking-tight transition-colors py-3 ${
-                    isActive ? "text-blue-600" : "text-slate-900 dark:text-slate-200"
-                  }`}
-                >
+                {isActive && <div className="absolute inset-0 bg-blue-100/50 dark:bg-blue-900/20 rounded-2xl -z-10 transition-all" />}
+                <span className={`text-4xl font-black tracking-tight transition-colors py-3 ${isActive ? "text-blue-600" : "text-slate-900 dark:text-slate-200"}`}>
                   {item.label}
                 </span>
               </button>
@@ -155,42 +154,26 @@ export const Navbar = () => {
           })}
         </div>
 
-        <div
-          className={`absolute bottom-12 z-10 transition-all duration-500 delay-300 transform ${
-            isMobileMenuOpen
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
-          }`}
-        >
+        <div className={`absolute bottom-12 z-10 transition-all duration-500 delay-300 transform ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
           <ThemeToggle />
         </div>
       </div>
 
       <nav className="fixed top-6 md:top-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-
         <div
           ref={desktopNavRef}
           className="hidden md:block pointer-events-auto relative rounded-full w-max group/navbar shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] will-change-transform"
         >
-
           <div
             className="absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-60 group-hover/navbar:opacity-90 blur-[6px] transition-opacity duration-500 pointer-events-none"
-            style={{
-              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-            }}
+            style={maskStyle}
           >
             <div className="navbar-spin-ring absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)]" />
           </div>
 
           <div
             className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden pointer-events-none shadow-2xl shadow-blue-500/10 z-10"
-            style={{
-              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-            }}
+            style={maskStyle}
           >
             <div className="navbar-spin-ring absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)]" />
           </div>
@@ -198,34 +181,18 @@ export const Navbar = () => {
           <div className="absolute -inset-[2px] rounded-full border border-slate-300/40 dark:border-slate-700/40 pointer-events-none z-10" />
 
           <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 p-1.5 rounded-full flex items-center justify-between w-full shadow-sm z-20">
-
             <div
               onClick={() => handleNavClick({ id: "home", type: "scroll" })}
               className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold cursor-pointer shadow-lg hover:shadow-blue-500/30 transition-all hover:scale-105"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
-              >
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
+              <LogoIcon sizeClass="w-5 h-5" />
             </div>
 
             <div className="w-px h-6 bg-slate-300/60 dark:bg-slate-700/60 mx-2 flex-shrink-0" />
 
             <div className="flex flex-1 items-center justify-center gap-1 px-1 mx-1">
               {navItems.map((item) => {
-                const isActive =
-                  location.pathname === "/"
-                    ? activeSection === item.id
-                    : location.pathname === item.path;
+                const isActive = location.pathname === "/" ? activeSection === item.id : location.pathname === item.path;
                 return (
                   <button
                     key={item.id}
@@ -271,7 +238,6 @@ export const Navbar = () => {
         </div>
 
         <div className="md:hidden pointer-events-none fixed top-4 left-4 right-4 flex justify-between z-50">
-
           <div className="pointer-events-auto">
             <div
               onClick={() => {
@@ -281,19 +247,7 @@ export const Navbar = () => {
               className="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer shadow-lg transition-colors duration-500 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] active:scale-95"
             >
               <div className="flex items-center justify-center w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-4 h-4"
-                >
-                  <polyline points="16 18 22 12 16 6" />
-                  <polyline points="8 6 2 12 8 18" />
-                </svg>
+                <LogoIcon sizeClass="w-4 h-4" />
               </div>
             </div>
           </div>
@@ -304,24 +258,9 @@ export const Navbar = () => {
               aria-label="Toggle Menu"
               className="group relative flex flex-col justify-center items-center w-12 h-12 gap-[5px] rounded-full cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] active:scale-95"
             >
-
-              <span
-                className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${
-                  isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"
-                }`}
-              />
-
-              <span
-                className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${
-                  isMobileMenuOpen ? "w-5.5" : "w-5"
-                }`}
-              />
-
-              <span
-                className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${
-                  isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"
-                }`}
-              />
+              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"}`} />
+              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-5.5" : "w-5"}`} />
+              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"}`} />
             </button>
           </div>
         </div>
