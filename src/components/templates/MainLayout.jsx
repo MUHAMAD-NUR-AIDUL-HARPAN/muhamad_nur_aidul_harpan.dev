@@ -51,17 +51,35 @@ export const MainLayout = ({ children }) => {
   // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker
   useEffect(() => {
     const lenis = new Lenis({
-      lerp: 0.085, // Damping lerp fisik murni untuk scroll mouse & trackpad desktop (mengambang dan ultra-halus)
-      wheelMultiplier: 1.0, // Respons wheel natural & presisi
+      lerp: 0.085, // Damping lerp fisik murni (seragam untuk desktop wheel & mobile touch)
+      wheelMultiplier: 1.0, // Respons wheel natural 1:1
+      touchMultiplier: 1.0, // Respons touch natural 1:1 (menempel presisi di jari, sama dengan desktop)
       smoothWheel: true,
-      syncTouch: false, // KUNCI UTAMA: Nonaktifkan pembajakan touch di HP. Biarkan GPU compositor native HP yang menangani sentuhan jari agar 100% bebas loncat-loncat & tidak berbenturan dengan address bar
+      syncTouch: true, // Lenis aktif di mobile sama persis seperti di desktop
+      syncTouchLerp: 0.085, // Nilai lerp inersia sama persis dengan lerp desktop (0.085)
+      touchInertiaExponent: 1.6, // Inersia alami tanpa loncatan eksponensial mendadak
       orientation: "vertical",
       gestureOrientation: "vertical",
-      autoResize: true,
+      autoResize: false, // Ditangani manual agar address bar HP tidak memicu reset scroll (anti loncat-loncat)
     });
 
     lenisRef.current = lenis;
     window.lenis = lenis;
+
+    // Resize handler cerdas: Hanya resize saat lebar layar berubah (rotasi HP atau resize jendela browser desktop),
+    // sehingga address bar HP yang muncul/hilang saat scrolling tidak mereset posisi scroll (bebas loncat-loncat)
+    let lastWidth = typeof window !== "undefined" ? window.innerWidth : 0;
+    const handleResize = () => {
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        lenis.resize();
+        ScrollTrigger.refresh();
+      }
+    };
+    window.addEventListener("resize", handleResize);
+
+    // Hitung dimensi awal
+    lenis.resize();
 
     // Jika preloader masih aktif saat inisialisasi, kunci scroll
     if (isLoading) {
@@ -79,6 +97,7 @@ export const MainLayout = ({ children }) => {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      window.removeEventListener("resize", handleResize);
       gsap.ticker.remove(tickerUpdate);
       lenis.destroy();
       window.lenis = null;
