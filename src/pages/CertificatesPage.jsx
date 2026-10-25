@@ -76,8 +76,15 @@ export const CertificatesPage = () => {
   };
 
   useEffect(() => {
-    document.body.style.overflow = selectedCert ? "hidden" : "unset";
+    if (selectedCert) {
+      window.smoother?.paused(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      window.smoother?.paused(false);
+      document.body.style.overflow = "unset";
+    }
     return () => {
+      window.smoother?.paused(false);
       document.body.style.overflow = "unset";
     };
   }, [selectedCert]);

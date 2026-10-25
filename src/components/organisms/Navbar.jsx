@@ -79,7 +79,9 @@ export const Navbar = () => {
 
   const scrollToTarget = (targetId) => {
     const targetElement = targetId === "home" ? 0 : document.getElementById(targetId);
-    if (window.lenis) {
+    if (window.smoother) {
+      window.smoother.scrollTo(targetElement, true, targetId === "home" ? "top top" : "top 80px");
+    } else if (window.lenis) {
       window.lenis.scrollTo(targetElement, {
         offset: targetId === "home" ? 0 : -80,
         duration: 1.2,

@@ -246,7 +246,9 @@ export const Hero = () => {
   }, [scheduleUpdate, updatePosition]);
 
   const handleContactClick = () => {
-    if (window.lenis) {
+    if (window.smoother) {
+      window.smoother.scrollTo("#contact", true, "top 80px");
+    } else if (window.lenis) {
       window.lenis.scrollTo("#contact", {
         offset: -80,
         duration: 1.2,

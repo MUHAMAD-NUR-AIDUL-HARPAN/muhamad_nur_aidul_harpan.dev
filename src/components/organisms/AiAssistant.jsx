@@ -233,11 +233,13 @@ export const AiAssistant = () => {
 
   useEffect(() => {
     if (isOpen) {
+      window.smoother?.paused(true);
       window.lenis?.stop();
       const originalBodyOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
 
       return () => {
+        window.smoother?.paused(false);
         window.lenis?.start();
         document.body.style.overflow = originalBodyOverflow;
       };
