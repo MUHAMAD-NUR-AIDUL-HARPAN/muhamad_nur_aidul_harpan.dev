@@ -48,25 +48,21 @@ export const MainLayout = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop)
+  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop & Mobile)
   useEffect(() => {
-    // Pada perangkat sentuh (HP/tablet), serahkan 100% ke hardware GPU kinetic scroll bawaan smartphone (120Hz)
-    // agar jari bebas dari input lag JavaScript dan halaman tidak melompat liar
-    const isTouch = ('ontouchstart' in window && window.innerWidth < 1024) || (navigator.maxTouchPoints > 0 && window.innerWidth < 1024) || window.innerWidth < 768;
-    if (isTouch) {
-      window.lenis = null;
-      lenisRef.current = null;
-      return;
-    }
-
+    // Lenis Smooth Scroll terkalibrasi: Luncuran inersia halus, terkontrol, dan tidak lompat liar di HP
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      syncTouch: false,
+      // Konfigurasi Touch / Mobile:
+      syncTouch: true,
+      syncTouchLerp: 0.065,
+      touchInertiaExponent: 1.85,
+      touchMultiplier: 1.0,
       autoResize: true,
     });
     lenisRef.current = lenis;
@@ -77,7 +73,7 @@ export const MainLayout = ({ children }) => {
       lenis.stop();
     }
 
-    // Sinkronisasi Sempurna Lenis dengan ScrollTrigger via GSAP Ticker untuk Desktop
+    // Sinkronisasi Sempurna Lenis dengan ScrollTrigger via GSAP Ticker
     lenis.on("scroll", ScrollTrigger.update);
     const tickerUpdate = (time) => {
       lenis.raf(time * 1000);
@@ -142,7 +138,7 @@ export const MainLayout = ({ children }) => {
         className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 z-[9999] pointer-events-none will-change-transform transform-gpu"
       />
 
-      <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 transition-colors duration-300 relative z-0 overflow-x-clip">
+      <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 relative z-0 overflow-x-clip">
         <div className="relative z-10">
           <Navbar />
           <main className="relative">{children}</main>

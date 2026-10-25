@@ -340,7 +340,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/btn:[animation-play-state:running]" />
                 </div>
 
                 <div
@@ -351,7 +351,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/btn:[animation-play-state:running]" />
                 </div>
 
                 <button
@@ -379,7 +379,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#3b82f6_75%,#60a5fa_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#3b82f6_75%,#60a5fa_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/cv:[animation-play-state:running]" />
                 </div>
 
                 <div
@@ -390,7 +390,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
+                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/cv:[animation-play-state:running]" />
                 </div>
 
                 <a
