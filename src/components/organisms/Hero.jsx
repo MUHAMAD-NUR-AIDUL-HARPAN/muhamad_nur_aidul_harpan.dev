@@ -255,7 +255,7 @@ export const Hero = () => {
             width: `${GRID_SIZE}px`,
             height: `${GRID_SIZE}px`,
           }}
-          className="absolute top-0 left-0 pointer-events-none z-0 flex items-center justify-center will-change-transform transform-gpu"
+          className="hidden md:flex absolute top-0 left-0 pointer-events-none z-0 items-center justify-center will-change-transform transform-gpu"
         >
           {/* 1. Soft Ambient Radial Glow beneath the active grid square */}
           <div className="absolute -inset-6 bg-blue-500/10 dark:bg-blue-400/15 rounded-2xl blur-lg pointer-events-none" />

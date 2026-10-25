@@ -378,8 +378,8 @@ export const AiAssistant = () => {
       <div className="fixed bottom-6 right-6 z-40">
         {!isOpen && (
           <div className="relative group transition-all duration-300">
-            {/* Outer Glow Ring */}
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
+            {/* Outer Glow Ring (Desktop Only) */}
+            <div className="hidden md:block absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
 
             <button
               onClick={() => setIsOpen(true)}

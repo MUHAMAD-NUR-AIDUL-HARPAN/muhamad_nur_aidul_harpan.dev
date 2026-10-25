@@ -38,8 +38,8 @@ export const ProjectsSection = () => {
 
   return (
     <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
-      {/* Background Decor (Dots pattern) */}
-      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
+      {/* Background Decor (Dots pattern - Desktop Only) */}
+      <div className="hidden md:block absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       {/* Decorative Text Background */}
       <div 

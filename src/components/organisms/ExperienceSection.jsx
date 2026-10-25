@@ -27,9 +27,9 @@ const ExperienceCard = ({ item, index }) => {
       {/* 2. TIMELINE DOT (Titik Tengah dengan Animated Ring Aktif & Jelas) */}
       <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20">
         <div className="relative w-11 h-11 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          {/* Animated Ring Glow (Soft Ambient Halo) */}
+          {/* Animated Ring Glow (Soft Ambient Halo - Desktop Only) */}
           <div 
-            className="absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-75 group-hover:opacity-100 blur-[4px] pointer-events-none transition-opacity duration-300"
+            className="hidden md:block absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-75 group-hover:opacity-100 blur-[4px] pointer-events-none transition-opacity duration-300"
             style={{
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
@@ -39,9 +39,9 @@ const ExperienceCard = ({ item, index }) => {
             <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_40%,#1d4ed8_65%,#3b82f6_80%,#60a5fa_90%,#ffffff_98%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
           </div>
 
-          {/* Crisp Concentric Traveling Ring Beam */}
+          {/* Crisp Concentric Traveling Ring Beam (Desktop Only) */}
           <div 
-            className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/30"
+            className="hidden md:block absolute -inset-[2px] rounded-full p-[2px] overflow-hidden pointer-events-none shadow-md shadow-blue-500/30"
             style={{
               WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
@@ -130,7 +130,7 @@ export const ExperienceSection = () => {
 
     const ctx = gsap.context(() => {
       const isMobile = window.innerWidth < 768;
-      const scrubConfig = isMobile ? true : 0.5;
+      const scrubConfig = isMobile ? 0.6 : 0.5;
 
       // 1. Garis vertikal terisi memanjang mengikuti scroll
       gsap.fromTo(
@@ -172,8 +172,8 @@ export const ExperienceSection = () => {
 
   return (
     <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
-      {/* Background Decor (Dots pattern) */}
-      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
+      {/* Background Decor (Dots pattern - Desktop Only) */}
+      <div className="hidden md:block absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       {/* Decorative Text Background */}
       <div 

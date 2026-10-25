@@ -37,7 +37,8 @@ export const MainLayout = ({ children }) => {
       easing: "ease-out-cubic",
       once: true,
       offset: 40,
-      disableMutationObserver: false,
+      disableMutationObserver: true,
+      throttleDelay: 120,
     });
 
     const timer = setTimeout(() => {
@@ -116,33 +117,46 @@ export const MainLayout = ({ children }) => {
     sessionStorage.setItem("visited", "true");
   };
 
-  // Scroll Progress Bar langsung via ScrollTrigger (Zero Layout Reflow)
+  // Scroll Progress Bar: 100% Passive GPU-Accelerated (Zero Jitter & No Layout Reflow)
   useEffect(() => {
     if (!progressBarRef.current) return;
-    const st = ScrollTrigger.create({
-      start: "top top",
-      end: "bottom bottom",
-      onUpdate: (self) => {
-        if (progressBarRef.current) {
-          progressBarRef.current.style.transform = `scaleX(${self.progress})`;
-        }
-      },
-    });
-    return () => st.kill();
+    let ticking = false;
+
+    const updateProgressBar = () => {
+      if (progressBarRef.current) {
+        const h = document.documentElement;
+        const b = document.body;
+        const scrollTop = window.pageYOffset || h.scrollTop || b.scrollTop || 0;
+        const scrollHeight = (h.scrollHeight || b.scrollHeight) - h.clientHeight;
+        const progress = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
+        progressBarRef.current.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+      }
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateProgressBar);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <>
       {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
 
-      {/* Global Progress Bar (100% GPU Hardware Accelerated via GSAP) */}
+      {/* Global Progress Bar (100% GPU Hardware Accelerated via Passive RAF) */}
       <div
         ref={progressBarRef}
         style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
         className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 z-[9999] pointer-events-none will-change-transform transform-gpu"
       />
 
-      <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 relative z-0 overflow-x-clip">
+      <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 relative z-0 overflow-x-hidden">
         <div className="relative z-10">
           <Navbar />
           <main className="relative">{children}</main>
