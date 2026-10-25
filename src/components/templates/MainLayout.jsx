@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import gsap from "gsap";
@@ -20,6 +22,7 @@ export const MainLayout = ({ children }) => {
     return !sessionStorage.getItem("visited");
   });
 
+  const lenisRef = useRef(null);
   const progressBarRef = useRef(null);
 
   // Optimasi ScrollTrigger untuk Mobile: Mencegah jitter saat address bar HP muncul/hilang
@@ -45,11 +48,59 @@ export const MainLayout = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+
+    const lenis = new Lenis({
+      duration: isMobile ? 0.9 : 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.15,
+      syncTouch: true,
+      syncTouchLerp: 0.12,
+      autoResize: true,
+    });
+
+    lenisRef.current = lenis;
+    window.lenis = lenis;
+
+    // Jika preloader masih aktif saat inisialisasi, kunci scroll
+    if (isLoading) {
+      lenis.stop();
+    }
+
+    // Integrasi Resmi GSAP Ticker & Lenis
+    lenis.on("scroll", ScrollTrigger.update);
+    const tickerUpdate = (time) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(tickerUpdate);
+
+    // KUNCI UTAMA: Matikan lagSmoothing bawaan GSAP agar frame rate 100% konsisten tanpa getaran/stutter
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(tickerUpdate);
+      lenis.destroy();
+      window.lenis = null;
+      lenisRef.current = null;
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   // Kontrol lock / unlock scroll saat preloader aktif
   useEffect(() => {
+    const lenis = lenisRef.current;
+
     if (isLoading) {
+      if (lenis) lenis.stop();
       document.body.style.overflow = "hidden";
     } else {
+      if (lenis) lenis.start();
       document.body.style.overflow = "";
       setTimeout(() => {
         AOS.refreshHard();
@@ -64,43 +115,30 @@ export const MainLayout = ({ children }) => {
     sessionStorage.setItem("visited", "true");
   };
 
-  // Scroll Progress Bar: 100% Passive GPU-Accelerated (Desktop Only)
+  // Scroll Progress Bar: Langsung dari Lenis Event (Zero Layout Reflow, 100% GPU)
   useEffect(() => {
-    if (!progressBarRef.current || window.innerWidth < 768) return;
-    let ticking = false;
+    const lenis = lenisRef.current;
+    if (!lenis || !progressBarRef.current) return;
 
-    const updateProgressBar = () => {
+    const onScroll = ({ progress }) => {
       if (progressBarRef.current) {
-        const h = document.documentElement;
-        const b = document.body;
-        const scrollTop = window.pageYOffset || h.scrollTop || b.scrollTop || 0;
-        const scrollHeight = (h.scrollHeight || b.scrollHeight) - h.clientHeight;
-        const progress = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
-        progressBarRef.current.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
-      }
-      ticking = false;
-    };
-
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateProgressBar);
-        ticking = true;
+        progressBarRef.current.style.transform = `scaleX(${progress})`;
       }
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    lenis.on("scroll", onScroll);
+    return () => lenis.off("scroll", onScroll);
+  }, [isLoading]);
 
   return (
     <>
       {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
 
-      {/* Global Progress Bar (Desktop Only) */}
+      {/* Global Progress Bar (100% GPU Hardware Accelerated via Lenis) */}
       <div
         ref={progressBarRef}
         style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
-        className="hidden md:block fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 z-[9999] pointer-events-none will-change-transform transform-gpu"
+        className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 z-[9999] pointer-events-none will-change-transform transform-gpu"
       />
 
       <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 relative z-0">

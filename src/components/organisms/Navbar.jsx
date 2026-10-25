@@ -61,7 +61,13 @@ export const Navbar = () => {
 
   const scrollToTarget = (targetId) => {
     const targetElement = targetId === "home" ? 0 : document.getElementById(targetId);
-    if (targetElement !== null) {
+    if (window.lenis) {
+      window.lenis.scrollTo(targetElement, {
+        offset: targetId === "home" ? 0 : -80,
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+    } else if (targetElement !== null) {
       gsap.to(window, {
         duration: 1.1,
         scrollTo: { y: targetElement, offsetY: targetId === "home" ? 0 : 80 },
@@ -88,14 +94,17 @@ export const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll and pause Lenis when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
+      window.lenis?.stop();
       document.body.style.overflow = "hidden";
     } else {
+      window.lenis?.start();
       document.body.style.overflow = "";
     }
     return () => {
+      window.lenis?.start();
       document.body.style.overflow = "";
     };
   }, [isMobileMenuOpen]);

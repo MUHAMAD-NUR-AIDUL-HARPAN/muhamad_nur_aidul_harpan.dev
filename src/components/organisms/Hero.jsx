@@ -231,14 +231,22 @@ export const Hero = () => {
   }, []);
 
   const handleContactClick = () => {
-    const contactSection = document.getElementById("contact");
-    if (contactSection) {
-      gsap.to(window, {
-        duration: 1.1,
-        scrollTo: { y: contactSection, offsetY: 80 },
-        ease: "power2.inOut",
-        overwrite: "auto",
+    if (window.lenis) {
+      window.lenis.scrollTo("#contact", {
+        offset: -80,
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
+    } else {
+      const contactSection = document.getElementById("contact");
+      if (contactSection) {
+        gsap.to(window, {
+          duration: 1.1,
+          scrollTo: { y: contactSection, offsetY: 80 },
+          ease: "power2.inOut",
+          overwrite: "auto",
+        });
+      }
     }
   };
 
