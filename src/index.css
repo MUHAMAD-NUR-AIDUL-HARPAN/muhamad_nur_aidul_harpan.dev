@@ -77,9 +77,11 @@
     overflow: clip;
   }
 
-  /* Cegah overscroll rubber-banding bertabrakan dengan Lenis momentum */
-  html.lenis {
-    overscroll-behavior-y: none;
+  /* Cegah overscroll rubber-banding bertabrakan dengan Lenis momentum di Desktop */
+  @media (min-width: 768px) {
+    html.lenis {
+      overscroll-behavior-y: none;
+    }
   }
 
   /* Optimasi GPU Mobile: Ringankan beban Gaussian blur saat scroll di HP */

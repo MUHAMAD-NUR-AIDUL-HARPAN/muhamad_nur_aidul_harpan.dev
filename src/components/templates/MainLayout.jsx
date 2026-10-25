@@ -50,17 +50,11 @@ export const MainLayout = ({ children }) => {
 
   // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-
     const lenis = new Lenis({
-      lerp: 0.085, // Damping lerp fisik yang sangat lembut dan halus untuk mouse wheel & trackpad
-      wheelMultiplier: 1.05, // Respons wheel natural tanpa terasa berat
-      touchMultiplier: 1.4, // Respon sentuhan jari lebih lincah dan berbobot di mobile
+      lerp: 0.085, // Damping lerp fisik murni untuk scroll mouse & trackpad desktop (mengambang dan ultra-halus)
+      wheelMultiplier: 1.0, // Respons wheel natural & presisi
       smoothWheel: true,
-      syncTouch: true, // Sinkronisasi sentuhan mobile dengan frame GSAP Ticker
-      syncTouchLerp: 0.075, // Golden sweet spot inersia sentuh: meluncur halus (glide) saat jari dilepas
-      touchInertiaExponent: 1.85, // Efek inersia kinetik yang elegan saat flick scroll
-      stopInertiaOnNavigate: true, // Mencegah benturan inersia saat klik link internal
+      syncTouch: false, // KUNCI UTAMA: Nonaktifkan pembajakan touch di HP. Biarkan GPU compositor native HP yang menangani sentuhan jari agar 100% bebas loncat-loncat & tidak berbenturan dengan address bar
       orientation: "vertical",
       gestureOrientation: "vertical",
       autoResize: true,
