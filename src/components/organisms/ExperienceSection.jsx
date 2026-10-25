@@ -124,15 +124,18 @@ export const ExperienceSection = () => {
   const fillLineRef = useRef(null);
   const beaconRef = useRef(null);
 
-  // Animasi GSAP ScrollTrigger untuk Timeline: 100% GPU Hardware Accelerated
+  // Animasi GSAP ScrollTrigger untuk Timeline: 100% GPU Hardware Accelerated (Desktop Only)
   useEffect(() => {
     if (!timelineRef.current || !fillLineRef.current || !beaconRef.current) return;
 
-    const ctx = gsap.context(() => {
-      const isMobile = window.innerWidth < 768;
-      const scrubConfig = isMobile ? 0.6 : 0.5;
+    // Pada mobile, hindari ScrollTrigger scrub terus-menerus yang memaksa sinkronisasi style saat sentuhan jari
+    if (window.innerWidth < 768) {
+      if (fillLineRef.current) fillLineRef.current.style.transform = "scaleY(1)";
+      return;
+    }
 
-      // 1. Garis vertikal terisi memanjang mengikuti scroll
+    const ctx = gsap.context(() => {
+      // 1. Garis vertikal terisi memanjang mengikuti scroll (Desktop)
       gsap.fromTo(
         fillLineRef.current,
         { scaleY: 0 },
@@ -143,7 +146,7 @@ export const ExperienceSection = () => {
             trigger: timelineRef.current,
             start: "top 70%",
             end: "bottom 70%",
-            scrub: scrubConfig,
+            scrub: 0.5,
           },
         }
       );
@@ -160,7 +163,7 @@ export const ExperienceSection = () => {
             trigger: timelineRef.current,
             start: "top 70%",
             end: "bottom 70%",
-            scrub: scrubConfig,
+            scrub: 0.5,
             invalidateOnRefresh: true,
           },
         }
@@ -235,10 +238,10 @@ export const ExperienceSection = () => {
             className="absolute left-4 md:left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-600 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_8px_#3b82f6] z-10 will-change-transform transform-gpu"
           />
 
-          {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (GSAP ScrollTrigger GPU translate3d) */}
+          {/* 3. Traveling Glowing Beacon Dot yang Mengikuti Posisi Scroll (GSAP ScrollTrigger GPU translate3d - Desktop Only) */}
           <div
             ref={beaconRef}
-            className="absolute left-4 md:left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex items-center justify-center will-change-transform transform-gpu"
+            className="hidden md:flex absolute left-4 md:left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none items-center justify-center will-change-transform transform-gpu"
           >
             {/* Soft Ambient Halo */}
             <div className="absolute w-8 h-8 rounded-full bg-blue-500/25 dark:bg-blue-400/30 blur-[4px] pointer-events-none" />

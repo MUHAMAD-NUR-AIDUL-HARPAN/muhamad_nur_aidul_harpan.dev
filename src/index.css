@@ -51,11 +51,6 @@
     color: #BFDBFE; /* blue-200 */
   }
   
-  html, body {
-    overflow-x: hidden;
-    max-width: 100vw;
-  }
-
   html {
     scroll-behavior: auto !important;
   }
@@ -74,15 +69,8 @@
     scroll-behavior: auto !important;
   }
 
-  /* Optimasi Performa GPU Mobile: Mencegah FPS drop dan stutter saat scroll di HP */
+  /* Optimasi GPU Mobile: Ringankan beban Gaussian blur saat scroll di HP */
   @media (max-width: 768px) {
-    /* Virtualisasi off-screen sections agar hemat RAM & GPU rendering cycle */
-    section {
-      content-visibility: auto;
-      contain-intrinsic-size: auto 700px;
-    }
-
-    /* Hilangkan backdrop-filter pada mobile agar GPU hardware kinetic scroll berjalan 120Hz murni tanpa lag */
     .backdrop-blur-xl,
     .backdrop-blur-lg,
     .backdrop-blur-2xl,
