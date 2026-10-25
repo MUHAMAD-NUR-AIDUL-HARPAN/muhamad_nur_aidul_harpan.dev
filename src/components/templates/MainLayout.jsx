@@ -48,47 +48,27 @@ export const MainLayout = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop & Mobile - Opsi B)
+  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop Only)
   useEffect(() => {
-    // Filter digital low-pass (EMA) untuk menyaring getaran sensor sentuh smartphone
-    let smoothedDelta = 0;
+    // Pada perangkat sentuh (HP/tablet), serahkan 100% ke hardware GPU kinetic scroll bawaan smartphone (120Hz)
+    // agar bebas mutlak dari frame dropping JavaScript yang menyebabkan sensasi menggerigi/bergetar
+    const isTouch = ('ontouchstart' in window && window.innerWidth < 1024) || (navigator.maxTouchPoints > 0 && window.innerWidth < 1024) || window.innerWidth < 768;
+    if (isTouch) {
+      window.lenis = null;
+      lenisRef.current = null;
+      return;
+    }
 
     const lenis = new Lenis({
-      duration: 1.0,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      // Konfigurasi Touch / Mobile:
-      syncTouch: true,
-      syncTouchLerp: 0.075,
-      touchInertiaExponent: 1.75,
-      touchMultiplier: 1.0,
+      syncTouch: false,
       autoResize: true,
-      // Menyaring noise getaran jari mentah sebelum diproses oleh Lenis
-      virtualScroll: (data) => {
-        if (data.event && data.event.type === "touchstart") {
-          smoothedDelta = 0;
-          return true;
-        }
-        if (data.event && data.event.type.includes("touch")) {
-          smoothedDelta = smoothedDelta * 0.35 + data.deltaY * 0.65;
-          data.deltaY = smoothedDelta;
-        }
-        return true;
-      },
     });
-
-    // Meredam lonjakan fraksional piksel saat jari menempel tanpa lag
-    const originalScrollTo = lenis.scrollTo.bind(lenis);
-    lenis.scrollTo = (target, options = {}) => {
-      if (options && options.programmatic === false && options.lerp === 1 && lenis.isTouching) {
-        options.lerp = 0.35; // Kecepatan interpolasi ideal: mulus total tanpa getaran subpixel
-      }
-      return originalScrollTo(target, options);
-    };
-
     lenisRef.current = lenis;
     window.lenis = lenis;
 
@@ -97,7 +77,7 @@ export const MainLayout = ({ children }) => {
       lenis.stop();
     }
 
-    // Sinkronisasi Sempurna Lenis dengan ScrollTrigger via GSAP Ticker
+    // Sinkronisasi Sempurna Lenis dengan ScrollTrigger via GSAP Ticker untuk Desktop
     lenis.on("scroll", ScrollTrigger.update);
     const tickerUpdate = (time) => {
       lenis.raf(time * 1000);

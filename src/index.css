@@ -64,8 +64,6 @@
 
   html.lenis, html.lenis body {
     height: auto;
-    overscroll-behavior-y: none;
-    touch-action: pan-x pinch-zoom;
   }
 
   .lenis.lenis-smooth {
