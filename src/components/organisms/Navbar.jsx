@@ -35,10 +35,6 @@ export const Navbar = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const desktopNavRef = useRef(null);
-  const navListRef = useRef(null);
-  const itemRefs = useRef({});
-  const [hoveredRect, setHoveredRect] = useState(null);
-  const [activeRect, setActiveRect] = useState(null);
 
   useEffect(() => {
     if (!desktopNavRef.current) return;
@@ -80,48 +76,6 @@ export const Navbar = () => {
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [location.pathname]);
-
-  useEffect(() => {
-    const updateActiveRect = () => {
-      const currentActiveId =
-        location.pathname === "/"
-          ? activeSection
-          : navItems.find((item) => item.path === location.pathname)?.id || "home";
-
-      const el = itemRefs.current[currentActiveId];
-      if (el && navListRef.current) {
-        const navBox = navListRef.current.getBoundingClientRect();
-        const elBox = el.getBoundingClientRect();
-        setActiveRect({
-          left: elBox.left - navBox.left,
-          width: elBox.width,
-        });
-      }
-    };
-
-    const timer = setTimeout(updateActiveRect, 50);
-    window.addEventListener("resize", updateActiveRect);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", updateActiveRect);
-    };
-  }, [activeSection, location.pathname]);
-
-  const handleItemMouseEnter = (id) => {
-    const el = itemRefs.current[id];
-    if (el && navListRef.current) {
-      const navBox = navListRef.current.getBoundingClientRect();
-      const elBox = el.getBoundingClientRect();
-      setHoveredRect({
-        left: elBox.left - navBox.left,
-        width: elBox.width,
-      });
-    }
-  };
-
-  const handleNavMouseLeave = () => {
-    setHoveredRect(null);
-  };
 
   const scrollToTarget = (targetId) => {
     const targetElement = targetId === "home" ? 0 : document.getElementById(targetId);
@@ -273,51 +227,31 @@ export const Navbar = () => {
 
             <div className="w-px h-6 bg-slate-300/60 dark:bg-slate-700/60 mx-2 flex-shrink-0" />
 
-            <div
-              ref={navListRef}
-              onMouseLeave={handleNavMouseLeave}
-              className="relative flex flex-1 items-center justify-center gap-1 px-1 mx-1"
-            >
-              {activeRect && (
-                <div
-                  style={{
-                    transform: `translateX(${hoveredRect ? hoveredRect.left : activeRect.left}px)`,
-                    width: `${hoveredRect ? hoveredRect.width : activeRect.width}px`,
-                    transition:
-                      "transform 300ms cubic-bezier(0.2, 0.9, 0.3, 1), width 300ms cubic-bezier(0.2, 0.9, 0.3, 1), background-color 200ms ease, border-color 200ms ease",
-                  }}
-                  className={`absolute top-1 bottom-1 rounded-full pointer-events-none will-change-transform transform-gpu ${
-                    hoveredRect
-                      ? "bg-slate-200/60 dark:bg-slate-800/80 border border-slate-300/60 dark:border-slate-700/60 shadow-xs"
-                      : "bg-blue-600/15 dark:bg-blue-500/20 border border-blue-600/30 dark:border-blue-400/30 shadow-[0_0_15px_rgba(37,99,235,0.2)]"
-                  }`}
-                />
-              )}
-
+            <div className="relative flex flex-1 items-center justify-center gap-1.5 px-1 mx-1">
               {navItems.map((item) => {
                 const isActive = location.pathname === "/" ? activeSection === item.id : location.pathname === item.path;
                 return (
                   <button
-                    ref={(el) => (itemRefs.current[item.id] = el)}
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    onMouseEnter={() => handleItemMouseEnter(item.id)}
-                    className="cursor-pointer relative z-10 px-3.5 py-1.5 rounded-full flex items-center justify-center transition-all duration-200 flex-shrink-0 active:scale-95"
+                    className={`group/item cursor-pointer relative px-3 py-1.5 rounded-full flex items-center justify-center transition-all duration-300 ease-out flex-shrink-0 active:scale-95 ${
+                      isActive
+                        ? "bg-blue-600/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 dark:border-blue-400/30 shadow-[0_0_12px_rgba(37,99,235,0.15)]"
+                        : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 border border-transparent"
+                    }`}
                   >
-                    <div className="relative flex items-center gap-2">
+                    <div className="relative z-10 flex items-center gap-2">
                       <item.icon
                         size={15}
-                        className={`transition-colors duration-200 ${
+                        className={`transition-all duration-300 transform group-hover/item:scale-110 group-hover/item:-translate-y-0.5 ${
                           isActive
                             ? "text-blue-600 dark:text-blue-400"
-                            : "text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
+                            : "text-slate-500 dark:text-slate-400 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400"
                         }`}
                       />
                       <span
-                        className={`hidden lg:block text-sm transition-colors duration-200 ${
-                          isActive
-                            ? "font-bold text-blue-600 dark:text-blue-400"
-                            : "font-medium text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
+                        className={`hidden lg:block text-sm transition-colors duration-300 tracking-tight ${
+                          isActive ? "font-bold" : "font-medium"
                         }`}
                       >
                         {item.label}
