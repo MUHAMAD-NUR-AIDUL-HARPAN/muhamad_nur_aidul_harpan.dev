@@ -1,6 +1,3 @@
-import { useRef, useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   SiHtml5,
   SiCss3,
@@ -16,8 +13,6 @@ import {
 } from "react-icons/si";
 import { TbBrandVscode, TbBrandOffice } from "react-icons/tb";
 import { Code } from "lucide-react";
-
-gsap.registerPlugin(ScrollTrigger);
 
 // Mapping Icon Brand
 const iconMap = {
@@ -40,30 +35,6 @@ export const SkillBar = ({ name, level, iconKey, color, index = 0 }) => {
   const iconData = iconMap[iconKey] || { icon: Code, color: color || "#3B82F6" };
   const IconComponent = iconData.icon;
   const brandColor = color || iconData.color;
-  const barRef = useRef(null);
-
-  useEffect(() => {
-    if (!barRef.current) return;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        barRef.current,
-        { width: "0%" },
-        {
-          width: `${level}%`,
-          duration: 1.1,
-          delay: Math.min(index * 0.06, 0.4),
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: barRef.current,
-            start: "top 92%",
-            once: true,
-          },
-        }
-      );
-    });
-
-    return () => ctx.revert();
-  }, [level, index]);
 
   return (
     <div className="mb-4 last:mb-0 group/skill">
@@ -87,15 +58,11 @@ export const SkillBar = ({ name, level, iconKey, color, index = 0 }) => {
 
       {/* Background Bar */}
       <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-        {/* Animated Foreground Bar */}
+        {/* Static Foreground Bar (Animasi dimatikan sesuai permintaan pengujian) */}
         <div
-          ref={barRef}
-          style={{ width: "0%" }}
-          className="h-full bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-500 dark:to-indigo-400 rounded-full relative will-change-[width]"
-        >
-          {/* Shimmer Effect (Kilau Putih Berjalan) */}
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
-        </div>
+          style={{ width: `${level}%` }}
+          className="h-full bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-500 dark:to-indigo-400 rounded-full relative"
+        />
       </div>
     </div>
   );
