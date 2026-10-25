@@ -28,9 +28,7 @@ db.serialize(() => {
       )`);
 
   // Attempt to add category column if it doesn't exist (for existing databases)
-  db.run(`ALTER TABLE certificates ADD COLUMN category TEXT DEFAULT 'Lainnya'`, (err) => {
-    // Ignored
-  });
+  db.run(`ALTER TABLE certificates ADD COLUMN category TEXT DEFAULT 'Lainnya'`, () => {});
 
   // Create Projects Table
   db.run(`CREATE TABLE IF NOT EXISTS projects (

@@ -221,7 +221,7 @@ export const AiAssistant = () => {
         })
         .catch(() => {});
     }
-  }, [isOpen]);
+  }, [isOpen, dynamicCerts.length, dynamicProjects.length]);
 
   const initialGreeting = {
     role: "assistant",

@@ -30,7 +30,7 @@ const iconMap = {
   office: { icon: TbBrandOffice, color: "#EA580C" },
 };
 
-export const SkillBar = ({ name, level, iconKey, color, index = 0 }) => {
+export const SkillBar = ({ name, level, iconKey, color }) => {
   const iconData = iconMap[iconKey] || { icon: Code, color: color || "#3B82F6" };
   const IconComponent = iconData.icon;
   const brandColor = color || iconData.color;

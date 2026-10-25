@@ -1,0 +1,10 @@
+{
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "css.validate": false,
+  "html-css-support.enable": false,
+  "html-css-support.validate": false,
+  "html.validate.scripts": false,
+  "typescript.validate.enable": false,
+  "javascript.validate.enable": true
+}

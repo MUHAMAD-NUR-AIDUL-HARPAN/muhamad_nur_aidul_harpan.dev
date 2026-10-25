@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { Download, ArrowRight, Github, Linkedin, Globe, Rocket, FileText, Code2 } from "lucide-react";
@@ -117,7 +117,7 @@ export const Hero = () => {
     };
   }, []);
 
-  const updatePosition = (clientX, clientY, isScrollUpdate = false) => {
+  const updatePosition = useCallback((clientX, clientY, isScrollUpdate = false) => {
     if (!heroRef.current) return false;
     const { width: heroWidth, height: heroHeight, top: heroTop } = heroDimensionsRef.current;
     const currentScroll = window.scrollY || 0;
@@ -171,15 +171,15 @@ export const Hero = () => {
     yTo.current?.(targetY);
     opacityTo.current?.(1);
     return true;
-  };
+  }, []);
 
-  const scheduleUpdate = (clientX, clientY, isScrollUpdate = false) => {
+  const scheduleUpdate = useCallback((clientX, clientY, isScrollUpdate = false) => {
     if (rafId.current) return;
     rafId.current = requestAnimationFrame(() => {
       rafId.current = null;
       updatePosition(clientX, clientY, isScrollUpdate);
     });
-  };
+  }, [updatePosition]);
 
   useEffect(() => {
     if (window.innerWidth < 768 || ('ontouchstart' in window && window.innerWidth < 1024)) return;
@@ -194,7 +194,7 @@ export const Hero = () => {
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
     };
-  }, []);
+  }, [scheduleUpdate]);
 
   useEffect(() => {
     if (window.innerWidth < 768) return;
@@ -214,7 +214,7 @@ export const Hero = () => {
       if (rafId.current) cancelAnimationFrame(rafId.current);
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [scheduleUpdate, updatePosition]);
 
   const handleContactClick = () => {
     if (window.lenis) {
