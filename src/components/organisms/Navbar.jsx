@@ -117,7 +117,7 @@ export const Navbar = () => {
             : "opacity-0 scale-98 pointer-events-none"
         }`}
       >
-        {/* Background Decor */}
+
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
         <div className="flex flex-col items-center gap-6 z-10 w-full px-8">
@@ -166,14 +166,13 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* === NAVBAR CONTAINER === */}
       <nav className="fixed top-6 md:top-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        {/* DESKTOP PILL */}
+
         <div
           ref={desktopNavRef}
           className="hidden md:block pointer-events-auto relative rounded-full w-max group/navbar shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] will-change-transform"
         >
-          {/* === ANIMATED RING GLOW (Soft Outer Ambient Glow) === */}
+
           <div
             className="absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-60 group-hover/navbar:opacity-90 blur-[6px] transition-opacity duration-500 pointer-events-none"
             style={{
@@ -185,7 +184,6 @@ export const Navbar = () => {
             <div className="navbar-spin-ring absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)]" />
           </div>
 
-          {/* === ANIMATED PROFESSIONAL RING (Crisp Border Beam) === */}
           <div
             className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden pointer-events-none shadow-2xl shadow-blue-500/10 z-10"
             style={{
@@ -197,12 +195,10 @@ export const Navbar = () => {
             <div className="navbar-spin-ring absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)]" />
           </div>
 
-          {/* Base Border Structure (Subtle outline when beam passes) */}
           <div className="absolute -inset-[2px] rounded-full border border-slate-300/40 dark:border-slate-700/40 pointer-events-none z-10" />
 
-          {/* Desktop Glass Container */}
           <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 p-1.5 rounded-full flex items-center justify-between w-full shadow-sm z-20">
-            {/* LOGO */}
+
             <div
               onClick={() => handleNavClick({ id: "home", type: "scroll" })}
               className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold cursor-pointer shadow-lg hover:shadow-blue-500/30 transition-all hover:scale-105"
@@ -222,10 +218,8 @@ export const Navbar = () => {
               </svg>
             </div>
 
-            {/* Separator */}
             <div className="w-px h-6 bg-slate-300/60 dark:bg-slate-700/60 mx-2 flex-shrink-0" />
 
-            {/* SCROLLABLE MENU ITEMS */}
             <div className="flex flex-1 items-center justify-center gap-1 px-1 mx-1">
               {navItems.map((item) => {
                 const isActive =
@@ -268,19 +262,16 @@ export const Navbar = () => {
               })}
             </div>
 
-            {/* Separator */}
             <div className="w-px h-6 bg-slate-300/60 dark:bg-slate-700/60 mx-2 flex-shrink-0" />
 
-            {/* TOGGLE */}
             <div className="flex-shrink-0">
               <ThemeToggle />
             </div>
           </div>
         </div>
 
-        {/* MOBILE LUXURY NAVBAR (Only visible on small screens) */}
         <div className="md:hidden pointer-events-none fixed top-4 left-4 right-4 flex justify-between z-50">
-          {/* Floating Logo (Left) */}
+
           <div className="pointer-events-auto">
             <div
               onClick={() => {
@@ -307,26 +298,25 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* Floating Symmetric Hamburger (Right) */}
           <div className="pointer-events-auto">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Menu"
               className="group relative flex flex-col justify-center items-center w-12 h-12 gap-[5px] rounded-full cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] active:scale-95"
             >
-              {/* Top Line */}
+
               <span
                 className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${
                   isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"
                 }`}
               />
-              {/* Middle Line */}
+
               <span
                 className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${
                   isMobileMenuOpen ? "w-5.5" : "w-5"
                 }`}
               />
-              {/* Bottom Line */}
+
               <span
                 className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${
                   isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"

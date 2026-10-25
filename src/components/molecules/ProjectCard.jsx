@@ -16,7 +16,7 @@ export const ProjectCard = ({ project, index = 0 }) => {
       data-aos-delay={(index % 3) * 100}
       className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
     >
-      {/* IMAGE */}
+
       <div className="h-60 scale-[1.03] overflow-hidden relative">
         <img
           src={getImageUrl(project.image)}
@@ -26,7 +26,6 @@ export const ProjectCard = ({ project, index = 0 }) => {
           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out"
         />
 
-        {/* OVERLAY */}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
           {project.github && (
             <a
@@ -54,7 +53,6 @@ export const ProjectCard = ({ project, index = 0 }) => {
         </div>
       </div>
 
-      {/* CONTENT */}
       <div className="p-6 flex-1 flex flex-col justify-between">
         <div>
           <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full">
@@ -71,7 +69,7 @@ export const ProjectCard = ({ project, index = 0 }) => {
         </div>
 
         <div>
-          {/* TECH STACK */}
+
           <div className="flex flex-wrap gap-2 mb-6">
             {(Array.isArray(project.tech) ? project.tech : (project.tech ? project.tech.split(',').map(t => t.trim()) : [])).map((t) => (
               <span
@@ -83,7 +81,6 @@ export const ProjectCard = ({ project, index = 0 }) => {
             ))}
           </div>
 
-          {/* ACTIONS (TEXT LINK) */}
           <div className="flex items-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
             {project.link ? (
               <a

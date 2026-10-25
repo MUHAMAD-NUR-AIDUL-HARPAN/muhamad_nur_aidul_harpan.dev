@@ -1,8 +1,7 @@
-// Tambahkan di file src/data/content.js
 import { Home, User, Briefcase, Code, Mail, Award, ShieldCheck } from "lucide-react";
 
 export const navItems = [
-  { id: "home", label: "Home", icon: Home, type: "scroll" }, // Scroll ke atas
+  { id: "home", label: "Home", icon: Home, type: "scroll" }, 
   { id: "about", label: "About", icon: User, type: "scroll" },
   { id: "experience", label: "Experience", icon: Briefcase, type: "scroll" },
   { id: "projects", label: "Projects", icon: Code, type: "scroll" },
@@ -12,20 +11,17 @@ export const navItems = [
     icon: Award,
     type: "route",
     path: "/certificates",
-  }, // Pindah Halaman
+  }, 
   { id: "contact", label: "Contact", icon: Mail, type: "scroll" },
   {
     id: "admin",
     label: "Admin",
-    icon: ShieldCheck, // Icon Admin Profesional (ShieldCheck)
+    icon: ShieldCheck, 
     type: "route",
     path: "/admin",
   },
 ];
 
-// File: src/data/content.js
-
-// --- HERO DATA ---
 export const heroData = {
   name: "Harpan",
   role: "Software Engineer",
@@ -44,11 +40,6 @@ export const heroData = {
     clients: "5+",
   },
 };
-
-// ... (pastikan export lainnya seperti navItems, projectsData, dll tetap ada di bawahnya)
-
-// ... import icon lainnya ...
-// Pastikan tidak ada duplikasi export, tambahkan ini di paling bawah atau gabungkan dengan export yang ada
 
 export const certificatesData = [
   {
@@ -174,16 +165,14 @@ export const skills = [
   "Git",
 ];
 
-// ... data lainnya ...
-
 export const projectsData = [
   {
     id: 1,
     title: "Predictive Maintenance Copilot",
     category: "Web App",
-    // Gambar Dashboard Futuristik High-Res
+
     image: "/image/projects/turbiq.webp",
-    // image: "/image/projects/turbiq2.png",
+
     tech: ["React", "Tailwind", "Recharts", "Python", "ML"],
     desc: "Admin dashboard dengan analitik realtime dan dark mode.",
     link: "https://a25-cs-056-predictive-maintenance-c.vercel.app/",
@@ -194,7 +183,7 @@ export const projectsData = [
     id: 2,
     title: "Klora Studio",
     category: "Mobile",
-    // Gambar HP/App High-Res
+
     image: "/image/projects/klora1.png",
     tech: ["React Native", "Redux"],
     desc: "Aplikasi klora Studio dengan animasi yang smooth.",
@@ -205,7 +194,7 @@ export const projectsData = [
     id: 3,
     title: "AI Image Generator",
     category: "AI Integration",
-    // Gambar AI/Robot High-Res
+
     image:
       "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2532&auto=format&fit=crop",
     tech: ["OpenAI API", "React", "Node.js"],
@@ -217,7 +206,7 @@ export const projectsData = [
     id: 4,
     title: "Luxury Hotel Booking",
     category: "Web App",
-    // Gambar Hotel Mewah High-Res
+
     image:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2670&auto=format&fit=crop",
     tech: ["Vue.js", "GSAP"],
@@ -226,7 +215,6 @@ export const projectsData = [
     github: "https://github.com",
   },
 ];
-// ... (kode sebelumnya)
 
 export const skillsData = [
   {
@@ -295,18 +283,17 @@ export const contactData = {
     wa: { id: "WhatsApp", en: "WhatsApp" },
   },
 };
-// ... data lainnya
 
 export const experienceData = [
   {
     id: 1,
-    category: "work", // Untuk membedakan icon (Tas Kerja)
+    category: "work", 
     role: {
       id: "Frontend Web Developer Intern",
       en: "Frontend Web Developer Intern",
     },
     company: "PT Anugrah Kreasi Digital",
-    period: "5 Months", // Sesuaikan tahun jika perlu, misal: "Feb - Jun 2024"
+    period: "5 Months", 
     desc: {
       id: "Menerjemahkan desain UI Figma menjadi website responsif yang pixel-perfect menggunakan HTML, Tailwind CSS, dan JavaScript. Membangun komponen interaktif dan animasi kompleks menggunakan GSAP dan Swiper.js, serta berkolaborasi langsung dengan tim pengembang untuk proyek klien nyata.",
       en: "Translated Figma UI designs into pixel-perfect, responsive websites using HTML, Tailwind CSS, and JavaScript. Built interactive components and complex animations using GSAP and Swiper.js, collaborating directly with the development team on real client projects.",
@@ -315,7 +302,7 @@ export const experienceData = [
   },
   {
     id: 2,
-    category: "education", // Untuk membedakan icon (Topi Toga/Buku)
+    category: "education", 
     role: { id: "React & Backend with AI", en: "React & Backend with AI" },
     company: "Asah led by Dicoding in association with Accenture",
     period: "Program SIB",
@@ -326,12 +313,11 @@ export const experienceData = [
     tech: ["React.js", "Node.js", "AWS Cloud", "Rest API", "Git/GitHub"],
   },
 ];
-// ... data lainnya
 
 export const educationData = [
   {
     id: 1,
-    type: "university", // Penanda untuk Icon Universitas
+    type: "university", 
     school: "Nusa Putra University",
     degree: {
       id: "S1 Teknik Informatika",
@@ -349,7 +335,7 @@ export const educationData = [
   },
   {
     id: 2,
-    type: "bootcamp", // Penanda untuk Icon Bootcamp
+    type: "bootcamp", 
     school: "Dicoding Indonesia",
     degree: {
       id: "Belajar Membuat Aplikasi Fullstack",
@@ -367,7 +353,7 @@ export const educationData = [
   },
   {
     id: 3,
-    type: "course", // Penanda untuk Icon Course
+    type: "course", 
     school: "Codepolitan",
     degree: {
       id: "Kelas Fullstack Web Developer",

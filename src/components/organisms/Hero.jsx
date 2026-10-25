@@ -7,7 +7,6 @@ import { heroData } from "../../data/content";
 
 gsap.registerPlugin(ScrollToPlugin);
 
-// --- COMPONENT: INFINITE MARQUEE (Pure Hardware-Accelerated CSS, 0 JS overhead) ---
 const Marquee = () => {
   const marqueeRef = useRef(null);
 
@@ -65,7 +64,6 @@ export const Hero = () => {
   const activePointer = useRef({ x: null, y: null, hasMoved: false });
   const rafId = useRef(null);
 
-  // GSAP QuickTo for Ultra-High Performance Cursor & Scroll Tracking
   const GRID_SIZE = 48;
   const heroDimensionsRef = useRef({ width: 0, height: 0, top: 0 });
 
@@ -78,7 +76,6 @@ export const Hero = () => {
     }
   }, []);
 
-  // Hero Entrance Animations via GSAP Timeline when Preloader completes
   useEffect(() => {
     if (isPreloaderDone && heroContentRef.current) {
       const tl = gsap.timeline();
@@ -120,7 +117,6 @@ export const Hero = () => {
     };
   }, []);
 
-  // Core coordinate evaluator: checks if point is within Hero bounds using cached geometry
   const updatePosition = (clientX, clientY, isScrollUpdate = false) => {
     if (!heroRef.current) return false;
     const { width: heroWidth, height: heroHeight, top: heroTop } = heroDimensionsRef.current;
@@ -129,13 +125,11 @@ export const Hero = () => {
     const rectBottom = rectTop + (heroHeight || 800);
     const windowH = window.innerHeight;
 
-    // If hero section has scrolled completely out of viewport, fade out smoothly in place
     if (rectBottom <= 0 || rectTop >= windowH) {
       opacityTo.current?.(0);
       return false;
     }
 
-    // Check if pointer is currently inside Hero's visible bounds
     if (clientX !== null && clientY !== null) {
       const isInside = 
         clientX >= 0 && 
@@ -156,24 +150,19 @@ export const Hero = () => {
       }
     }
 
-    // If pointer moved physically outside Hero, fade out in place
     if (activePointer.current.hasMoved && !isScrollUpdate) {
       opacityTo.current?.(0);
       return false;
     }
 
-    // When scrolling through Hero without active pointer:
-    // Move gracefully along the grid rows following scroll progression
     const effectiveWidth = heroWidth || window.innerWidth;
     const effectiveHeight = heroHeight || 800;
     const totalCols = Math.max(4, Math.floor(effectiveWidth / GRID_SIZE));
     const totalRows = Math.max(6, Math.floor(effectiveHeight / GRID_SIZE));
-    
-    // Smooth progress from 0 (top of hero) to 1 (bottom of hero)
+
     const scrollProgress = Math.max(0, Math.min(1, -rectTop / (effectiveHeight * 0.75 || 600)));
     const targetCol = Math.floor(totalCols * 0.25) * GRID_SIZE;
-    
-    // Compute target row without deadzone, smoothly traveling down the grid
+
     const startRow = 2;
     const maxRow = Math.max(startRow, totalRows - 3);
     const targetY = (startRow + scrollProgress * (maxRow - startRow)) * GRID_SIZE;
@@ -192,7 +181,6 @@ export const Hero = () => {
     });
   };
 
-  // 1. Direct window-level pointer tracking (Desktop mouse only)
   useEffect(() => {
     if (window.innerWidth < 768 || ('ontouchstart' in window && window.innerWidth < 1024)) return;
 
@@ -208,7 +196,6 @@ export const Hero = () => {
     };
   }, []);
 
-  // 2. Instant scroll tracking on every frame (Only needed on Desktop)
   useEffect(() => {
     if (window.innerWidth < 768) return;
 
@@ -216,7 +203,6 @@ export const Hero = () => {
       scheduleUpdate(activePointer.current.x, activePointer.current.y, true);
     };
 
-    // Initial placement on load (fades in smoothly at row 2)
     const timer = setTimeout(() => {
       updatePosition(activePointer.current.x, activePointer.current.y, true);
     }, 120);
@@ -256,11 +242,10 @@ export const Hero = () => {
       className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-20 bg-slate-50 dark:bg-slate-900"
     >
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Clean 48px Precision Kotak-Kotak Grid */}
+
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808018_1px,transparent_1px),linear-gradient(to_bottom,#80808018_1px,transparent_1px)] bg-[size:48px_48px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)]" />
 
-        {/* Ultra-Smooth High-Tech Animated Ring Snapped into Kotak-Kotak Grid (GSAP QuickTo GPU Engine) */}
         <div
           ref={ringRef}
           style={{
@@ -269,19 +254,16 @@ export const Hero = () => {
           }}
           className="hidden md:flex absolute top-0 left-0 pointer-events-none z-0 items-center justify-center will-change-transform transform-gpu"
         >
-          {/* 1. Soft Ambient Radial Glow beneath the active grid square */}
+
           <div className="absolute -inset-6 bg-blue-500/10 dark:bg-blue-400/15 rounded-2xl blur-lg pointer-events-none" />
 
-          {/* 2. Highlighted Active Grid Box Frame */}
           <div className="absolute inset-0 bg-blue-500/[0.08] dark:bg-blue-400/[0.12] border border-blue-500/50 dark:border-blue-400/60 rounded-md shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-colors duration-300" />
 
-          {/* 3. Precision Corner Target Crosshairs */}
           <div className="absolute -top-[1px] -left-[1px] w-2 h-2 border-t-2 border-l-2 border-blue-600 dark:border-blue-400 rounded-tl-sm" />
           <div className="absolute -top-[1px] -right-[1px] w-2 h-2 border-t-2 border-r-2 border-blue-600 dark:border-blue-400 rounded-tr-sm" />
           <div className="absolute -bottom-[1px] -left-[1px] w-2 h-2 border-b-2 border-l-2 border-blue-600 dark:border-blue-400 rounded-bl-sm" />
           <div className="absolute -bottom-[1px] -right-[1px] w-2 h-2 border-b-2 border-r-2 border-blue-600 dark:border-blue-400 rounded-br-sm" />
 
-          {/* 4. Inscribed Rotating Conic Traveling Light Beam Ring */}
           <div 
             className="absolute w-[38px] h-[38px] rounded-full p-[1.5px] overflow-hidden shadow-[0_0_10px_rgba(56,189,248,0.35)]"
             style={{
@@ -293,22 +275,18 @@ export const Hero = () => {
             <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_40%,#1d4ed8_65%,#3b82f6_80%,#38bdf8_92%,#ffffff_98%,transparent_100%)] animate-[spin_3s_linear_infinite]" />
           </div>
 
-          {/* 5. Concentric Dashed Inner Tech Ring with Center Beacon */}
           <div className="w-[20px] h-[20px] rounded-full border border-dashed border-blue-400/50 dark:border-blue-300/40 animate-[spin_8s_linear_infinite_reverse] flex items-center justify-center pointer-events-none">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse shadow-[0_0_8px_#3b82f6]" />
           </div>
 
-          {/* 6. Expanding Soft Radar Ripple Wave */}
           <div className="absolute -inset-1 rounded-lg border border-blue-500/30 animate-ping opacity-35 pointer-events-none duration-1000" />
 
-          {/* 7. Subtle Connected Crosshair HUD Accents (4 Neighbor Cells) */}
           <div className="absolute -top-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
           <div className="absolute -bottom-[48px] inset-x-0 h-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
           <div className="absolute -left-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
           <div className="absolute -right-[48px] inset-y-0 w-[48px] border border-blue-500/20 bg-blue-500/[0.03] rounded-sm pointer-events-none opacity-40 transition-opacity" />
         </div>
       </div>
-
 
       <div className="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
         <div className="lg:col-span-7 flex flex-col justify-center">
@@ -342,7 +320,7 @@ export const Hero = () => {
             </div>
 
             <div className="hero-fade-item flex flex-wrap gap-5 items-center">
-              {/* PRIMARY BUTTON: Mulai Proyek */}
+
               <div className="relative group/btn cursor-pointer">
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/btn:opacity-100 blur-[4px] transition-all duration-500 pointer-events-none"
@@ -381,7 +359,6 @@ export const Hero = () => {
                 </button>
               </div>
 
-              {/* SECONDARY BUTTON: CV Saya */}
               <div className="relative group/cv cursor-pointer">
                 <div
                   className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/cv:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
@@ -450,18 +427,17 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Foto Profil */}
         <div
           ref={heroImageRef}
           className="lg:col-span-5 flex justify-center lg:justify-end relative mt-10 lg:mt-0"
         >
-          {/* Cahaya di belakang foto */}
+
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 aspect-square bg-blue-500/15 dark:bg-blue-400/10 rounded-full blur-[50px] pointer-events-none z-0 hidden sm:block" />
 
           <div className="relative z-10 w-full max-w-[340px] md:max-w-[400px]">
-            {/* Wrapper Foto */}
+
             <div className="relative w-full aspect-[3/4] group">
-              {/* Clean Elegant Frame with Soft Shadow & Border */}
+
               <div className="relative w-full h-full rounded-t-full rounded-b-[40px] overflow-hidden bg-slate-100 dark:bg-slate-900 shadow-xl border border-slate-200/90 dark:border-slate-800/80 transition-colors duration-300">
                 <img
                   src={t.image}
@@ -472,7 +448,6 @@ export const Hero = () => {
                   className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                 />
 
-                {/* Bottom Cinematic Vignette Gradient Overlay */}
                 <div className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-slate-100 via-slate-100/90 to-transparent dark:from-slate-950 dark:via-slate-950/85 dark:to-transparent flex flex-col items-center justify-end pb-7 px-6 text-center pointer-events-none select-none z-10 transition-colors duration-500">
                   <h3 className="font-serif text-2xl sm:text-[26px] font-normal tracking-[0.22em] uppercase text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] transition-colors duration-500">
                     -

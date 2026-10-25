@@ -9,11 +9,9 @@ export const CertificatesPage = () => {
   const [certificates, setCertificates] = useState([]);
   const [error, setError] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-  
-  // State for the Image Modal (Lightbox)
+
   const [selectedCert, setSelectedCert] = useState(null);
 
-  // Fallback image menggunakan SVG lokal
   const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f1f5f9'/%3E%3Cpath d='M400 200c-33.1 0-60 26.9-60 60s26.9 60 60 60 60-26.9 60-60-26.9-60-60-60zm0 90c-16.5 0-30-13.5-30-30s13.5-30 30-30 30 13.5 30 30-13.5 30-30 30z' fill='%2394a3b8'/%3E%3Cpath d='M360 320h80v100l-40-20-40 20z' fill='%2394a3b8'/%3E%3Ctext x='50%25' y='65%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' font-weight='bold' fill='%2364748b'%3ESertifikat%3C/text%3E%3C/svg%3E";
 
   useEffect(() => {
@@ -33,15 +31,12 @@ export const CertificatesPage = () => {
     fetchCertificates();
   }, []);
 
-  // Extract unique categories from certificates, always include "All"
   const categories = ["All", ...new Set(certificates.map(cert => cert.category || "Lainnya"))];
 
-  // Filter certificates based on active tab
   const filteredCertificates = activeCategory === "All" 
     ? certificates 
     : certificates.filter(cert => (cert.category || "Lainnya") === activeCategory);
 
-  // Helper to format image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) return FALLBACK_IMAGE;
     if (imagePath.startsWith('/uploads/')) {
@@ -52,7 +47,6 @@ export const CertificatesPage = () => {
     return `https://${imagePath}`; 
   };
 
-  // Helper to check if link is valid
   const isValidLink = (link) => {
     return link && link !== '#' && link.trim() !== '';
   };
@@ -79,7 +73,6 @@ export const CertificatesPage = () => {
     }
   };
 
-  // Prevent scrolling when modal is open
   useEffect(() => {
     if (selectedCert) {
       document.body.style.overflow = 'hidden';
@@ -91,7 +84,7 @@ export const CertificatesPage = () => {
 
   return (
     <div className="pt-32 pb-20 min-h-screen px-6 max-w-7xl mx-auto">
-      {/* Header Halaman */}
+
       <div
         data-aos="fade-up"
         className="mb-12 text-center"
@@ -118,7 +111,6 @@ export const CertificatesPage = () => {
         </p>
       </div>
 
-      {/* Error States */}
       {error && (
         <div className="flex flex-col items-center justify-center py-20 text-red-500 text-center max-w-lg mx-auto">
           <AlertCircle size={48} className="mb-4 opacity-50" />
@@ -133,7 +125,6 @@ export const CertificatesPage = () => {
         </div>
       )}
 
-      {/* Filter Tabs */}
       {!error && certificates.length > 0 && (
         <div 
           data-aos="fade-up"
@@ -160,7 +151,6 @@ export const CertificatesPage = () => {
         </div>
       )}
 
-      {/* Grid Sertifikat */}
       {!error && certificates.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCertificates.map((cert, index) => (
@@ -171,7 +161,7 @@ export const CertificatesPage = () => {
               onClick={() => handleCardClick(cert)}
               className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer"
             >
-              {/* Image Section */}
+
               <div className="h-56 overflow-hidden relative bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                 <img
                   src={getImageUrl(cert.image)}
@@ -181,7 +171,7 @@ export const CertificatesPage = () => {
                   onError={handleImageError}
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                 />
-                {/* Hover Overlay */}
+
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <div className="flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-sm text-black rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                     {getValidLink(cert) ? (
@@ -197,8 +187,7 @@ export const CertificatesPage = () => {
                     )}
                   </div>
                 </div>
-                
-                {/* Category Badge overlay on image */}
+
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 bg-black/70 backdrop-blur-md text-white text-xs font-bold rounded-full border border-white/20 shadow-lg">
                     {cert.category || (lang === "id" ? "Lainnya" : "Other")}
@@ -206,7 +195,6 @@ export const CertificatesPage = () => {
                 </div>
               </div>
 
-              {/* Content Section */}
               <div className="p-6">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wide">
                   <Calendar size={12} />
@@ -222,14 +210,12 @@ export const CertificatesPage = () => {
                 </p>
               </div>
 
-              {/* Decorative Gradient Line at Bottom */}
               <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-500 dark:to-indigo-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </div>
           ))}
         </div>
       )}
-      
-      {/* Empty State for Filter */}
+
       {!error && certificates.length > 0 && filteredCertificates.length === 0 && (
         <div 
           className="text-center py-20 text-slate-500"
@@ -243,7 +229,6 @@ export const CertificatesPage = () => {
         </div>
       )}
 
-      {/* Image Modal (Lightbox) - Only shows if NO external link exists and image is clicked */}
       {selectedCert && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 md:p-8 transition-opacity duration-200"
@@ -253,7 +238,7 @@ export const CertificatesPage = () => {
             className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
+
             <button 
               onClick={() => setSelectedCert(null)}
               className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-colors cursor-pointer"
@@ -261,7 +246,6 @@ export const CertificatesPage = () => {
               <X size={24} />
             </button>
 
-            {/* Modal Content */}
             <div className="flex-1 overflow-auto bg-slate-100 dark:bg-slate-950 flex items-center justify-center min-h-[40vh] relative p-4">
               <img
                 src={getImageUrl(selectedCert.image)}
@@ -270,7 +254,7 @@ export const CertificatesPage = () => {
                 className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-lg"
               />
             </div>
-            
+
             <div className="p-6 md:p-8 bg-white dark:bg-slate-900 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-t border-slate-100 dark:border-slate-800">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">

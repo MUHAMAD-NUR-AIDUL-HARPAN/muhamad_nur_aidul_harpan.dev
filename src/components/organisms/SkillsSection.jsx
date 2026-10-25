@@ -4,7 +4,6 @@ import { Layout, Server, Settings, Cpu, Layers } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { TextHighlighter } from "../atoms/TextHighlighter";
 
-// Helper untuk mapping string icon ke Komponen Lucide
 const iconMap = {
   Layout: Layout,
   Server: Server,
@@ -16,7 +15,7 @@ export const SkillsSection = () => {
 
   return (
     <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-900 relative overflow-hidden">
-      {/* Background Decor (Dots pattern - Desktop Only) */}
+
       <div className="hidden md:block absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -57,7 +56,7 @@ export const SkillsSection = () => {
                 data-aos-delay={catIndex * 100}
                 className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-300"
               >
-                {/* Header Icon */}
+
                 <div className="flex items-center gap-4 mb-8">
                   <div className="p-3 rounded-2xl bg-blue-100 dark:bg-blue-900/30 text-blue-600">
                     <Icon size={28} />
@@ -65,7 +64,6 @@ export const SkillsSection = () => {
                   <h3 className="text-2xl font-bold">{category.category}</h3>
                 </div>
 
-                {/* List Skills */}
                 <div className="space-y-6">
                   {category.skills.map((skill, skillIndex) => (
                     <SkillBar

@@ -14,7 +14,6 @@ import {
 import { TbBrandVscode, TbBrandOffice } from "react-icons/tb";
 import { Code } from "lucide-react";
 
-// Mapping Icon Brand
 const iconMap = {
   html: { icon: SiHtml5, color: "#E34F26" },
   css: { icon: SiCss3, color: "#1572B6" },
@@ -40,7 +39,7 @@ export const SkillBar = ({ name, level, iconKey, color, index = 0 }) => {
     <div className="mb-4 last:mb-0 group/skill">
       <div className="flex justify-between items-center mb-1.5">
         <div className="flex items-center gap-2">
-          {/* Logo Badge Icon */}
+
           <div
             className="w-6 h-6 rounded-md flex items-center justify-center p-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 group-hover/skill:scale-110 transition-transform duration-300 shadow-xs"
             style={{ color: brandColor }}
@@ -56,9 +55,8 @@ export const SkillBar = ({ name, level, iconKey, color, index = 0 }) => {
         </span>
       </div>
 
-      {/* Background Bar */}
       <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-        {/* Static Foreground Bar (Animasi dimatikan sesuai permintaan pengujian) */}
+
         <div
           style={{ width: `${level}%` }}
           className="h-full bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-500 dark:to-indigo-400 rounded-full relative"

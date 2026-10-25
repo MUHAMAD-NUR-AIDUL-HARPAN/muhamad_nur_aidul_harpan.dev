@@ -9,7 +9,6 @@ import {
   contactData,
 } from "../../data/content";
 
-// --- ENTERPRISE AI EMBLEM (Minimalist Neural Spark Icon) ---
 const AiIcon = ({ size = 20, className = "" }) => (
   <svg
     width={size}
@@ -18,9 +17,9 @@ const AiIcon = ({ size = 20, className = "" }) => (
     fill="currentColor"
     className={className}
   >
-    {/* Primary 4-pointed Astroid Curve */}
+
     <path d="M12 2C12 7.523 7.523 12 2 12C7.523 12 12 16.477 12 22C12 16.477 16.477 12 22 12C16.477 12 12 7.523 12 2Z" />
-    {/* Micro Satellite Spark */}
+
     <path
       d="M19 3C19 5.209 17.209 7 15 7C17.209 7 19 8.791 19 11C19 8.791 20.791 7 23 7C20.791 7 19 5.209 19 3Z"
       opacity="0.85"
@@ -28,9 +27,8 @@ const AiIcon = ({ size = 20, className = "" }) => (
   </svg>
 );
 
-// --- GENERATOR BASIS PENGETAHUAN DINAMIS & KOMPREHENSIF (KNOWLEDGE BASE) ---
 const buildHarpanContext = (dynamicCerts = [], dynamicProjects = []) => {
-  // Proyek gabungan (database backend terbaru + fallback content.js)
+
   const allProjects = dynamicProjects.length > 0 ? dynamicProjects : projectsData;
   const projectListFormatted = allProjects
     .map((p, idx) => {
@@ -44,7 +42,6 @@ const buildHarpanContext = (dynamicCerts = [], dynamicProjects = []) => {
     })
     .join("\n\n");
 
-  // Pengalaman kerja & program
   const experienceFormatted = experienceData
     .map((exp, idx) => {
       return `Pengalaman ${idx + 1}:
@@ -56,7 +53,6 @@ const buildHarpanContext = (dynamicCerts = [], dynamicProjects = []) => {
     })
     .join("\n\n");
 
-  // Riwayat Pendidikan
   const educationFormatted = educationData
     .map((edu, idx) => {
       return `Pendidikan ${idx + 1}:
@@ -68,7 +64,6 @@ const buildHarpanContext = (dynamicCerts = [], dynamicProjects = []) => {
     })
     .join("\n\n");
 
-  // Sertifikasi Industri & Pelatihan (Database terbaru + fallback resmi)
   const actualCerts = dynamicCerts.length > 0 ? dynamicCerts : certificatesData;
   const certsFormatted = actualCerts
     .map((c, idx) => `${idx + 1}. ${c.title} (${c.issuer} - ${c.category || 'Sertifikasi'})`)
@@ -204,7 +199,6 @@ export const AiAssistant = () => {
   const [dynamicProjects, setDynamicProjects] = useState([]);
   const scrollRef = useRef(null);
 
-  // Ambil data terbaru dari Supabase hanya saat chatbot dibuka agar tidak membebani initial load
   useEffect(() => {
     if (!isOpen) return;
 
@@ -237,7 +231,6 @@ export const AiAssistant = () => {
   const [messages, setMessages] = useState([initialGreeting]);
   const messagesEndRef = useRef(null);
 
-  // Kunci scroll halaman ketika modal chatbot dibuka
   useEffect(() => {
     if (isOpen) {
       window.lenis?.stop();
@@ -275,9 +268,7 @@ export const AiAssistant = () => {
     const textToSend = messageText.trim();
     if (!textToSend || isLoading) return;
 
-    // --- GROQ API KEY ---
     const apiKey = import.meta.env.VITE_GROQ_API_KEY;
-    // ---------------------
 
     if (!apiKey || apiKey.trim() === "") {
       setInput("");
@@ -297,18 +288,15 @@ export const AiAssistant = () => {
     setIsLoading(true);
 
     try {
-      // Generate context dinamis yang selalu sinkron dengan data website & database
+
       const dynamicContext = buildHarpanContext(dynamicCerts, dynamicProjects);
 
-      // Ambil maksimal 4 percakapan terakhir agar prompt tidak membengkak dan bebas limit TPM
       const recentHistory = messages.slice(-4).map((m) => ({ role: m.role, content: m.content }));
 
-      // Berikan ruang token yang lega (450 - 800 token) agar AI selalu menyelesaikan kalimatnya sampai tuntas tanpa terpotong
       const lowerQuery = textToSend.toLowerCase();
       const isAskingList = lowerQuery.includes("semua") || lowerQuery.includes("daftar") || lowerQuery.includes("apa saja") || lowerQuery.includes("list") || lowerQuery.includes("rincian");
       const dynamicMaxTokens = isAskingList ? 800 : 450;
 
-      // Panggilan langsung via native fetch (bebas beban library 350KB)
       const requestGroq = async (modelName) => {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
@@ -374,11 +362,11 @@ export const AiAssistant = () => {
 
   return (
     <>
-      {/* === FLOATING TRIGGER BUTTON === */}
+
       <div className="fixed bottom-6 right-6 z-40">
         {!isOpen && (
           <div className="relative group transition-all duration-300">
-            {/* Outer Glow Ring (Desktop Only) */}
+
             <div className="hidden md:block absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
 
             <button
@@ -401,10 +389,9 @@ export const AiAssistant = () => {
         )}
       </div>
 
-      {/* === CHAT MODAL WINDOW === */}
       {isOpen && (
         <>
-          {/* Backdrop: mengunci interaksi di luar dan menutup saat diklik */}
+
           <div
             onClick={() => setIsOpen(false)}
             className="fixed inset-0 z-40 bg-black/40 transition-opacity duration-200"
@@ -413,7 +400,7 @@ export const AiAssistant = () => {
           <div
             className="fixed bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[580px] max-h-[85vh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden will-change-transform transform-gpu"
           >
-              {/* --- HEADER --- */}
+
               <div className="shrink-0 p-4 px-5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
@@ -454,7 +441,6 @@ export const AiAssistant = () => {
                 </div>
               </div>
 
-              {/* --- MESSAGES CONTAINER --- */}
               <div
                 ref={scrollRef}
                 data-lenis-prevent="true"
@@ -490,7 +476,6 @@ export const AiAssistant = () => {
                 </div>
               ))}
 
-              {/* Typing Animated Wave */}
               {isLoading && (
                 <div className="flex items-start gap-2.5 justify-start">
                   <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5">
@@ -513,7 +498,6 @@ export const AiAssistant = () => {
                 </div>
               )}
 
-              {/* QUICK SUGGESTIONS (Shown when message count is low) */}
               {messages.length <= 2 && !isLoading && (
                 <div className="pt-2">
                   <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 mb-2 px-1">
@@ -534,11 +518,9 @@ export const AiAssistant = () => {
                 </div>
               )}
 
-              {/* Anchor to scroll into view */}
               <div ref={messagesEndRef} className="h-1" />
             </div>
 
-            {/* --- INPUT BAR --- */}
             <div className="shrink-0 p-3.5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
               <form onSubmit={handleSubmit} className="flex items-center gap-2">
                 <div className="flex-1 relative flex items-center rounded-2xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200/70 dark:border-slate-700/60 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
@@ -569,4 +551,3 @@ export const AiAssistant = () => {
     </>
   );
 };
-

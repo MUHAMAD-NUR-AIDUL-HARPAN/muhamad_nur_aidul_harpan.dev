@@ -11,10 +11,9 @@ export const AboutSection = () => {
 
   return (
     <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
-      {/* Pattern titik-titik halus (Desktop Only) */}
+
       <div className="hidden md:block absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
-      {/* Decorative Text Background */}
       <div 
         className="hidden md:block absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
       >
@@ -23,7 +22,7 @@ export const AboutSection = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* LEFT COLUMN: Narrative & Stats (AOS Fade Up) */}
+
           <div
             data-aos="fade-up"
           >
@@ -50,13 +49,12 @@ export const AboutSection = () => {
             <StatsGrid />
           </div>
 
-          {/* RIGHT COLUMN: Visual & Skills (AOS Fade Up Staggered) */}
           <div
             data-aos="fade-up"
             data-aos-delay="150"
             className="relative"
           >
-            {/* Glassmorphic Card Container */}
+
             <div className="p-8 rounded-3xl bg-white/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-2xl relative z-10 hover:shadow-blue-500/10 transition-all duration-300">
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600">
@@ -67,14 +65,12 @@ export const AboutSection = () => {
                 </h3>
               </div>
 
-              {/* Skills Grid */}
               <div className="flex flex-wrap gap-3">
                 {skills.map((skill, index) => (
                   <TechTag key={skill} label={skill} index={index} />
                 ))}
               </div>
 
-              {/* Decorative Code Snippet Style */}
               <div className="mt-8 p-4 rounded-xl bg-slate-900 text-slate-300 font-mono text-xs overflow-hidden border border-slate-800 shadow-md">
                 <div className="flex gap-1.5 mb-3">
                   <div className="w-3 h-3 rounded-full bg-red-500" />

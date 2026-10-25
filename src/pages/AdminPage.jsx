@@ -4,14 +4,12 @@ import { supabase } from "../lib/supabaseClient";
 
 export const AdminPage = () => {
   const [activeTab, setActiveTab] = useState("certificates"); 
-  
-  // ================= SEARCH & FILTER STATE =================
+
   const [certSearch, setCertSearch] = useState("");
   const [certFilterCat, setCertFilterCat] = useState("All");
   const [projSearch, setProjSearch] = useState("");
   const [projFilterCat, setProjFilterCat] = useState("All");
 
-  // ================= CERTIFICATES STATE =================
   const [certificates, setCertificates] = useState([]);
   const [certForm, setCertForm] = useState({
     title: "", issuer: "", date: "", category: "Frontend", image: "", link: ""
@@ -22,7 +20,6 @@ export const AdminPage = () => {
   const [isNewCertCategory, setIsNewCertCategory] = useState(false);
   const [editingCertId, setEditingCertId] = useState(null);
 
-  // ================= PROJECTS STATE =================
   const [projects, setProjects] = useState([]);
   const [projectForm, setProjectForm] = useState({
     title: "", category: "Web App", tech: "", desc: "", image: "", link: "", github: ""
@@ -33,7 +30,6 @@ export const AdminPage = () => {
   const [isNewProjectCategory, setIsNewProjectCategory] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState(null);
 
-  // ================= GLOBAL STATE =================
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -44,7 +40,6 @@ export const AdminPage = () => {
   const defaultProjectCategories = ["Web App", "Mobile", "AI Integration", "Lainnya"];
   const projectCategories = [...new Set([...defaultProjectCategories, ...projects.map(p => p.category).filter(Boolean)])];
 
-  // Filtered Certificates
   const filteredCertificates = useMemo(() => {
     return certificates.filter((cert) => {
       const matchSearch = (cert.title || "").toLowerCase().includes(certSearch.toLowerCase()) ||
@@ -54,7 +49,6 @@ export const AdminPage = () => {
     });
   }, [certificates, certSearch, certFilterCat]);
 
-  // Filtered Projects
   const filteredProjects = useMemo(() => {
     return projects.filter((proj) => {
       const matchSearch = (proj.title || "").toLowerCase().includes(projSearch.toLowerCase()) ||
@@ -72,10 +66,10 @@ export const AdminPage = () => {
         supabase.from('certificates').select('*').order('id', { ascending: false }),
         supabase.from('projects').select('*').order('id', { ascending: false })
       ]);
-      
+
       if (resCerts.error) throw resCerts.error;
       if (resProj.error) throw resProj.error;
-      
+
       setCertificates(resCerts.data || []);
       setProjects(resProj.data || []);
       setError("");
@@ -116,7 +110,6 @@ export const AdminPage = () => {
     return publicData.publicUrl;
   };
 
-  // ================= HANDLERS =================
   const handleCertSubmit = async (e) => {
     e.preventDefault();
     if (!certImageFile && !certForm.image && !editingCertId) {
@@ -222,7 +215,6 @@ export const AdminPage = () => {
     }
   };
 
-  // Edit Handlers
   const handleEditCert = (cert) => {
     setEditingCertId(cert.id);
     setCertForm({
@@ -260,13 +252,12 @@ export const AdminPage = () => {
   return (
     <div className="pt-32 pb-20 min-h-screen bg-slate-50 dark:bg-slate-900 px-6">
       <div className="max-w-7xl mx-auto">
-        
-        {/* HEADER & TABS */}
+
         <div className="mb-10 text-center">
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-slate-50 mb-6">
             Admin <span className="text-blue-600">Dashboard</span>
           </h1>
-          
+
           <div className="inline-flex bg-white dark:bg-slate-900 rounded-full p-1 shadow-lg border border-slate-200 dark:border-slate-800 relative z-10">
             <button
               onClick={() => { setActiveTab("certificates"); resetCertForm(); }}
@@ -290,11 +281,9 @@ export const AdminPage = () => {
           </div>
         )}
 
-        {/* ======================= TAB: CERTIFICATES ======================= */}
         {activeTab === "certificates" && (
           <div key="certificates" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Form Sertifikat */}
+
               <div className="lg:col-span-5">
                 <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-6">
                   <div className="flex justify-between items-center mb-6">
@@ -364,10 +353,9 @@ export const AdminPage = () => {
                 </div>
               </div>
 
-              {/* List Sertifikat */}
               <div className="lg:col-span-7">
                 <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-6">
-                  {/* Header & Quick Stats */}
+
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-800 gap-3">
                     <div>
                       <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -386,7 +374,6 @@ export const AdminPage = () => {
                     )}
                   </div>
 
-                  {/* Filter & Search Toolbar */}
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-4">
                     <div className="sm:col-span-7 relative">
                       <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -419,7 +406,6 @@ export const AdminPage = () => {
                     </div>
                   </div>
 
-                  {/* Scrollable Container with overscroll-contain */}
                   <div
                     className="space-y-3 max-h-[580px] overflow-y-auto overscroll-contain pr-2 scrollbar-thin"
                   >
@@ -450,17 +436,16 @@ export const AdminPage = () => {
                               <Calendar size={10} /> {cert.date}
                             </span>
                           </div>
-                          
+
                           <h3 className="font-bold text-sm text-slate-900 dark:text-white truncate" title={cert.title}>
                             {cert.title}
                           </h3>
-                          
+
                           <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
                             {cert.issuer}
                           </p>
                         </div>
 
-                        {/* Action Buttons */}
                         <div className="flex items-center gap-1">
                           {cert.link && (
                             <a
@@ -504,11 +489,9 @@ export const AdminPage = () => {
             </div>
           )}
 
-          {/* ======================= TAB: PROJECTS ======================= */}
           {activeTab === "projects" && (
             <div key="projects" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Form Tambah Proyek */}
+
               <div className="lg:col-span-5">
                 <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-6">
                   <div className="flex justify-between items-center mb-6">
@@ -519,13 +502,13 @@ export const AdminPage = () => {
                       <button onClick={resetProjectForm} className="text-sm text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><X size={14}/> Batal</button>
                     )}
                   </div>
-                  
+
                   <form onSubmit={handleProjectSubmit} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-2"><Briefcase size={14} /> Judul Proyek</label>
                       <input type="text" required value={projectForm.title} onChange={e => setProjectForm({...projectForm, title: e.target.value})} placeholder="e.g. Predictive Copilot" className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 transition-all dark:text-white" />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
                         <span className="flex items-center gap-2"><Tag size={14} /> Kategori Platform</span>
@@ -585,10 +568,9 @@ export const AdminPage = () => {
                 </div>
               </div>
 
-              {/* List Proyek */}
               <div className="lg:col-span-7">
                 <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-6">
-                  {/* Header & Quick Stats */}
+
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-800 gap-3">
                     <div>
                       <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -607,7 +589,6 @@ export const AdminPage = () => {
                     )}
                   </div>
 
-                  {/* Filter & Search Toolbar */}
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-4">
                     <div className="sm:col-span-7 relative">
                       <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -640,7 +621,6 @@ export const AdminPage = () => {
                     </div>
                   </div>
 
-                  {/* Scrollable Container with overscroll-contain */}
                   <div
                     className="space-y-3 max-h-[580px] overflow-y-auto overscroll-contain pr-2 scrollbar-thin"
                   >
@@ -679,7 +659,6 @@ export const AdminPage = () => {
                           </div>
                         </div>
 
-                        {/* Action Buttons */}
                         <div className="flex items-center gap-1">
                           {proj.link && (
                             <a

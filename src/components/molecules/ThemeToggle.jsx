@@ -21,9 +21,9 @@ export const ThemeToggle = () => {
           {lang.toUpperCase()}
         </span>
       </button>
-      
+
       <div className="w-px bg-slate-200 dark:bg-slate-700 my-1.5" />
-      
+
       <button
         onClick={toggleTheme}
         aria-label="Toggle Theme"
