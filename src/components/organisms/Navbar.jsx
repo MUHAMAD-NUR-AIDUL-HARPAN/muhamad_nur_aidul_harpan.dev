@@ -133,7 +133,7 @@ export const Navbar = () => {
       >
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
-        <div className="flex flex-col items-center gap-5 z-10 w-full px-8">
+        <div className="flex flex-col items-center gap-3 z-10 w-full px-6">
           {navItems.map((item, i) => {
             const isActive = location.pathname === "/" ? activeSection === item.id : location.pathname === item.path;
             return (
@@ -141,14 +141,31 @@ export const Navbar = () => {
                 key={item.id}
                 style={{ transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms" }}
                 onClick={() => handleNavClick(item)}
-                className={`group relative flex items-center justify-center w-full transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer ${
+                className={`group relative flex items-center justify-between w-full max-w-xs px-5 py-3 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-95 cursor-pointer ${
                   isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                } ${
+                  isActive
+                    ? "bg-blue-600/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 shadow-sm"
+                    : "text-slate-800 dark:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:text-blue-600 dark:hover:text-blue-400"
                 }`}
               >
-                {isActive && <div className="absolute inset-0 bg-blue-100/60 dark:bg-blue-900/30 rounded-2xl -z-10 transition-all" />}
-                <span className={`text-3xl font-black tracking-tight transition-colors py-2.5 ${isActive ? "text-blue-600" : "text-slate-900 dark:text-slate-200 group-hover:text-blue-500"}`}>
-                  {item.label}
-                </span>
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`p-2 rounded-xl transition-colors duration-300 ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-blue-600 group-hover:text-white"
+                    }`}
+                  >
+                    <item.icon size={18} />
+                  </div>
+                  <span className="text-lg font-bold tracking-tight">{item.label}</span>
+                </div>
+                <div
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    isActive ? "bg-blue-600 scale-100" : "bg-transparent scale-0 group-hover:bg-blue-500 group-hover:scale-100"
+                  }`}
+                />
               </button>
             );
           })}
@@ -201,7 +218,7 @@ export const Navbar = () => {
           <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 p-1.5 rounded-full flex items-center justify-between w-full shadow-sm z-20">
             <div
               onClick={() => handleNavClick({ id: "home", type: "scroll" })}
-              className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold cursor-pointer shadow-lg hover:shadow-blue-500/30 transition-all hover:scale-105 active:scale-95"
+              className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold cursor-pointer shadow-lg hover:shadow-blue-500/40 transition-all duration-300 hover:scale-110 hover:rotate-6 active:scale-95"
             >
               <LogoIcon sizeClass="w-5 h-5" />
             </div>
@@ -215,33 +232,45 @@ export const Navbar = () => {
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className="cursor-pointer relative group/item px-2 py-2 rounded-full flex items-center justify-center transition-all flex-shrink-0 hover:scale-105 active:scale-95"
+                    className="cursor-pointer relative group/item px-3 py-2 rounded-full flex items-center justify-center transition-all duration-300 flex-shrink-0 active:scale-95"
                   >
-                    <div className="relative z-10 flex items-center gap-1.5">
-                      <div className="relative flex items-center justify-center w-8 h-8 rounded-full">
-                        <div className="absolute -inset-1 rounded-full border-[1.5px] border-dashed border-blue-500 dark:border-blue-400 opacity-0 group-hover/item:opacity-100 transition-all duration-300" />
-                        {isActive && (
-                          <div className="absolute -inset-0.5 rounded-full border-2 border-blue-600 dark:border-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.4)] transition-all duration-300" />
-                        )}
+                    <div
+                      className={`absolute inset-0 rounded-full transition-all duration-300 ease-out pointer-events-none ${
+                        isActive
+                          ? "bg-blue-600/15 dark:bg-blue-500/20 border border-blue-600/30 dark:border-blue-400/30 shadow-[0_0_15px_rgba(37,99,235,0.2)] scale-100 opacity-100"
+                          : "bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/50 dark:border-slate-700/50 scale-75 opacity-0 group-hover/item:scale-100 group-hover/item:opacity-100 group-hover/item:shadow-[0_0_12px_rgba(59,130,246,0.15)]"
+                      }`}
+                    />
+
+                    <div className="relative z-10 flex items-center gap-2">
+                      <div className="relative flex items-center justify-center w-7 h-7 rounded-full">
                         <item.icon
                           size={15}
-                          className={`relative z-10 transition-colors duration-300 ${
+                          className={`relative z-10 transition-all duration-300 transform group-hover/item:scale-115 group-hover/item:-translate-y-0.5 ${
                             isActive
-                              ? "text-blue-600 dark:text-blue-400"
+                              ? "text-blue-600 dark:text-blue-400 scale-105"
                               : "text-slate-500 dark:text-slate-400 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400"
                           }`}
                         />
                       </div>
                       <span
-                        className={`hidden lg:block text-sm font-semibold transition-colors duration-300 ${
+                        className={`hidden lg:block text-sm font-semibold transition-all duration-300 tracking-tight ${
                           isActive
-                            ? "text-blue-600 dark:text-blue-400"
-                            : "text-slate-500 dark:text-slate-400 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400"
+                            ? "text-blue-600 dark:text-blue-400 font-bold"
+                            : "text-slate-600 dark:text-slate-300 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400"
                         }`}
                       >
                         {item.label}
                       </span>
                     </div>
+
+                    <span
+                      className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-cyan-400 rounded-full transition-all duration-300 ease-out pointer-events-none ${
+                        isActive
+                          ? "w-1/2 opacity-100"
+                          : "w-0 opacity-0 group-hover/item:w-1/2 group-hover/item:opacity-100"
+                      }`}
+                    />
                   </button>
                 );
               })}

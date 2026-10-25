@@ -3,13 +3,9 @@ import { createContext, useContext, useState, useEffect } from "react";
 const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
-
   const [lang, setLang] = useState("en");
-
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [isPreloaderDone, setIsPreloaderDone] = useState(() => {
-    return !!sessionStorage.getItem("visited");
-  });
+  const [isPreloaderDone, setIsPreloaderDone] = useState(false);
 
   const toggleLang = () => {
     setLang((prev) => (prev === "en" ? "id" : "en"));
@@ -30,8 +26,8 @@ export const GlobalProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
-        lang, 
-        toggleLang, 
+        lang,
+        toggleLang,
         isDarkMode,
         toggleTheme,
         isPreloaderDone,

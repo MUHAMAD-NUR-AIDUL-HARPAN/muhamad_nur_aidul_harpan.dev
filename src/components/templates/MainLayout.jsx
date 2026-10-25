@@ -16,7 +16,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 export const MainLayout = ({ children }) => {
   const { setIsPreloaderDone } = useGlobal();
-  const [isLoading, setIsLoading] = useState(() => !sessionStorage.getItem("visited"));
+  const [isLoading, setIsLoading] = useState(true);
   const lenisRef = useRef(null);
   const progressBarRef = useRef(null);
 
@@ -24,7 +24,7 @@ export const MainLayout = ({ children }) => {
     ScrollTrigger.config({ ignoreMobileResize: true });
 
     AOS.init({
-      duration: 600,
+      duration: 950,
       easing: "ease-out-cubic",
       once: true,
       offset: 40,
@@ -98,7 +98,6 @@ export const MainLayout = ({ children }) => {
   const handlePreloaderComplete = () => {
     setIsLoading(false);
     setIsPreloaderDone(true);
-    sessionStorage.setItem("visited", "true");
   };
 
   return (

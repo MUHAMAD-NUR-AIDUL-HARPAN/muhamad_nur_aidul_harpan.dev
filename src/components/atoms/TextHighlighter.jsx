@@ -16,7 +16,7 @@ export const TextHighlighter = ({ className = "" }) => {
         }
       },
       {
-        threshold: 0.3,
+        threshold: 0.25,
         rootMargin: "0px 0px -40px 0px",
       }
     );
@@ -35,7 +35,7 @@ export const TextHighlighter = ({ className = "" }) => {
         style={{
           transformOrigin: "left center",
           transform: isVisible ? "scaleX(1)" : "scaleX(0)",
-          transition: "transform 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.1s",
+          transition: "transform 1.4s cubic-bezier(0.25, 1, 0.5, 1) 0.15s",
         }}
         className="absolute inset-0 bg-blue-200/80 dark:bg-blue-600/30 rounded-md block will-change-transform transform-gpu"
       >

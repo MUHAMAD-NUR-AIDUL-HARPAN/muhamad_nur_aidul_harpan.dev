@@ -7,76 +7,100 @@ export const Preloader = ({ onComplete }) => {
   const contentRef = useRef(null);
 
   useEffect(() => {
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-      currentProgress += Math.floor(Math.random() * 8) + 5;
+    const counter = { val: 0 };
+    const tween = gsap.to(counter, {
+      val: 100,
+      duration: 1.8,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        setProgress(Math.floor(counter.val));
+      },
+      onComplete: () => {
+        const tl = gsap.timeline({
+          onComplete: () => {
+            onComplete();
+          },
+        });
 
-      if (currentProgress >= 100) {
-        setProgress(100);
-        clearInterval(interval);
+        tl.to(contentRef.current, {
+          y: -24,
+          opacity: 0,
+          scale: 0.98,
+          duration: 0.4,
+          ease: "power3.in",
+        }).to(
+          containerRef.current,
+          {
+            yPercent: -100,
+            duration: 0.75,
+            ease: "power4.inOut",
+          },
+          "-=0.1"
+        );
+      },
+    });
 
-        setTimeout(() => {
-          const tl = gsap.timeline({
-            onComplete: () => {
-              onComplete();
-            },
-          });
-
-          tl.to(contentRef.current, {
-            opacity: 0,
-            scale: 0.98,
-            duration: 0.35,
-            ease: "power2.out",
-          }).to(
-            containerRef.current,
-            {
-              opacity: 0,
-              duration: 0.45,
-              ease: "power2.inOut",
-            },
-            "-=0.1"
-          );
-        }, 120);
-      } else {
-        setProgress(currentProgress);
-      }
-    }, 18);
-
-    return () => clearInterval(interval);
+    return () => {
+      tween.kill();
+    };
   }, [onComplete]);
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 overflow-hidden pointer-events-none will-change-transform transform-gpu"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-950 text-slate-100 overflow-hidden pointer-events-auto select-none will-change-transform transform-gpu"
     >
+      <div className="absolute w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.08)_0,transparent_70%)] pointer-events-none" />
+
       <div
         ref={contentRef}
-        className="relative flex flex-col items-center justify-center w-full px-4"
+        className="relative z-10 flex flex-col items-center justify-center px-6 max-w-md w-full"
       >
-
-        <div className="relative text-[5vw] sm:text-[3vw] md:text-3xl lg:text-4xl font-black tracking-[0.15em] uppercase whitespace-nowrap mb-6">
-
-          <div className="text-slate-200 dark:text-slate-800">
-            MUHAMAD NUR AIDUL HARPAN
-          </div>
-
-          <div 
-            className="absolute top-0 left-0 overflow-hidden text-slate-900 dark:text-slate-100 whitespace-nowrap transition-all duration-100 ease-out"
-            style={{ width: `${progress}%` }}
+        <div className="relative flex items-center justify-center w-16 h-16 mb-8 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-[0_0_35px_rgba(37,99,235,0.4)] border border-blue-400/30">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-8 h-8 text-white"
           >
-            MUHAMAD NUR AIDUL HARPAN
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
+          <div className="absolute -inset-1 rounded-2xl bg-blue-500/20 blur-md pointer-events-none" />
+        </div>
+
+        <div className="text-center mb-6">
+          <h2 className="text-lg sm:text-xl font-bold tracking-[0.2em] text-white uppercase mb-1">
+            Muhamad Nur Aidul Harpan
+          </h2>
+          <p className="text-[11px] font-mono tracking-[0.25em] text-blue-400 uppercase">
+            Full-Stack Developer & AI Specialist
+          </p>
+        </div>
+
+        <div className="w-full max-w-[280px] mb-4">
+          <div className="h-[3px] w-full bg-slate-800/90 rounded-full overflow-hidden relative">
+            <div
+              className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-400 transition-all duration-75 ease-out relative"
+              style={{ width: `${progress}%` }}
+            >
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_10px_#38bdf8]" />
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 text-xs font-mono text-slate-400 dark:text-slate-500 tracking-widest">
-          <span>LOADING</span>
-          <div className="w-12 h-[1px] bg-slate-300 dark:bg-slate-700" />
-          <span className="w-8 text-right font-bold text-slate-800 dark:text-slate-200">
-            {progress}%
-          </span>
+        <div className="flex items-center justify-between w-full max-w-[280px] text-[11px] font-mono text-slate-400">
+          <span className="tracking-widest uppercase">Loading Assets</span>
+          <span className="font-semibold text-white tracking-wider">{progress}%</span>
         </div>
       </div>
     </div>
   );
 };
+
+export default Preloader;
