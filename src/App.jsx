@@ -8,9 +8,9 @@ import {
 import { GlobalProvider } from "./context/GlobalContext";
 import { MainLayout } from "./components/templates/MainLayout";
 import ProtectedRoute from "./components/utilities/ProtectedRoute";
+import HomePage from "./pages/HomePage";
 import "./index.css";
 
-const HomePage = lazy(() => import("./pages/HomePage"));
 const CertificatesPage = lazy(() => import("./pages/CertificatesPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));

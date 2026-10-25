@@ -11,7 +11,50 @@ const getImageUrl = (imagePath) => {
   return imagePath;
 };
 
-const uploadImageToSupabase = async (file) => {
+const convertImageToWebP = (file, maxWidth = 1280, quality = 0.85) => {
+  return new Promise((resolve) => {
+    if (!file || file.type === "image/webp") {
+      resolve(file);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const newName = file.name.replace(/\.[^.]+$/, ".webp");
+              resolve(new File([blob], newName, { type: "image/webp" }));
+            } else {
+              resolve(file);
+            }
+          },
+          "image/webp",
+          quality
+        );
+      };
+      img.onerror = () => resolve(file);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+};
+
+const uploadImageToSupabase = async (rawFile) => {
+  const file = await convertImageToWebP(rawFile);
   const fileExt = file.name.split(".").pop();
   const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${fileExt}`;
   const { error } = await supabase.storage.from("portfolio").upload(fileName, file, { contentType: file.type, upsert: true });

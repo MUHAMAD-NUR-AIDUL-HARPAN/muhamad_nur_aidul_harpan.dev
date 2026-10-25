@@ -30,36 +30,52 @@ export const MainLayout = ({ children }) => {
       offset: 40,
     });
 
-    const lenis = new Lenis({
-      lerp: 0.085,
-      smoothWheel: true,
-      syncTouch: true,
-      syncTouchLerp: 0.08,
-      touchMultiplier: 1.0,
-      touchInertiaExponent: 1.5,
-      autoResize: true,
-    });
+    const isDesktop = window.innerWidth > 768;
+    let lenis = null;
+    let tickerUpdate = null;
 
-    lenisRef.current = lenis;
-    window.lenis = lenis;
+    if (isDesktop) {
+      lenis = new Lenis({
+        lerp: 0.085,
+        smoothWheel: true,
+        autoResize: true,
+      });
 
-    lenis.on("scroll", ScrollTrigger.update);
-    const tickerUpdate = (time) => lenis.raf(time * 1000);
-    gsap.ticker.add(tickerUpdate);
-    gsap.ticker.lagSmoothing(0);
+      lenisRef.current = lenis;
+      window.lenis = lenis;
 
-    const onScroll = ({ progress }) => {
-      if (progressBarRef.current) {
-        progressBarRef.current.style.transform = `scaleX(${progress})`;
-      }
-    };
-    lenis.on("scroll", onScroll);
+      lenis.on("scroll", ScrollTrigger.update);
+      tickerUpdate = (time) => lenis.raf(time * 1000);
+      gsap.ticker.add(tickerUpdate);
+      gsap.ticker.lagSmoothing(0);
 
-    return () => {
-      gsap.ticker.remove(tickerUpdate);
-      lenis.destroy();
+      const onScroll = ({ progress }) => {
+        if (progressBarRef.current) {
+          progressBarRef.current.style.transform = `scaleX(${progress})`;
+        }
+      };
+      lenis.on("scroll", onScroll);
+    } else {
       window.lenis = null;
       lenisRef.current = null;
+
+      const handleNativeScroll = () => {
+        if (progressBarRef.current) {
+          const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = totalHeight > 0 ? window.scrollY / totalHeight : 0;
+          progressBarRef.current.style.transform = `scaleX(${progress})`;
+        }
+      };
+      window.addEventListener("scroll", handleNativeScroll, { passive: true });
+    }
+
+    return () => {
+      if (tickerUpdate) gsap.ticker.remove(tickerUpdate);
+      if (lenis) {
+        lenis.destroy();
+        window.lenis = null;
+        lenisRef.current = null;
+      }
       document.body.style.overflow = "";
     };
   }, []);
