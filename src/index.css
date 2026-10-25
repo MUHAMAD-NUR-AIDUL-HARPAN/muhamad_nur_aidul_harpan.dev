@@ -1,13 +1,11 @@
 @import "tailwindcss";
 
-/* ... kode variant dark mode anda ... */
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Poppins", sans-serif;
   --font-display: "Darker Grotesque", sans-serif;
 
-  /* Ubah palet abu-abu menjadi Slate untuk kesan lebih profesional dan tech-oriented */
   --color-gray-50: var(--color-slate-50);
   --color-gray-100: var(--color-slate-100);
   --color-gray-200: var(--color-slate-200);
@@ -30,25 +28,22 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Light Mode: Background #F8FAFC, Text #0F172A */
     background-color: #F8FAFC;
     color: #0F172A;
   }
   
   .dark body {
-    /* Dark Mode: Background #0F172A, Text #F1F5F9 */
     background-color: #0F172A;
     color: #F1F5F9;
   }
 
-  /* Accent selection color */
   ::selection {
-    background-color: #93C5FD; /* blue-300 */
-    color: #1D4ED8; /* blue-700 */
+    background-color: #93C5FD;
+    color: #1D4ED8;
   }
   .dark ::selection {
-    background-color: #1E3A8A; /* blue-900 */
-    color: #BFDBFE; /* blue-200 */
+    background-color: #1E3A8A;
+    color: #BFDBFE;
   }
   
   html {
@@ -58,6 +53,9 @@
   @media (min-width: 768px) {
     html {
       scrollbar-gutter: stable;
+    }
+    html.lenis {
+      overscroll-behavior-y: none;
     }
   }
 
@@ -77,12 +75,6 @@
     overflow: clip;
   }
 
-  /* Cegah overscroll rubber-banding bertabrakan dengan Lenis momentum (Seragam Mobile & Desktop) */
-  html.lenis {
-    overscroll-behavior-y: none;
-  }
-
-  /* Optimasi GPU Mobile: Ringankan beban Gaussian blur saat scroll di HP */
   @media (max-width: 768px) {
     .backdrop-blur-xl,
     .backdrop-blur-lg,
@@ -95,16 +87,14 @@
 }
 
 @layer components {
-  /* Class utility untuk menyembunyikan scrollbar */
   .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
   }
   
-  /* Class untuk custom scrollbar yang tipis dan elegan */
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: var(--color-gray-300) transparent;
@@ -127,7 +117,6 @@
     background-color: var(--color-gray-700);
   }
 
-  /* GPU-Accelerated Highlighter sweep triggered by AOS & GSAP */
   .highlighter-sweep {
     transform: scaleX(0);
     transform-origin: left center;

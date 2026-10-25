@@ -94,7 +94,6 @@ export const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Lock body scroll and pause Lenis when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       window.lenis?.stop();
@@ -111,7 +110,6 @@ export const Navbar = () => {
 
   return (
     <>
-      {/* === AWESOME FULL-SCREEN MOBILE MENU OVERLAY === */}
       <div
         className={`fixed inset-0 w-full h-[100dvh] bg-slate-50 dark:bg-slate-900 z-40 flex flex-col justify-center items-center md:hidden transition-all duration-300 transform-gpu ${
           isMobileMenuOpen
