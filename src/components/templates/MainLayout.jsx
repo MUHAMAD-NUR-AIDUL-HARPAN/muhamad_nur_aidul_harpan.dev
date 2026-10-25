@@ -32,15 +32,12 @@ export const MainLayout = ({ children }) => {
 
   // Inisialisasi AOS (Animate On Scroll)
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
     AOS.init({
       duration: 600,
       easing: "ease-out-cubic",
       once: true,
       offset: 40,
       disableMutationObserver: false,
-      // Di HP, matikan kalkulasi layout thrashing AOS agar scrolling 100% lancar tanpa stutter
-      disable: isMobile,
     });
 
     const timer = setTimeout(() => {
