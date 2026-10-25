@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import Lenis from "lenis";
-import "lenis/dist/lenis.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import gsap from "gsap";
@@ -22,7 +20,6 @@ export const MainLayout = ({ children }) => {
     return !sessionStorage.getItem("visited");
   });
 
-  const lenisRef = useRef(null);
   const progressBarRef = useRef(null);
 
   // Optimasi ScrollTrigger untuk Mobile: Mencegah jitter saat address bar HP muncul/hilang
@@ -48,60 +45,11 @@ export const MainLayout = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Inisialisasi Lenis Smooth Scroll terintegrasi dengan GSAP Ticker (Desktop Only)
+  // Kontrol lock / unlock scroll saat preloader aktif
   useEffect(() => {
-    // Pada perangkat sentuh (HP/tablet), serahkan 100% ke hardware GPU kinetic scroll bawaan smartphone (120Hz)
-    // agar bebas mutlak dari frame dropping JavaScript yang menyebabkan sensasi menggerigi/bergetar
-    const isTouch = ('ontouchstart' in window && window.innerWidth < 1024) || (navigator.maxTouchPoints > 0 && window.innerWidth < 1024) || window.innerWidth < 768;
-    if (isTouch) {
-      window.lenis = null;
-      lenisRef.current = null;
-      return;
-    }
-
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-      syncTouch: false,
-      autoResize: true,
-    });
-    lenisRef.current = lenis;
-    window.lenis = lenis;
-
-    // Jika preloader masih aktif saat inisialisasi, kunci scroll
     if (isLoading) {
-      lenis.stop();
-    }
-
-    // Sinkronisasi Sempurna Lenis dengan ScrollTrigger via GSAP Ticker untuk Desktop
-    lenis.on("scroll", ScrollTrigger.update);
-    const tickerUpdate = (time) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(tickerUpdate);
-
-    return () => {
-      gsap.ticker.remove(tickerUpdate);
-      lenis.destroy();
-      window.lenis = null;
-      lenisRef.current = null;
-      document.body.style.overflow = "";
-    };
-  }, []);
-
-  // Kontrol stop / start scroll saat preloader aktif
-  useEffect(() => {
-    const lenis = lenisRef.current;
-
-    if (isLoading) {
-      if (lenis) lenis.stop();
       document.body.style.overflow = "hidden";
     } else {
-      if (lenis) lenis.start();
       document.body.style.overflow = "";
       setTimeout(() => {
         AOS.refreshHard();

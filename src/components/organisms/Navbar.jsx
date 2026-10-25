@@ -21,6 +21,16 @@ export const Navbar = () => {
       { y: -60, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
     );
+
+    const rings = desktopNavRef.current.querySelectorAll(".navbar-spin-ring");
+    const spinTween = gsap.to(rings, {
+      rotation: 360,
+      repeat: -1,
+      duration: 7,
+      ease: "none",
+    });
+
+    return () => spinTween.kill();
   }, []);
 
   useEffect(() => {
@@ -51,13 +61,7 @@ export const Navbar = () => {
 
   const scrollToTarget = (targetId) => {
     const targetElement = targetId === "home" ? 0 : document.getElementById(targetId);
-    if (window.lenis) {
-      window.lenis.scrollTo(targetElement, {
-        offset: targetId === "home" ? 0 : -80,
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      });
-    } else if (targetElement !== null) {
+    if (targetElement !== null) {
       gsap.to(window, {
         duration: 1.1,
         scrollTo: { y: targetElement, offsetY: targetId === "home" ? 0 : 80 },
@@ -84,18 +88,15 @@ export const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Lock body scroll and pause Lenis when mobile menu is open
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
-      window.lenis?.stop();
       document.body.style.overflow = "hidden";
     } else {
-      window.lenis?.start();
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     }
     return () => {
-      window.lenis?.start();
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [isMobileMenuOpen]);
 
@@ -174,7 +175,7 @@ export const Navbar = () => {
               maskComposite: "exclude",
             }}
           >
-            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_7s_linear_infinite]" />
+            <div className="navbar-spin-ring absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)]" />
           </div>
 
           {/* === ANIMATED PROFESSIONAL RING (Crisp Border Beam) === */}
@@ -186,7 +187,7 @@ export const Navbar = () => {
               maskComposite: "exclude",
             }}
           >
-            <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_7s_linear_infinite]" />
+            <div className="navbar-spin-ring absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)]" />
           </div>
 
           {/* Base Border Structure (Subtle outline when beam passes) */}
@@ -232,7 +233,7 @@ export const Navbar = () => {
                   >
                     <div className="relative z-10 flex items-center gap-1.5">
                       <div className="relative flex items-center justify-center w-8 h-8 rounded-full">
-                        <div className="absolute -inset-1 rounded-full border-[1.5px] border-dashed border-blue-500 dark:border-blue-400 opacity-0 group-hover/item:opacity-100 group-hover/item:animate-[spin_4s_linear_infinite] transition-all duration-300" />
+                        <div className="absolute -inset-1 rounded-full border-[1.5px] border-dashed border-blue-500 dark:border-blue-400 opacity-0 group-hover/item:opacity-100 transition-all duration-300" />
                         {isActive && (
                           <div className="absolute -inset-0.5 rounded-full border-2 border-blue-600 dark:border-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.4)] transition-all duration-300" />
                         )}

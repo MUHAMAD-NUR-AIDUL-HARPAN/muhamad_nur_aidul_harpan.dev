@@ -52,21 +52,13 @@
   }
   
   html {
-    scroll-behavior: auto !important;
+    scroll-behavior: smooth;
   }
 
   @media (min-width: 768px) {
     html {
       scrollbar-gutter: stable;
     }
-  }
-
-  html.lenis, html.lenis body {
-    height: auto;
-  }
-
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
   }
 
   /* Optimasi GPU Mobile: Ringankan beban Gaussian blur saat scroll di HP */
@@ -114,22 +106,7 @@
     background-color: var(--color-gray-700);
   }
 
-  /* Ultra-lightweight Hardware-Accelerated Marquee (0 JS Overhead) */
-  @keyframes marquee-scroll {
-    0% {
-      transform: translate3d(0, 0, 0);
-    }
-    100% {
-      transform: translate3d(-50%, 0, 0);
-    }
-  }
-
-  .animate-marquee-smooth {
-    animation: marquee-scroll 25s linear infinite;
-    will-change: transform;
-  }
-
-  /* GPU-Accelerated Highlighter sweep triggered by AOS */
+  /* GPU-Accelerated Highlighter sweep triggered by AOS & GSAP */
   .highlighter-sweep {
     transform: scaleX(0);
     transform-origin: left center;

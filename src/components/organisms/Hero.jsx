@@ -9,9 +9,21 @@ gsap.registerPlugin(ScrollToPlugin);
 
 // --- COMPONENT: INFINITE MARQUEE (Pure Hardware-Accelerated CSS, 0 JS overhead) ---
 const Marquee = () => {
+  const marqueeRef = useRef(null);
+
+  useEffect(() => {
+    if (!marqueeRef.current) return;
+    const tween = gsap.to(marqueeRef.current, {
+      xPercent: -50,
+      repeat: -1,
+      duration: 25,
+      ease: "none",
+    });
+    return () => tween.kill();
+  }, []);
   return (
     <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-gray-900 dark:bg-white text-white dark:text-black py-3 z-20 border-t border-white/10">
-      <div className="flex whitespace-nowrap animate-marquee-smooth will-change-transform">
+      <div ref={marqueeRef} className="flex whitespace-nowrap will-change-transform">
         {[...Array(6)].map((_, i) => (
           <div key={i} className="flex items-center gap-8 mx-4">
             <span className="text-sm font-bold tracking-[0.2em] uppercase">
@@ -219,22 +231,14 @@ export const Hero = () => {
   }, []);
 
   const handleContactClick = () => {
-    if (window.lenis) {
-      window.lenis.scrollTo("#contact", {
-        offset: -80,
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      gsap.to(window, {
+        duration: 1.1,
+        scrollTo: { y: contactSection, offsetY: 80 },
+        ease: "power2.inOut",
+        overwrite: "auto",
       });
-    } else {
-      const contactSection = document.getElementById("contact");
-      if (contactSection) {
-        gsap.to(window, {
-          duration: 1.1,
-          scrollTo: { y: contactSection, offsetY: 80 },
-          ease: "power2.inOut",
-          overwrite: "auto",
-        });
-      }
     }
   };
 
@@ -340,7 +344,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/btn:[animation-play-state:running]" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full" />
                 </div>
 
                 <div
@@ -351,7 +355,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/btn:[animation-play-state:running]" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full" />
                 </div>
 
                 <button
@@ -379,7 +383,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#3b82f6_75%,#60a5fa_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/cv:[animation-play-state:running]" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-sky-400 rounded-full" />
                 </div>
 
                 <div
@@ -390,7 +394,7 @@ export const Hero = () => {
                     maskComposite: "exclude",
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/cv:[animation-play-state:running]" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-300 rounded-full" />
                 </div>
 
                 <a

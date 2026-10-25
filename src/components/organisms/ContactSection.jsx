@@ -228,7 +228,7 @@ export const ContactSection = () => {
                       maskComposite: "exclude",
                     }}
                   >
-                    <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#1d4ed8_75%,#3b82f6_85%,#93c5fd_95%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/submit:[animation-play-state:running]" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl" />
                   </div>
 
                   <div
@@ -239,7 +239,7 @@ export const ContactSection = () => {
                       maskComposite: "exclude",
                     }}
                   >
-                    <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#2563eb_75%,#38bdf8_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/submit:[animation-play-state:running]" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-400 rounded-xl" />
                   </div>
 
                   <button
@@ -297,7 +297,7 @@ export const ContactSection = () => {
                       maskComposite: "exclude",
                     }}
                   >
-                    <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#16a34a_75%,#22c55e_85%,#86efac_95%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/wa:[animation-play-state:running]" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-500 rounded-xl" />
                   </div>
 
                   <div
@@ -308,7 +308,7 @@ export const ContactSection = () => {
                       maskComposite: "exclude",
                     }}
                   >
-                    <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_60%,#16a34a_75%,#4ade80_88%,#ffffff_96%,transparent_100%)] animate-[spin_4s_linear_infinite] [animation-play-state:paused] group-hover/wa:[animation-play-state:running]" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-400 rounded-xl" />
                   </div>
 
                   <button
