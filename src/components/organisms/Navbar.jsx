@@ -35,6 +35,10 @@ export const Navbar = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const desktopNavRef = useRef(null);
+  const navListRef = useRef(null);
+  const itemRefs = useRef({});
+  const [hoveredRect, setHoveredRect] = useState(null);
+  const [activeRect, setActiveRect] = useState(null);
 
   useEffect(() => {
     if (!desktopNavRef.current) return;
@@ -76,6 +80,48 @@ export const Navbar = () => {
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [location.pathname]);
+
+  useEffect(() => {
+    const updateActiveRect = () => {
+      const currentActiveId =
+        location.pathname === "/"
+          ? activeSection
+          : navItems.find((item) => item.path === location.pathname)?.id || "home";
+
+      const el = itemRefs.current[currentActiveId];
+      if (el && navListRef.current) {
+        const navBox = navListRef.current.getBoundingClientRect();
+        const elBox = el.getBoundingClientRect();
+        setActiveRect({
+          left: elBox.left - navBox.left,
+          width: elBox.width,
+        });
+      }
+    };
+
+    const timer = setTimeout(updateActiveRect, 50);
+    window.addEventListener("resize", updateActiveRect);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", updateActiveRect);
+    };
+  }, [activeSection, location.pathname]);
+
+  const handleItemMouseEnter = (id) => {
+    const el = itemRefs.current[id];
+    if (el && navListRef.current) {
+      const navBox = navListRef.current.getBoundingClientRect();
+      const elBox = el.getBoundingClientRect();
+      setHoveredRect({
+        left: elBox.left - navBox.left,
+        width: elBox.width,
+      });
+    }
+  };
+
+  const handleNavMouseLeave = () => {
+    setHoveredRect(null);
+  };
 
   const scrollToTarget = (targetId) => {
     const targetElement = targetId === "home" ? 0 : document.getElementById(targetId);
@@ -141,20 +187,20 @@ export const Navbar = () => {
                 key={item.id}
                 style={{ transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms" }}
                 onClick={() => handleNavClick(item)}
-                className={`group relative flex items-center justify-between w-full max-w-xs px-5 py-3 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-95 cursor-pointer ${
+                className={`group relative flex items-center justify-between w-full max-w-xs px-5 py-3 rounded-2xl transition-all duration-300 transform active:scale-95 cursor-pointer ${
                   isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 } ${
                   isActive
-                    ? "bg-blue-600/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 shadow-sm"
-                    : "text-slate-800 dark:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "bg-blue-600/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 shadow-[0_0_15px_rgba(37,99,235,0.15)]"
+                    : "text-slate-800 dark:text-slate-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 border border-transparent"
                 }`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3.5">
                   <div
-                    className={`p-2 rounded-xl transition-colors duration-300 ${
+                    className={`p-2 rounded-xl transition-all duration-300 ${
                       isActive
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-blue-600 group-hover:text-white"
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-500/30 scale-105"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-105"
                     }`}
                   >
                     <item.icon size={18} />
@@ -163,7 +209,9 @@ export const Navbar = () => {
                 </div>
                 <div
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    isActive ? "bg-blue-600 scale-100" : "bg-transparent scale-0 group-hover:bg-blue-500 group-hover:scale-100"
+                    isActive
+                      ? "bg-blue-600 dark:bg-blue-400 shadow-[0_0_8px_#3b82f6] scale-100"
+                      : "bg-transparent scale-0 group-hover:bg-blue-500 group-hover:scale-100"
                   }`}
                 />
               </button>
@@ -225,52 +273,59 @@ export const Navbar = () => {
 
             <div className="w-px h-6 bg-slate-300/60 dark:bg-slate-700/60 mx-2 flex-shrink-0" />
 
-            <div className="flex flex-1 items-center justify-center gap-1 px-1 mx-1">
+            <div
+              ref={navListRef}
+              onMouseLeave={handleNavMouseLeave}
+              className="relative flex flex-1 items-center justify-center gap-1 px-1 mx-1"
+            >
+              {activeRect && (
+                <div
+                  style={{
+                    transform: `translateX(${hoveredRect ? hoveredRect.left : activeRect.left}px)`,
+                    width: `${hoveredRect ? hoveredRect.width : activeRect.width}px`,
+                    transition:
+                      "transform 300ms cubic-bezier(0.2, 0.9, 0.3, 1), width 300ms cubic-bezier(0.2, 0.9, 0.3, 1), background-color 200ms ease, border-color 200ms ease",
+                  }}
+                  className={`absolute top-1 bottom-1 rounded-full pointer-events-none will-change-transform transform-gpu ${
+                    hoveredRect
+                      ? "bg-slate-200/60 dark:bg-slate-800/80 border border-slate-300/60 dark:border-slate-700/60 shadow-xs"
+                      : "bg-blue-600/15 dark:bg-blue-500/20 border border-blue-600/30 dark:border-blue-400/30 shadow-[0_0_15px_rgba(37,99,235,0.2)]"
+                  }`}
+                />
+              )}
+
               {navItems.map((item) => {
                 const isActive = location.pathname === "/" ? activeSection === item.id : location.pathname === item.path;
                 return (
                   <button
+                    ref={(el) => (itemRefs.current[item.id] = el)}
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className="cursor-pointer relative group/item px-3 py-2 rounded-full flex items-center justify-center transition-all duration-300 flex-shrink-0 active:scale-95"
+                    onMouseEnter={() => handleItemMouseEnter(item.id)}
+                    className="cursor-pointer relative z-10 px-3.5 py-1.5 rounded-full flex items-center justify-center transition-all duration-200 flex-shrink-0 active:scale-95"
                   >
-                    <div
-                      className={`absolute inset-0 rounded-full transition-all duration-300 ease-out pointer-events-none ${
-                        isActive
-                          ? "bg-blue-600/15 dark:bg-blue-500/20 border border-blue-600/30 dark:border-blue-400/30 shadow-[0_0_15px_rgba(37,99,235,0.2)] scale-100 opacity-100"
-                          : "bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/50 dark:border-slate-700/50 scale-75 opacity-0 group-hover/item:scale-100 group-hover/item:opacity-100 group-hover/item:shadow-[0_0_12px_rgba(59,130,246,0.15)]"
-                      }`}
-                    />
-
-                    <div className="relative z-10 flex items-center gap-2">
-                      <div className="relative flex items-center justify-center w-7 h-7 rounded-full">
-                        <item.icon
-                          size={15}
-                          className={`relative z-10 transition-all duration-300 transform group-hover/item:scale-115 group-hover/item:-translate-y-0.5 ${
-                            isActive
-                              ? "text-blue-600 dark:text-blue-400 scale-105"
-                              : "text-slate-500 dark:text-slate-400 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400"
-                          }`}
-                        />
-                      </div>
-                      <span
-                        className={`hidden lg:block text-sm font-semibold transition-all duration-300 tracking-tight ${
+                    <div className="relative flex items-center gap-2">
+                      <item.icon
+                        size={15}
+                        className={`transition-colors duration-200 ${
                           isActive
-                            ? "text-blue-600 dark:text-blue-400 font-bold"
-                            : "text-slate-600 dark:text-slate-300 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400"
+                            ? "text-blue-600 dark:text-blue-400"
+                            : "text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
+                        }`}
+                      />
+                      <span
+                        className={`hidden lg:block text-sm transition-colors duration-200 ${
+                          isActive
+                            ? "font-bold text-blue-600 dark:text-blue-400"
+                            : "font-medium text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
                         }`}
                       >
                         {item.label}
                       </span>
+                      {isActive && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 shadow-[0_0_8px_#3b82f6] animate-pulse" />
+                      )}
                     </div>
-
-                    <span
-                      className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-cyan-400 rounded-full transition-all duration-300 ease-out pointer-events-none ${
-                        isActive
-                          ? "w-1/2 opacity-100"
-                          : "w-0 opacity-0 group-hover/item:w-1/2 group-hover/item:opacity-100"
-                      }`}
-                    />
                   </button>
                 );
               })}
