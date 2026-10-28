@@ -5,46 +5,49 @@ export const Preloader = ({ onComplete, onStartExit }) => {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
   const fillRef = useRef(null);
+  const barRef = useRef(null);
   const numberRef = useRef(null);
 
   useEffect(() => {
     const counter = { val: 0 };
     const tween = gsap.to(counter, {
       val: 100,
-      duration: 1.8,
-      ease: "power2.out",
+      duration: 1.6,
+      ease: "power2.inOut",
       onUpdate: () => {
-        const p = Math.floor(counter.val);
+        const p = Math.round(counter.val);
         if (fillRef.current) {
-          fillRef.current.style.width = `${counter.val}%`;
+          fillRef.current.style.clipPath = `inset(0 ${100 - counter.val}% 0 0)`;
+        }
+        if (barRef.current) {
+          barRef.current.style.transform = `scaleX(${counter.val / 100})`;
         }
         if (numberRef.current) {
           numberRef.current.textContent = `${p}%`;
         }
       },
       onComplete: () => {
-        if (onStartExit) onStartExit();
-
         const tl = gsap.timeline({
+          delay: 0.12,
           onComplete: () => {
             onComplete();
           },
         });
 
         tl.to(contentRef.current, {
-          y: -20,
+          y: -60,
           opacity: 0,
-          duration: 0.35,
-          ease: "power2.in",
-        }).to(
-          containerRef.current,
-          {
-            yPercent: -100,
-            duration: 0.85,
-            ease: "power3.inOut",
-          },
-          "-=0.05"
-        );
+          duration: 0.5,
+          ease: "power3.inOut",
+        }, 0)
+        .to(containerRef.current, {
+          yPercent: -100,
+          duration: 0.95,
+          ease: "power4.inOut",
+        }, 0)
+        .call(() => {
+          if (onStartExit) onStartExit();
+        }, null, 0.18);
       },
     });
 
@@ -65,24 +68,31 @@ export const Preloader = ({ onComplete, onStartExit }) => {
         ref={contentRef}
         className="relative z-10 flex flex-col items-center justify-center px-4 w-full"
       >
-        <div className="relative text-[6vw] sm:text-[4vw] md:text-3xl lg:text-4xl font-black tracking-[0.2em] uppercase whitespace-nowrap mb-6">
+        <div className="relative text-[6vw] sm:text-[4vw] md:text-3xl lg:text-4xl font-black tracking-[0.2em] uppercase whitespace-nowrap mb-6 select-none">
           <div className="text-slate-800 select-none">
             MUHAMAD NUR AIDUL HARPAN
           </div>
 
           <div
             ref={fillRef}
-            className="absolute top-0 left-0 overflow-hidden whitespace-nowrap select-none text-white drop-shadow-[0_0_25px_rgba(59,130,246,0.6)] will-change-[width]"
-            style={{ width: "0%" }}
+            className="absolute inset-0 text-white drop-shadow-[0_0_25px_rgba(59,130,246,0.6)] pointer-events-none will-change-[clip-path]"
+            style={{ clipPath: "inset(0 100% 0 0)" }}
           >
             MUHAMAD NUR AIDUL HARPAN
-            <span className="absolute right-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-blue-400 to-transparent shadow-[0_0_12px_#38bdf8]" />
           </div>
+        </div>
+
+        <div className="w-56 sm:w-72 h-[2px] bg-slate-800/80 rounded-full overflow-hidden mb-6 relative">
+          <div
+            ref={barRef}
+            className="h-full w-full bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-500 rounded-full will-change-transform shadow-[0_0_10px_rgba(56,189,248,0.7)]"
+            style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
+          />
         </div>
 
         <div className="flex items-center gap-4 text-xs font-mono text-slate-500 tracking-widest">
           <div className="w-12 h-[1px] bg-slate-800" />
-          <span ref={numberRef} className="font-bold text-slate-300">
+          <span ref={numberRef} className="font-bold text-slate-300 min-w-[3ch] text-center">
             0%
           </span>
           <div className="w-12 h-[1px] bg-slate-800" />

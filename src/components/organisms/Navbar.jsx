@@ -230,18 +230,14 @@ export const Navbar = () => {
                 key={item.id}
                 style={{ transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms" }}
                 onClick={() => handleNavClick(item)}
-                className={`group relative flex items-center justify-between w-full max-w-xs px-5 py-3.5 rounded-2xl transition-all duration-400 ease-out transform active:scale-95 cursor-pointer overflow-hidden ${
+                className={`group relative flex items-center w-full max-w-xs px-5 py-3 rounded-2xl transition-all duration-300 active:scale-95 cursor-pointer ${
                   isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                } ${
-                  isActive
-                    ? "bg-gradient-to-r from-blue-600/15 via-blue-500/20 to-indigo-600/15 dark:from-blue-500/20 dark:via-blue-400/25 dark:to-indigo-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/35 dark:border-blue-400/35 shadow-[0_4px_20px_rgba(37,99,235,0.18)] font-semibold"
-                    : "text-slate-800 dark:text-slate-200 hover:bg-slate-100/90 dark:hover:bg-slate-800/70 hover:text-blue-600 dark:hover:text-blue-400 border border-transparent font-medium"
                 }`}
               >
                 <div className="flex items-center gap-3.5 relative z-10">
-                  <div className="relative flex items-center justify-center w-10 h-10 rounded-xl">
+                  <div className="relative flex items-center justify-center w-10 h-10 rounded-full">
                     <div
-                      className={`absolute -inset-[2px] rounded-xl p-[1.5px] overflow-hidden pointer-events-none transition-opacity duration-300 ${
+                      className={`absolute -inset-[2px] rounded-full p-[1.5px] overflow-hidden pointer-events-none transition-opacity duration-300 ${
                         isActive ? "opacity-0" : "opacity-0 group-hover:opacity-100"
                       }`}
                       style={maskStyle}
@@ -249,7 +245,7 @@ export const Navbar = () => {
                       <div className="absolute top-1/2 left-1/2 aspect-square w-[300%] -translate-x-1/2 -translate-y-1/2 bg-[conic-gradient(from_0deg,transparent_30%,#2563eb_65%,#38bdf8_85%,#ffffff_96%,transparent_100%)] animate-[spin_2.5s_linear_infinite]" />
                     </div>
                     <div
-                      className={`absolute -inset-[3px] rounded-xl p-[2px] overflow-hidden blur-[3px] pointer-events-none transition-opacity duration-300 ${
+                      className={`absolute -inset-[3px] rounded-full p-[2px] overflow-hidden blur-[3px] pointer-events-none transition-opacity duration-300 ${
                         isActive ? "opacity-0" : "opacity-0 group-hover:opacity-75"
                       }`}
                       style={maskStyle}
@@ -258,30 +254,32 @@ export const Navbar = () => {
                     </div>
 
                     <div
-                      className={`absolute -inset-[2px] rounded-xl border-[1.5px] border-blue-500/80 dark:border-blue-400/90 shadow-[0_0_8px_rgba(59,130,246,0.5)] pointer-events-none transition-all duration-400 ${
+                      className={`absolute -inset-[2px] rounded-full border-[1.5px] border-blue-500/80 dark:border-blue-400/90 shadow-[0_0_8px_rgba(59,130,246,0.5)] pointer-events-none transition-all duration-400 ${
                         isActive ? "opacity-100 scale-100" : "opacity-0 scale-90"
                       }`}
                     />
 
-                    <div
-                      className={`w-full h-full flex items-center justify-center rounded-xl transition-all duration-400 ease-out ${
-                        isActive
-                          ? "bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30"
-                          : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-blue-600 group-hover:text-white"
-                      }`}
-                    >
-                      <item.icon size={18} />
+                    <div className="w-full h-full flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                      <item.icon
+                        size={18}
+                        className={`transition-colors duration-300 ${
+                          isActive
+                            ? "text-blue-600 dark:text-blue-400"
+                            : "text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400"
+                        }`}
+                      />
                     </div>
                   </div>
-                  <span className="text-lg tracking-tight">{item.label}</span>
+                  <span
+                    className={`text-lg tracking-tight transition-colors duration-300 ${
+                      isActive
+                        ? "text-blue-600 dark:text-blue-400 font-semibold"
+                        : "text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white font-medium"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
                 </div>
-                <div
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-400 ease-out ${
-                    isActive
-                      ? "bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-400 shadow-[0_0_10px_#3b82f6] scale-100"
-                      : "bg-transparent scale-0 group-hover:bg-blue-500/60 group-hover:scale-75"
-                  }`}
-                />
               </button>
             );
           })}
@@ -357,30 +355,8 @@ export const Navbar = () => {
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className={`group/item cursor-pointer relative px-3.5 py-1.5 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-400 ease-out active:scale-95 ${
-                      isActive
-                        ? "text-blue-600 dark:text-blue-400 font-semibold"
-                        : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium"
-                    }`}
+                    className="group/item cursor-pointer relative px-3 py-1.5 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 active:scale-95"
                   >
-                    <div
-                      className={`absolute inset-0 rounded-full transition-all duration-400 ease-out pointer-events-none ${
-                        isActive
-                          ? "bg-gradient-to-r from-blue-600/12 via-blue-500/18 to-indigo-600/12 dark:from-blue-500/20 dark:via-blue-400/25 dark:to-indigo-500/20 border border-blue-500/35 dark:border-blue-400/35 shadow-[0_2px_14px_rgba(37,99,235,0.18)] opacity-100 scale-100"
-                          : "opacity-0 scale-95 border border-transparent"
-                      }`}
-                    />
-
-                    {!isActive && (
-                      <div className="absolute inset-0 rounded-full bg-slate-100/80 dark:bg-slate-800/60 opacity-0 group-hover/item:opacity-100 transition-all duration-300 ease-out pointer-events-none" />
-                    )}
-
-                    <div
-                      className={`absolute -bottom-[1px] left-3 right-3 h-[2px] bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400 rounded-full shadow-[0_0_10px_#3b82f6] transition-all duration-400 ease-out ${
-                        isActive ? "opacity-100 scale-x-100" : "opacity-0 scale-x-50"
-                      }`}
-                    />
-
                     <div className="relative z-10 flex items-center gap-2">
                       <div className="relative flex items-center justify-center w-7 h-7">
                         <div
@@ -415,7 +391,13 @@ export const Navbar = () => {
                           }`}
                         />
                       </div>
-                      <span className="hidden lg:block text-sm tracking-tight transition-colors duration-300 ease-out">
+                      <span
+                        className={`hidden lg:block text-sm tracking-tight transition-colors duration-300 ease-out ${
+                          isActive
+                            ? "text-blue-600 dark:text-blue-400 font-semibold"
+                            : "text-slate-600 dark:text-slate-300 group-hover/item:text-slate-900 dark:group-hover/item:text-white font-medium"
+                        }`}
+                      >
                         {item.label}
                       </span>
                     </div>
