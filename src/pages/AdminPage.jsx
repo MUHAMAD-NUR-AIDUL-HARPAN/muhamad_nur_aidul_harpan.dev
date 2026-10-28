@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
-import { Plus, Award, Building, Calendar, Tag, Link as LinkIcon, UploadCloud, AlertCircle, Briefcase, Trash2, X, Github, Monitor, Edit2, Search, Filter, ArrowUpRight } from "lucide-react";
+import { Plus, Award, Building, Calendar, Tag, Link as LinkIcon, UploadCloud, AlertCircle, Briefcase, Trash2, X, Github, Monitor, Edit2, Search, Filter, ArrowUpRight, FileText } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
+import { convertPdfToImage } from "../lib/pdfHelper";
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return "";
@@ -63,7 +64,29 @@ const uploadImageToSupabase = async (rawFile) => {
   return publicData.publicUrl;
 };
 
-const ImagePicker = ({ option, onOptionChange, preview, onFileChange, urlValue, onUrlChange, isEditing, placeholder }) => (
+const uploadFileToSupabase = async (file) => {
+  const fileExt = file.name.split(".").pop();
+  const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${fileExt}`;
+  const { error } = await supabase.storage.from("portfolio").upload(fileName, file, { contentType: file.type || "application/pdf", upsert: true });
+  if (error) throw error;
+  const { data: publicData } = supabase.storage.from("portfolio").getPublicUrl(fileName);
+  return publicData.publicUrl;
+};
+
+const ImagePicker = ({
+  option,
+  onOptionChange,
+  preview,
+  onFileChange,
+  urlValue,
+  onUrlChange,
+  isEditing,
+  placeholder,
+  accept = "image/*",
+  converting = false,
+  pdfFileName = "",
+  onClearPdf,
+}) => (
   <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-50/50 dark:bg-slate-800/30">
     <div className="flex border-b border-slate-200 dark:border-slate-700">
       <button
@@ -71,7 +94,7 @@ const ImagePicker = ({ option, onOptionChange, preview, onFileChange, urlValue, 
         onClick={() => onOptionChange("upload")}
         className={`flex-1 py-3 text-sm font-bold transition-colors ${option === "upload" ? "bg-blue-600 text-white" : "bg-transparent text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"}`}
       >
-        1. Upload File
+        1. Upload File {accept.includes("pdf") ? "(Gambar / PDF)" : "(Gambar)"}
       </button>
       <button
         type="button"
@@ -83,27 +106,66 @@ const ImagePicker = ({ option, onOptionChange, preview, onFileChange, urlValue, 
     </div>
     <div className="p-4">
       {option === "upload" ? (
-        <label className="block relative border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl p-4 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer group bg-white dark:bg-slate-900">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const f = e.target.files[0];
-              if (f) onFileChange(f, URL.createObjectURL(f));
-            }}
-            className="hidden"
-          />
-          {preview ? (
-            <img src={preview} alt="Preview" className="h-24 mx-auto object-contain rounded-lg shadow-sm" />
-          ) : (
-            <div className="py-2 opacity-60">
-              <UploadCloud size={24} className="mx-auto text-slate-500 mb-1" />
-              <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                Pilih file gambar {isEditing && <span className="block text-[10px] mt-1 text-slate-400">(Biarkan kosong jika tidak ganti)</span>}
-              </p>
+        <div className="space-y-3">
+          <label className={`block relative border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl p-4 text-center transition-colors bg-white dark:bg-slate-900 ${converting ? "opacity-75 cursor-wait" : "hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer group"}`}>
+            <input
+              type="file"
+              accept={accept}
+              disabled={converting}
+              onChange={(e) => {
+                const f = e.target.files[0];
+                if (f) onFileChange(f);
+                e.target.value = "";
+              }}
+              className="hidden"
+            />
+            {converting ? (
+              <div className="py-6 flex flex-col items-center justify-center text-blue-600 dark:text-blue-400">
+                <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mb-2" />
+                <p className="text-xs font-bold">Sedang mengonversi halaman PDF menjadi gambar...</p>
+                <p className="text-[10px] text-slate-400 mt-1">Halaman 1 otomatis diekstrak menjadi gambar tajam</p>
+              </div>
+            ) : preview ? (
+              <div className="space-y-2">
+                <img src={preview} alt="Preview" className="h-32 mx-auto object-contain rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800" />
+                <p className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold">Klik area ini untuk mengganti file</p>
+              </div>
+            ) : (
+              <div className="py-3 opacity-70">
+                <UploadCloud size={28} className="mx-auto text-slate-500 mb-1.5" />
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  {accept.includes("pdf") ? "Pilih file Gambar atau Dokumen PDF" : "Pilih file gambar"}
+                </p>
+                <p className="text-[10px] text-slate-400 mt-1">
+                  {accept.includes("pdf") ? "Bisa upload file .pdf asli, otomatis dikonversi ke gambar pratinjau" : "Format WebP, PNG, atau JPG"}
+                </p>
+                {isEditing && (
+                  <span className="block text-[10px] mt-1 text-amber-500 font-medium">(Biarkan kosong jika tidak ganti)</span>
+                )}
+              </div>
+            )}
+          </label>
+
+          {pdfFileName && !converting && (
+            <div className="flex items-center justify-between px-3 py-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-700 dark:text-emerald-300 text-xs">
+              <div className="flex items-center gap-2 truncate mr-2">
+                <FileText size={16} className="flex-shrink-0 text-emerald-600" />
+                <span className="truncate font-semibold">{pdfFileName}</span>
+                <span className="text-[10px] bg-emerald-200/60 dark:bg-emerald-800/60 px-1.5 py-0.5 rounded text-emerald-800 dark:text-emerald-200 font-mono">PDF Terdeteksi</span>
+              </div>
+              {onClearPdf && (
+                <button
+                  type="button"
+                  onClick={onClearPdf}
+                  className="text-slate-400 hover:text-red-500 p-1 cursor-pointer"
+                  title="Hapus file PDF"
+                >
+                  <X size={14} />
+                </button>
+              )}
             </div>
           )}
-        </label>
+        </div>
       ) : (
         <input
           type="text"
@@ -194,6 +256,9 @@ export const AdminPage = () => {
   const [certImageFile, setCertImageFile] = useState(null);
   const [certImagePreview, setCertImagePreview] = useState(null);
   const [certImageOption, setCertImageOption] = useState("upload");
+  const [certPdfFile, setCertPdfFile] = useState(null);
+  const [certPdfName, setCertPdfName] = useState("");
+  const [convertingPdf, setConvertingPdf] = useState(false);
   const [isNewCertCategory, setIsNewCertCategory] = useState(false);
   const [editingCertId, setEditingCertId] = useState(null);
 
@@ -258,10 +323,38 @@ export const AdminPage = () => {
     fetchData();
   }, []);
 
+  const handleCertFileChange = async (file) => {
+    if (!file) return;
+
+    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+
+    if (isPdf) {
+      setConvertingPdf(true);
+      setError("");
+      try {
+        setCertPdfFile(file);
+        setCertPdfName(file.name);
+        const convertedImage = await convertPdfToImage(file);
+        setCertImageFile(convertedImage);
+        setCertImagePreview(URL.createObjectURL(convertedImage));
+      } catch (err) {
+        console.error(err);
+        setError("Gagal membaca file PDF: " + (err.message || "Pastikan file PDF tidak rusak."));
+      } finally {
+        setConvertingPdf(false);
+      }
+    } else {
+      setCertPdfFile(null);
+      setCertPdfName("");
+      setCertImageFile(file);
+      setCertImagePreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleCertSubmit = async (e) => {
     e.preventDefault();
     if (!certImageFile && !certForm.image && !editingCertId) {
-      setError("Silakan upload gambar sertifikat ATAU masukkan URL Gambar.");
+      setError("Silakan upload gambar/PDF sertifikat ATAU masukkan URL Gambar.");
       return;
     }
     setSubmitting(true);
@@ -271,12 +364,20 @@ export const AdminPage = () => {
       let imageUrl = certForm.image;
       if (certImageFile) imageUrl = await uploadImageToSupabase(certImageFile);
 
+      let linkUrl = certForm.link || "#";
+      if (certPdfFile) {
+        const uploadedPdfUrl = await uploadFileToSupabase(certPdfFile);
+        if (!certForm.link || certForm.link === "#" || certForm.link.trim() === "") {
+          linkUrl = uploadedPdfUrl;
+        }
+      }
+
       const certData = {
         title: certForm.title,
         issuer: certForm.issuer,
         date: certForm.date,
         category: certForm.category || "Lainnya",
-        link: certForm.link || "#",
+        link: linkUrl,
         image: imageUrl,
       };
 
@@ -355,11 +456,14 @@ export const AdminPage = () => {
       issuer: cert.issuer,
       date: cert.date,
       category: cert.category,
-      link: cert.link,
+      link: cert.link === "#" ? "" : (cert.link || ""),
       image: cert.image,
     });
     setCertImageOption(cert.image && cert.image.startsWith("/uploads/") ? "upload" : "url");
-    setCertImagePreview(cert.image && cert.image.startsWith("/uploads/") ? getImageUrl(cert.image) : null);
+    setCertImagePreview(cert.image ? getImageUrl(cert.image) : null);
+    setCertPdfFile(null);
+    setCertPdfName("");
+    setConvertingPdf(false);
     setIsNewCertCategory(!certCategories.includes(cert.category));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -386,6 +490,9 @@ export const AdminPage = () => {
     setCertForm({ title: "", issuer: "", date: "", category: "Frontend", image: "", link: "" });
     setCertImageFile(null);
     setCertImagePreview(null);
+    setCertPdfFile(null);
+    setCertPdfName("");
+    setConvertingPdf(false);
     setIsNewCertCategory(false);
   };
 
@@ -469,18 +576,45 @@ export const AdminPage = () => {
                     onOptionChange={(opt) => {
                       setCertImageOption(opt);
                       if (opt === "upload") setCertForm({ ...certForm, image: "" });
-                      else { setCertImageFile(null); setCertImagePreview(null); }
+                      else {
+                        setCertImageFile(null);
+                        setCertImagePreview(null);
+                        setCertPdfFile(null);
+                        setCertPdfName("");
+                      }
                     }}
                     preview={certImagePreview}
-                    onFileChange={(f, prev) => { setCertImageFile(f); setCertImagePreview(prev); }}
+                    onFileChange={handleCertFileChange}
                     urlValue={certForm.image}
                     onUrlChange={(val) => setCertForm({ ...certForm, image: val })}
                     isEditing={!!editingCertId}
+                    accept="image/*,application/pdf,.pdf"
+                    converting={convertingPdf}
+                    pdfFileName={certPdfName}
+                    onClearPdf={() => {
+                      setCertPdfFile(null);
+                      setCertPdfName("");
+                      setCertImageFile(null);
+                      setCertImagePreview(null);
+                    }}
                   />
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-2"><LinkIcon size={14} /> URL Verifikasi Sertifikat (Opsional)</label>
-                    <input type="text" value={certForm.link} onChange={(e) => setCertForm({ ...certForm, link: e.target.value })} placeholder="https://coursera.org/verify/..." className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 transition-all dark:text-white" />
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-2">
+                      <LinkIcon size={14} /> URL Verifikasi Sertifikat (Opsional)
+                    </label>
+                    <input
+                      type="text"
+                      value={certForm.link}
+                      onChange={(e) => setCertForm({ ...certForm, link: e.target.value })}
+                      placeholder="https://coursera.org/verify/..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 transition-all dark:text-white"
+                    />
+                    {certPdfName && !certForm.link && (
+                      <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 font-medium">
+                        File PDF ({certPdfName}) otomatis akan menjadi link sertifikat ini jika kolom ini dikosongkan.
+                      </p>
+                    )}
                   </div>
 
                   <button type="submit" disabled={submitting} className={`w-full mt-4 py-3 px-4 ${editingCertId ? "bg-amber-600 hover:bg-amber-700" : "bg-blue-600 hover:bg-blue-700"} text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-colors disabled:opacity-70 shadow-md`}>
@@ -623,7 +757,7 @@ export const AdminPage = () => {
                       else { setProjectImageFile(null); setProjectImagePreview(null); }
                     }}
                     preview={projectImagePreview}
-                    onFileChange={(f, prev) => { setProjectImageFile(f); setProjectImagePreview(prev); }}
+                    onFileChange={(f) => { setProjectImageFile(f); setProjectImagePreview(URL.createObjectURL(f)); }}
                     urlValue={projectForm.image}
                     onUrlChange={(val) => setProjectForm({ ...projectForm, image: val })}
                     isEditing={!!editingProjectId}
