@@ -4,12 +4,7 @@ import { useGlobal } from "../../context/GlobalContext";
 import { contactData } from "../../data/content";
 import { InputGroup } from "../atoms/InputGroup";
 import { TextHighlighter } from "../atoms/TextHighlighter";
-
-const maskStyle = {
-  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-  WebkitMaskComposite: "xor",
-  maskComposite: "exclude",
-};
+import { ButtonRing } from "../atoms/ButtonRing";
 
 export const ContactSection = () => {
   const { lang } = useGlobal();
@@ -172,24 +167,12 @@ export const ContactSection = () => {
                   onChange={handleChange}
                 />
 
-                <div className="relative group/submit w-full mt-2">
-                  <div
-                    className="absolute -inset-[2px] rounded-xl p-[2px] overflow-hidden opacity-0 group-hover/submit:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
-                    style={maskStyle}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl" />
-                  </div>
-                  <div
-                    className="absolute -inset-[1.5px] rounded-xl p-[1.5px] overflow-hidden opacity-0 group-hover/submit:opacity-100 transition-all duration-500 pointer-events-none z-10"
-                    style={maskStyle}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-400 rounded-xl" />
-                  </div>
-
+                <div className="relative group/submit w-full mt-2 cursor-pointer">
+                  <ButtonRing rounded="rounded-xl" variant="blue" />
                   <button
                     type="submit"
                     disabled={status !== "idle"}
-                    className={`relative w-full py-4 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-lg group-hover/submit:shadow-xl group-hover/submit:shadow-blue-500/25 cursor-pointer z-0 ${
+                    className={`relative w-full py-4 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-lg group-hover/submit:shadow-xl group-hover/submit:shadow-blue-500/25 active:scale-95 cursor-pointer z-0 ${
                       status === "success" ? "bg-emerald-500" : "bg-blue-600 hover:bg-blue-700"
                     }`}
                   >
@@ -227,23 +210,11 @@ export const ContactSection = () => {
                   required
                 />
 
-                <div className="relative group/wa w-full mt-2">
-                  <div
-                    className="absolute -inset-[2px] rounded-xl p-[2px] overflow-hidden opacity-0 group-hover/wa:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
-                    style={maskStyle}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-500 rounded-xl" />
-                  </div>
-                  <div
-                    className="absolute -inset-[1.5px] rounded-xl p-[1.5px] overflow-hidden opacity-0 group-hover/wa:opacity-100 transition-all duration-500 pointer-events-none z-10"
-                    style={maskStyle}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-400 rounded-xl" />
-                  </div>
-
+                <div className="relative group/wa w-full mt-2 cursor-pointer">
+                  <ButtonRing rounded="rounded-xl" variant="emerald" />
                   <button
                     type="submit"
-                    className="relative w-full py-4 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer z-0"
+                    className="relative w-full py-4 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 cursor-pointer z-0"
                   >
                     {lang === "id" ? t.form.btnWa.id : t.form.btnWa.en}{" "}
                     <Send

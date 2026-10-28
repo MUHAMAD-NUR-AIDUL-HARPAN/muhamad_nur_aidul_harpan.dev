@@ -4,6 +4,7 @@ import { Award, Calendar, ArrowRight, ExternalLink, ZoomIn } from "lucide-react"
 import { useGlobal } from "../../context/GlobalContext";
 import { supabase } from "../../lib/supabaseClient";
 import { TextHighlighter } from "../atoms/TextHighlighter";
+import { ButtonRing } from "../atoms/ButtonRing";
 
 const FALLBACK_IMAGE =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f1f5f9'/%3E%3Cpath d='M400 200c-33.1 0-60 26.9-60 60s26.9 60 60 60 60-26.9 60-60-26.9-60-60-60zm0 90c-16.5 0-30-13.5-30-30s13.5-30 30-30 30 13.5 30 30-13.5 30-30 30z' fill='%2394a3b8'/%3E%3Cpath d='M360 320h80v100l-40-20-40 20z' fill='%2394a3b8'/%3E%3Ctext x='50%25' y='65%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' font-weight='bold' fill='%2364748b'%3ESertifikat%3C/text%3E%3C/svg%3E";
@@ -106,7 +107,7 @@ export const CertificatesSection = () => {
                       loading="lazy"
                       decoding="async"
                       onError={handleImageError}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                      className="w-full h-full object-cover transition-opacity duration-300"
                     />
 
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -161,13 +162,16 @@ export const CertificatesSection = () => {
         ) : null}
 
         <div data-aos="fade-up" className="flex justify-center mt-6">
-          <Link
-            to="/certificates"
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full font-bold text-sm shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 hover:scale-105 active:scale-95 transition-all duration-400 ease-out"
-          >
-            <span>{lang === "id" ? "Lihat Sertifikat Lengkap" : "View All Certificates"}</span>
-            <ArrowRight size={18} className="transform group-hover:translate-x-1.5 transition-transform duration-400 ease-out" />
-          </Link>
+          <div className="relative group inline-block cursor-pointer">
+            <ButtonRing rounded="rounded-full" />
+            <Link
+              to="/certificates"
+              className="relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full font-bold text-sm shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:scale-95 transition-all duration-400 ease-out"
+            >
+              <span>{lang === "id" ? "Lihat Sertifikat Lengkap" : "View All Certificates"}</span>
+              <ArrowRight size={18} className="transform group-hover:translate-x-1.5 transition-transform duration-400 ease-out" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

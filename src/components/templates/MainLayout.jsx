@@ -105,6 +105,10 @@ export const MainLayout = ({ children }) => {
     }
   }, [isLoading]);
 
+  const handlePreloaderStartExit = () => {
+    setIsPreloaderDone(true);
+  };
+
   const handlePreloaderComplete = () => {
     setIsLoading(false);
     setIsPreloaderDone(true);
@@ -112,7 +116,12 @@ export const MainLayout = ({ children }) => {
 
   return (
     <>
-      {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
+      {isLoading && (
+        <Preloader
+          onStartExit={handlePreloaderStartExit}
+          onComplete={handlePreloaderComplete}
+        />
+      )}
       <div
         ref={progressBarRef}
         style={{ transform: "scaleX(0)", transformOrigin: "left center" }}

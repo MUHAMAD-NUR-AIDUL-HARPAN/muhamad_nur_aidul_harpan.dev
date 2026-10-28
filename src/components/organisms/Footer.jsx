@@ -1,5 +1,6 @@
 import { Github, Linkedin, Instagram } from "lucide-react";
 import { contactData } from "../../data/content";
+import { ButtonRing } from "../atoms/ButtonRing";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -34,17 +35,18 @@ export const Footer = () => {
 
           <div className="flex items-center gap-3">
             {socialLinks.map((social, idx) => (
-              <a
-                key={idx}
-                href={social.href}
-                target="_blank"
-                rel="noreferrer"
-
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 dark:hover:text-white dark:hover:border-blue-600 hover:scale-110 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-400 ease-out"
-                aria-label={social.label}
-              >
-                <social.icon size={18} strokeWidth={2} />
-              </a>
+              <div key={idx} className="relative group inline-block cursor-pointer">
+                <ButtonRing rounded="rounded-full" />
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 dark:hover:text-white dark:hover:border-blue-600 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 transition-all duration-400 ease-out"
+                  aria-label={social.label}
+                >
+                  <social.icon size={18} strokeWidth={2} />
+                </a>
+              </div>
             ))}
           </div>
         </div>

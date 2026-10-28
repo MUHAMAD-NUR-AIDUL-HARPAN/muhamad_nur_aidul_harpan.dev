@@ -3,6 +3,7 @@ import { useGlobal } from "../../context/GlobalContext";
 import { projectsData, projectCategories } from "../../data/content";
 import { ProjectCard } from "../molecules/ProjectCard";
 import { TextHighlighter } from "../atoms/TextHighlighter";
+import { ButtonRing } from "../atoms/ButtonRing";
 import { Filter } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -72,21 +73,23 @@ export const ProjectsSection = () => {
           </p>
         </div>
 
-        <div data-aos="fade-up" data-aos-delay="100" className="flex flex-wrap justify-center gap-2 mb-12">
+        <div data-aos="fade-up" data-aos-delay="100" className="flex flex-wrap justify-center gap-2.5 mb-12">
           {categories.map((cat) => {
             const isActive = activeCategory === cat;
             return (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`relative px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-400 ease-out cursor-pointer ${
-                  isActive
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
-                    : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 bg-white dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs hover:border-blue-500/30"
-                }`}
-              >
-                <span className="relative z-10">{cat}</span>
-              </button>
+              <div key={cat} className="relative group inline-block cursor-pointer">
+                <ButtonRing rounded="rounded-full" />
+                <button
+                  onClick={() => setActiveCategory(cat)}
+                  className={`relative px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-400 ease-out cursor-pointer active:scale-95 ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 border border-blue-500 font-bold"
+                      : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 bg-white dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs hover:border-blue-500/30"
+                  }`}
+                >
+                  <span className="relative z-10">{cat}</span>
+                </button>
+              </div>
             );
           })}
         </div>

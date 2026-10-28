@@ -41,7 +41,7 @@ export const SkillBar = ({ name, level, iconKey, color }) => {
         <div className="flex items-center gap-2">
 
           <div
-            className="w-6 h-6 rounded-md flex items-center justify-center p-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 group-hover/skill:scale-110 transition-transform duration-300 shadow-xs"
+            className="w-6 h-6 rounded-md flex items-center justify-center p-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 transition-colors duration-300 shadow-xs"
             style={{ color: brandColor }}
           >
             <IconComponent size={14} />

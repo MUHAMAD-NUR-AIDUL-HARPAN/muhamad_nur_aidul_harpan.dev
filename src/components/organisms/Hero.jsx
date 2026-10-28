@@ -4,6 +4,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { Github, Linkedin, Globe, Rocket, Eye, Download, Code2 } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { heroData } from "../../data/content";
+import { ButtonRing } from "../atoms/ButtonRing";
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -331,20 +332,7 @@ export const Hero = () => {
 
             <div className="hero-fade-item flex flex-wrap gap-4 items-center">
               <div className="relative group/btn cursor-pointer">
-                <div
-                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/btn:opacity-100 blur-[4px] transition-all duration-500 pointer-events-none"
-                  style={maskStyle}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full" />
-                </div>
-
-                <div
-                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/btn:opacity-100 transition-all duration-500 pointer-events-none z-10"
-                  style={maskStyle}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-400 rounded-full" />
-                </div>
-
+                <ButtonRing rounded="rounded-full" variant="blue" />
                 <button
                   onClick={handleContactClick}
                   className="relative inline-flex h-13 sm:h-14 items-center justify-center overflow-hidden rounded-full bg-slate-900 dark:bg-white px-7 sm:px-8 font-medium text-white dark:text-slate-900 shadow-xl transition-all duration-300 group-hover/btn:shadow-2xl group-hover/btn:shadow-blue-500/25 group-hover/btn:-translate-y-0.5 active:translate-y-0 cursor-pointer z-0"
@@ -361,20 +349,7 @@ export const Hero = () => {
               </div>
 
               <div className="relative group/viewcv cursor-pointer">
-                <div
-                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/viewcv:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
-                  style={maskStyle}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-sky-400 rounded-full" />
-                </div>
-
-                <div
-                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/viewcv:opacity-100 transition-all duration-500 pointer-events-none z-10"
-                  style={maskStyle}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-300 rounded-full" />
-                </div>
-
+                <ButtonRing rounded="rounded-full" variant="blue" />
                 <a
                   href="/CV MUHAMAD NUR AIDUL HARPAN.pdf"
                   target="_blank"
@@ -385,7 +360,7 @@ export const Hero = () => {
                   <span className="relative flex items-center gap-2 font-semibold tracking-wide text-sm sm:text-base">
                     <Eye 
                       size={18} 
-                      className="group-hover/viewcv:scale-110 group-hover/viewcv:rotate-6 transition-transform duration-300 text-blue-600 dark:text-blue-400"
+                      className="group-hover/viewcv:rotate-6 transition-transform duration-300 text-blue-600 dark:text-blue-400"
                     /> 
                     {lang === "id" ? "Lihat CV" : "View CV"}
                   </span>
@@ -393,20 +368,7 @@ export const Hero = () => {
               </div>
 
               <div className="relative group/dlcv cursor-pointer">
-                <div
-                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/dlcv:opacity-100 blur-[3px] transition-all duration-500 pointer-events-none"
-                  style={maskStyle}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" />
-                </div>
-
-                <div
-                  className="absolute -inset-[2px] rounded-full p-[2px] overflow-hidden opacity-0 group-hover/dlcv:opacity-100 transition-all duration-500 pointer-events-none z-10"
-                  style={maskStyle}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full" />
-                </div>
-
+                <ButtonRing rounded="rounded-full" variant="emerald" />
                 <a
                   href="/CV MUHAMAD NUR AIDUL HARPAN.pdf"
                   download="CV MUHAMAD NUR AIDUL HARPAN.pdf"
@@ -424,19 +386,21 @@ export const Hero = () => {
               </div>
             </div>
 
-            <div className="hero-fade-item mt-12 flex gap-6 text-slate-500 dark:text-slate-400">
+            <div className="hero-fade-item mt-12 flex gap-4 text-slate-500 dark:text-slate-400">
               {socials.map((item, idx) => {
                 const Icon = item.icon;
                 return (
-                  <a
-                    key={idx}
-                    href={item.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 ease-out transform hover:-translate-y-1 hover:scale-110"
-                  >
-                    <Icon size={22} />
-                  </a>
+                  <div key={idx} className="relative group/social cursor-pointer">
+                    <ButtonRing rounded="rounded-full" />
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 ease-out active:scale-95"
+                    >
+                      <Icon size={18} />
+                    </a>
+                  </div>
                 );
               })}
             </div>
@@ -458,7 +422,7 @@ export const Hero = () => {
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
-                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-all duration-500"
                 />
 
                 <div className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-slate-100 via-slate-100/90 to-transparent dark:from-slate-950 dark:via-slate-950/85 dark:to-transparent flex flex-col items-center justify-end pb-7 px-6 text-center pointer-events-none select-none z-10 transition-colors duration-500">

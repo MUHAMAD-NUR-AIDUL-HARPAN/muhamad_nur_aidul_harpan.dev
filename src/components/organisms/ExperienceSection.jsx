@@ -21,7 +21,7 @@ const ExperienceCard = ({ item, index }) => {
       <div className="hidden md:block w-5/12" />
 
       <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20">
-        <div className="relative w-11 h-11 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+        <div className="relative w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300">
           <div 
             className="absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-75 group-hover:opacity-100 blur-[4px] pointer-events-none transition-opacity duration-300"
             style={{
@@ -46,11 +46,11 @@ const ExperienceCard = ({ item, index }) => {
 
           <div className="w-9 h-9 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center z-10 shadow-sm transition-all duration-300 group-hover:border-blue-500/50 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.3)]">
             {item.category === "work" ? (
-              <Briefcase size={15} className="text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+              <Briefcase size={15} className="text-blue-600 dark:text-blue-400 transition-colors duration-300" />
             ) : (
               <GraduationCap
                 size={15}
-                className="text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300"
+                className="text-blue-600 dark:text-blue-400 transition-colors duration-300"
               />
             )}
           </div>

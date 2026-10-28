@@ -1,4 +1,5 @@
 import { ExternalLink, Github } from "lucide-react";
+import { ButtonRing } from "../atoms/ButtonRing";
 
 export const ProjectCard = ({ project, index = 0 }) => {
   const getImageUrl = (imagePath) => {
@@ -17,38 +18,44 @@ export const ProjectCard = ({ project, index = 0 }) => {
       className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col justify-between will-change-transform"
     >
 
-      <div className="h-60 scale-[1.03] overflow-hidden relative">
+      <div className="h-60 overflow-hidden relative">
         <img
           src={getImageUrl(project.image)}
           alt={project.title}
           loading="lazy"
           decoding="async"
-          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+          className="w-full h-full object-cover transition-opacity duration-300"
         />
 
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
           {project.github && (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              className="p-3 bg-white/95 text-slate-900 rounded-full hover:bg-white hover:scale-110 hover:shadow-lg transition-all duration-300 ease-out shadow-md"
-              title="Source Code"
-            >
-              <Github size={20} />
-            </a>
+            <div className="relative group/btn inline-block cursor-pointer">
+              <ButtonRing rounded="rounded-full" />
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center p-3 bg-white/95 text-slate-900 rounded-full hover:bg-white hover:shadow-lg transition-all duration-300 ease-out shadow-md active:scale-95"
+                title="Source Code"
+              >
+                <Github size={20} />
+              </a>
+            </div>
           )}
 
           {project.link && (
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noreferrer"
-              className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-500 hover:scale-110 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 ease-out shadow-md"
-              title="Live Demo"
-            >
-              <ExternalLink size={20} />
-            </a>
+            <div className="relative group/btn inline-block cursor-pointer">
+              <ButtonRing rounded="rounded-full" variant="blue" />
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center p-3 bg-blue-600 text-white rounded-full hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 ease-out shadow-md active:scale-95"
+                title="Live Demo"
+              >
+                <ExternalLink size={20} />
+              </a>
+            </div>
           )}
         </div>
       </div>

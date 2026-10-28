@@ -1,21 +1,30 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-export const Preloader = ({ onComplete }) => {
-  const [progress, setProgress] = useState(0);
+export const Preloader = ({ onComplete, onStartExit }) => {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
+  const fillRef = useRef(null);
+  const numberRef = useRef(null);
 
   useEffect(() => {
     const counter = { val: 0 };
     const tween = gsap.to(counter, {
       val: 100,
-      duration: 1.6,
-      ease: "power2.inOut",
+      duration: 1.8,
+      ease: "power2.out",
       onUpdate: () => {
-        setProgress(Math.floor(counter.val));
+        const p = Math.floor(counter.val);
+        if (fillRef.current) {
+          fillRef.current.style.width = `${counter.val}%`;
+        }
+        if (numberRef.current) {
+          numberRef.current.textContent = `${p}%`;
+        }
       },
       onComplete: () => {
+        if (onStartExit) onStartExit();
+
         const tl = gsap.timeline({
           onComplete: () => {
             onComplete();
@@ -23,19 +32,18 @@ export const Preloader = ({ onComplete }) => {
         });
 
         tl.to(contentRef.current, {
-          y: -24,
+          y: -20,
           opacity: 0,
-          scale: 0.98,
-          duration: 0.4,
-          ease: "power3.in",
+          duration: 0.35,
+          ease: "power2.in",
         }).to(
           containerRef.current,
           {
             yPercent: -100,
-            duration: 0.75,
-            ease: "power4.inOut",
+            duration: 0.85,
+            ease: "power3.inOut",
           },
-          "-=0.1"
+          "-=0.05"
         );
       },
     });
@@ -43,15 +51,15 @@ export const Preloader = ({ onComplete }) => {
     return () => {
       tween.kill();
     };
-  }, [onComplete]);
+  }, [onComplete, onStartExit]);
 
   return (
     <div
       ref={containerRef}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-950 text-slate-100 overflow-hidden pointer-events-auto select-none will-change-transform transform-gpu"
     >
-      <div className="absolute w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06)_0,transparent_70%)] pointer-events-none" />
+      <div className="absolute w-[600px] h-[600px] bg-blue-600/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.08)_0,transparent_70%)] pointer-events-none" />
 
       <div
         ref={contentRef}
@@ -63,8 +71,9 @@ export const Preloader = ({ onComplete }) => {
           </div>
 
           <div
-            className="absolute top-0 left-0 overflow-hidden whitespace-nowrap select-none transition-all duration-75 ease-out text-white drop-shadow-[0_0_25px_rgba(59,130,246,0.5)]"
-            style={{ width: `${progress}%` }}
+            ref={fillRef}
+            className="absolute top-0 left-0 overflow-hidden whitespace-nowrap select-none text-white drop-shadow-[0_0_25px_rgba(59,130,246,0.6)] will-change-[width]"
+            style={{ width: "0%" }}
           >
             MUHAMAD NUR AIDUL HARPAN
             <span className="absolute right-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-blue-400 to-transparent shadow-[0_0_12px_#38bdf8]" />
@@ -73,8 +82,8 @@ export const Preloader = ({ onComplete }) => {
 
         <div className="flex items-center gap-4 text-xs font-mono text-slate-500 tracking-widest">
           <div className="w-12 h-[1px] bg-slate-800" />
-          <span className="font-bold text-slate-300">
-            {progress}%
+          <span ref={numberRef} className="font-bold text-slate-300">
+            0%
           </span>
           <div className="w-12 h-[1px] bg-slate-800" />
         </div>

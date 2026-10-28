@@ -14,7 +14,7 @@ export const EducationCard = ({ item, index }) => {
       <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-500/10 transition-colors duration-500" />
 
       <div className="flex justify-between items-start mb-6 relative z-10">
-        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-2xl transition-colors duration-300">
           <GraduationCap size={32} />
         </div>
         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-500 uppercase tracking-wide">

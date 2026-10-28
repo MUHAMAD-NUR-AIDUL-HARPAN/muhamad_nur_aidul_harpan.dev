@@ -13,6 +13,7 @@ import {
 import { useGlobal } from "../context/GlobalContext";
 import { supabase } from "../lib/supabaseClient";
 import { TextHighlighter } from "../components/atoms/TextHighlighter";
+import { ButtonRing } from "../components/atoms/ButtonRing";
 
 const FALLBACK_IMAGE =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f1f5f9'/%3E%3Cpath d='M400 200c-33.1 0-60 26.9-60 60s26.9 60 60 60 60-26.9 60-60-26.9-60-60-60zm0 90c-16.5 0-30-13.5-30-30s13.5-30 30-30 30 13.5 30 30-13.5 30-30 30z' fill='%2394a3b8'/%3E%3Cpath d='M360 320h80v100l-40-20-40 20z' fill='%2394a3b8'/%3E%3Ctext x='50%25' y='65%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' font-weight='bold' fill='%2364748b'%3ESertifikat%3C/text%3E%3C/svg%3E";
@@ -188,21 +189,23 @@ export const CertificatesPage = () => {
             const isActive = activeCategory === category;
 
             return (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-400 ease-out flex items-center gap-2 cursor-pointer ${
-                  isActive
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 border border-blue-500 transform scale-105"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400 shadow-xs"
-                }`}
-              >
-                {category === "All" && <Filter size={16} />}
-                {category}
-                <span className={`px-2 py-0.5 rounded-full text-xs ${isActive ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"}`}>
-                  {count}
-                </span>
-              </button>
+              <div key={category} className="relative group inline-block cursor-pointer">
+                <ButtonRing rounded="rounded-full" />
+                <button
+                  onClick={() => setActiveCategory(category)}
+                  className={`relative px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-400 ease-out flex items-center gap-2 cursor-pointer active:scale-95 ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 border border-blue-500 font-bold"
+                      : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400 shadow-xs"
+                  }`}
+                >
+                  {category === "All" && <Filter size={16} />}
+                  {category}
+                  <span className={`px-2 py-0.5 rounded-full text-xs ${isActive ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"}`}>
+                    {count}
+                  </span>
+                </button>
+              </div>
             );
           })}
         </div>
@@ -227,7 +230,7 @@ export const CertificatesPage = () => {
                     loading="lazy"
                     decoding="async"
                     onError={handleImageError}
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="w-full h-full object-cover transition-opacity duration-300"
                   />
 
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -365,15 +368,18 @@ export const CertificatesPage = () => {
                 </div>
 
                 {getValidLink(selectedCert) && (
-                  <a
-                    href={getValidLink(selectedCert)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hidden sm:inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-blue-500/25 transition-all hover:scale-105 flex-shrink-0"
-                  >
-                    <ExternalLink size={16} />
-                    {lang === "id" ? "Lihat Dokumen Asli / PDF" : "View Original Credential"}
-                  </a>
+                  <div className="relative group/btn hidden sm:inline-block cursor-pointer flex-shrink-0">
+                    <ButtonRing rounded="rounded-xl" variant="blue" />
+                    <a
+                      href={getValidLink(selectedCert)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-blue-500/25 transition-all active:scale-95 flex-shrink-0"
+                    >
+                      <ExternalLink size={16} />
+                      {lang === "id" ? "Lihat Dokumen Asli / PDF" : "View Original Credential"}
+                    </a>
+                  </div>
                 )}
               </div>
 

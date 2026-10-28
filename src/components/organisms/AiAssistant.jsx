@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Send, RotateCcw, ArrowRight } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
+import { ButtonRing } from "../atoms/ButtonRing";
 import {
   experienceData,
   educationData,
@@ -365,14 +366,14 @@ export const AiAssistant = () => {
 
       <div className={`fixed bottom-6 right-6 z-40 transition-all duration-300 ${isOpen ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100 pointer-events-auto"}`}>
         <div className="relative group transition-all duration-300">
-          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none transform-gpu will-change-transform" />
+          <ButtonRing rounded="rounded-full" />
 
           <button
             onClick={() => setIsOpen(true)}
-            className="relative flex items-center gap-3 px-5 py-3.5 rounded-full bg-slate-900/90 dark:bg-slate-800/90 text-white backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="relative flex items-center gap-3 px-5 py-3.5 rounded-full bg-slate-900/90 dark:bg-slate-800/90 text-white backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl active:scale-95 transition-all duration-300 cursor-pointer"
           >
             <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md">
-              <AiIcon size={16} className="group-hover:scale-110 transition-transform duration-300" />
+              <AiIcon size={16} />
               <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border border-slate-900"></span>
@@ -533,13 +534,16 @@ export const AiAssistant = () => {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={!input.trim() || isLoading}
-                  className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white flex items-center justify-center transition-all duration-200 shadow-md shadow-blue-500/25 hover:scale-105 active:scale-95 disabled:opacity-40 disabled:hover:scale-100 disabled:shadow-none cursor-pointer"
-                >
-                  <Send size={16} />
-                </button>
+                <div className="relative group cursor-pointer">
+                  <ButtonRing rounded="rounded-2xl" />
+                  <button
+                    type="submit"
+                    disabled={!input.trim() || isLoading}
+                    className="relative w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white flex items-center justify-center transition-all duration-200 shadow-md shadow-blue-500/25 active:scale-95 disabled:opacity-40 disabled:shadow-none cursor-pointer"
+                  >
+                    <Send size={16} />
+                  </button>
+                </div>
               </form>
 
               <p className="text-[10px] text-center text-slate-400 dark:text-slate-500 mt-2">
