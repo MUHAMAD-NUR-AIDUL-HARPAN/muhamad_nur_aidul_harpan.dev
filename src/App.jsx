@@ -1,10 +1,11 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, useLayoutEffect, useRef } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useLocation,
 } from "react-router-dom";
+import gsap from "gsap";
 import { GlobalProvider } from "./context/GlobalContext";
 import { MainLayout } from "./components/templates/MainLayout";
 import ProtectedRoute from "./components/utilities/ProtectedRoute";
@@ -21,6 +22,26 @@ const RouteLoader = () => (
   </div>
 );
 
+const PageTransition = ({ children }) => {
+  const containerRef = useRef(null);
+  const location = useLocation();
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+    gsap.fromTo(
+      containerRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.35, ease: "power2.out" }
+    );
+  }, [location.pathname]);
+
+  return (
+    <div ref={containerRef} className="w-full">
+      {children}
+    </div>
+  );
+};
+
 const AnimatedRoutes = () => {
   const location = useLocation();
 
@@ -36,19 +57,21 @@ const AnimatedRoutes = () => {
   return (
     <MainLayout>
       <Suspense fallback={<RouteLoader />}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/certificates" element={<CertificatesPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route 
-            path="/admin" 
-            element={
-              <ProtectedRoute>
-                <AdminPage />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
+        <PageTransition>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/certificates" element={<CertificatesPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute>
+                  <AdminPage />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </PageTransition>
       </Suspense>
     </MainLayout>
   );

@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import AOS from "aos";
 import { ThemeToggle } from "../molecules/ThemeToggle";
 import { navItems } from "../../data/content";
 
@@ -35,6 +36,7 @@ export const Navbar = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const desktopNavRef = useRef(null);
+  const isTransitioningRef = useRef(false);
 
   useEffect(() => {
     if (!desktopNavRef.current) return;
@@ -65,6 +67,7 @@ export const Navbar = () => {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (isTransitioningRef.current) return;
         const visibleSection = entries.find((entry) => entry.isIntersecting);
         if (visibleSection) {
           setActiveSection(visibleSection.target.id);
@@ -77,54 +80,44 @@ export const Navbar = () => {
     return () => observer.disconnect();
   }, [location.pathname]);
 
-  const scrollToTarget = (targetId, isCrossPage = false) => {
+  const scrollToTarget = (targetId) => {
+    isTransitioningRef.current = true;
+    setActiveSection(targetId);
+
     if (targetId === "home") {
       if (window.lenis) {
         window.lenis.scrollTo(0, { duration: 1.0 });
       } else {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
+      setTimeout(() => {
+        isTransitioningRef.current = false;
+      }, 1000);
       return;
     }
 
-    const performScroll = () => {
-      const targetElement = document.getElementById(targetId);
-      if (!targetElement) return false;
-
-      window.lenis?.resize();
-
-      if (window.lenis) {
-        window.lenis.scrollTo(targetElement, {
-          offset: -80,
-          duration: isCrossPage ? 1.2 : 1.0,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        });
-      } else {
-        const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
-      return true;
-    };
-
-    if (!isCrossPage) {
-      performScroll();
+    const targetElement = document.getElementById(targetId);
+    if (!targetElement) {
+      isTransitioningRef.current = false;
       return;
     }
 
-    let attempts = 0;
-    const maxAttempts = 30;
-    const interval = setInterval(() => {
-      attempts++;
-      const success = performScroll();
-      if (success || attempts >= maxAttempts) {
-        clearInterval(interval);
-        if (success) {
-          setTimeout(performScroll, 300);
-          setTimeout(performScroll, 700);
-          setTimeout(performScroll, 1200);
-        }
-      }
-    }, 60);
+    window.lenis?.resize();
+
+    if (window.lenis) {
+      window.lenis.scrollTo(targetElement, {
+        offset: -80,
+        duration: 1.0,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+    } else {
+      const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+
+    setTimeout(() => {
+      isTransitioningRef.current = false;
+    }, 1000);
   };
 
   const handleNavClick = (item) => {
@@ -141,16 +134,67 @@ export const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (location.pathname === "/" && location.state?.scrollTo) {
       const targetId = location.state.scrollTo;
-      setActiveSection(targetId);
-      window.scrollTo(0, 0);
-      window.lenis?.scrollTo(0, { immediate: true });
-      setTimeout(() => {
-        scrollToTarget(targetId, true);
-      }, 50);
+      isTransitioningRef.current = true;
+
+      const performCrossPageScroll = () => {
+        if (targetId === "home") {
+          window.scrollTo(0, 0);
+          window.lenis?.scrollTo(0, { immediate: true });
+          return true;
+        }
+
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement) return false;
+
+        window.lenis?.resize();
+
+        if (window.lenis) {
+          window.lenis.scrollTo(targetElement, {
+            offset: -120,
+            immediate: true,
+          });
+          window.lenis.scrollTo(targetElement, {
+            offset: -80,
+            duration: 0.6,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          });
+        } else {
+          const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo(0, Math.max(0, top));
+        }
+
+        if (typeof AOS !== "undefined" && AOS?.refresh) {
+          AOS.refresh();
+        }
+
+        return true;
+      };
+
+      let rafId;
+      const tryScroll = (attempts = 0) => {
+        const success = performCrossPageScroll();
+        if (success) {
+          setActiveSection(targetId);
+        } else if (attempts < 10) {
+          rafId = requestAnimationFrame(() => tryScroll(attempts + 1));
+        }
+      };
+
+      tryScroll();
+
+      const timer = setTimeout(() => {
+        isTransitioningRef.current = false;
+      }, 700);
+
       window.history.replaceState({}, document.title);
+
+      return () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        clearTimeout(timer);
+      };
     }
   }, [location.pathname, location.state]);
 
