@@ -9,7 +9,7 @@ export const navItems = [
     id: "certificates",
     label: "Certificates",
     icon: Award,
-    type: "route",
+    type: "scroll",
     path: "/certificates",
   }, 
   { id: "contact", label: "Contact", icon: Mail, type: "scroll" },

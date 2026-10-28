@@ -78,21 +78,38 @@ export const Navbar = () => {
   }, [location.pathname]);
 
   const scrollToTarget = (targetId) => {
-    const targetElement = targetId === "home" ? 0 : document.getElementById(targetId);
-    if (window.lenis) {
-      window.lenis.scrollTo(targetElement, {
-        offset: targetId === "home" ? 0 : -80,
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      });
-    } else if (targetElement !== null) {
+    let attempts = 0;
+    const maxAttempts = 30;
+
+    const attempt = () => {
       if (targetId === "home") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: "smooth" });
+        if (window.lenis) {
+          window.lenis.scrollTo(0, { duration: 1.2 });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+        return;
       }
-    }
+
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        if (window.lenis) {
+          window.lenis.scrollTo(targetElement, {
+            offset: -80,
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          });
+        } else {
+          const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top, behavior: "smooth" });
+        }
+      } else if (attempts < maxAttempts) {
+        attempts++;
+        setTimeout(attempt, 80);
+      }
+    };
+
+    attempt();
   };
 
   const handleNavClick = (item) => {
@@ -100,8 +117,7 @@ export const Navbar = () => {
       navigate(item.path);
     } else {
       if (location.pathname !== "/") {
-        navigate("/");
-        setTimeout(() => scrollToTarget(item.id), 150);
+        navigate("/", { state: { scrollTo: item.id } });
       } else {
         scrollToTarget(item.id);
       }
@@ -109,6 +125,15 @@ export const Navbar = () => {
     }
     setIsMobileMenuOpen(false);
   };
+
+  useEffect(() => {
+    if (location.pathname === "/" && location.state?.scrollTo) {
+      const targetId = location.state.scrollTo;
+      setActiveSection(targetId);
+      scrollToTarget(targetId);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.pathname, location.state]);
 
   useEffect(() => {
     if (isMobileMenuOpen) {
