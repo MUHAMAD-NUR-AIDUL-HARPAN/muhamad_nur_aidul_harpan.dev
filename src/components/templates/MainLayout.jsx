@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import AOS from "aos";
@@ -17,8 +18,12 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 export const MainLayout = ({ children }) => {
   const { setIsPreloaderDone } = useGlobal();
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
   const lenisRef = useRef(null);
   const progressBarRef = useRef(null);
+
+  const isNoLenis = location.pathname.startsWith("/admin") || location.pathname === "/login";
+  const isAdminPage = location.pathname.startsWith("/admin");
 
   useEffect(() => {
     ScrollTrigger.config({ ignoreMobileResize: true });
@@ -29,12 +34,15 @@ export const MainLayout = ({ children }) => {
       once: true,
       offset: 40,
     });
+  }, []);
 
+  useEffect(() => {
     const isDesktop = window.innerWidth > 768;
     let lenis = null;
     let tickerUpdate = null;
+    let handleNativeScroll = null;
 
-    if (isDesktop) {
+    if (!isNoLenis && isDesktop) {
       lenis = new Lenis({
         lerp: 0.085,
         smoothWheel: true,
@@ -59,7 +67,7 @@ export const MainLayout = ({ children }) => {
       window.lenis = null;
       lenisRef.current = null;
 
-      const handleNativeScroll = () => {
+      handleNativeScroll = () => {
         if (progressBarRef.current) {
           const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
           const progress = totalHeight > 0 ? window.scrollY / totalHeight : 0;
@@ -71,14 +79,16 @@ export const MainLayout = ({ children }) => {
 
     return () => {
       if (tickerUpdate) gsap.ticker.remove(tickerUpdate);
+      if (handleNativeScroll) window.removeEventListener("scroll", handleNativeScroll);
       if (lenis) {
         lenis.destroy();
         window.lenis = null;
         lenisRef.current = null;
       }
+      document.documentElement.classList.remove("lenis", "lenis-smooth", "lenis-scrolling", "lenis-stopped");
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [isNoLenis]);
 
   useEffect(() => {
     const lenis = lenisRef.current;
@@ -112,8 +122,8 @@ export const MainLayout = ({ children }) => {
         <div className="relative z-10">
           <Navbar />
           <main className="relative">{children}</main>
-          <Footer />
-          <AiAssistant />
+          {!isAdminPage && <Footer />}
+          {!isAdminPage && <AiAssistant />}
         </div>
       </div>
     </>
