@@ -125,4 +125,16 @@
   .highlighter-sweep.is-active {
     transform: scaleX(1);
   }
+
+  [data-page="public"] button,
+  [data-page="public"] a,
+  [data-page="public"] .group {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-page="public"] .group:hover,
+  [data-page="public"] a:hover,
+  [data-page="public"] button:hover {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }

@@ -55,7 +55,7 @@ export const AboutSection = () => {
             className="relative"
           >
 
-            <div className="p-8 rounded-3xl bg-white/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-2xl relative z-10 hover:shadow-blue-500/10 transition-all duration-300">
+            <div className="p-8 rounded-3xl bg-white/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-2xl relative z-10 hover:shadow-2xl hover:shadow-blue-500/15 hover:border-blue-500/30 transition-all duration-500 ease-out">
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600">
                   <Code size={20} />

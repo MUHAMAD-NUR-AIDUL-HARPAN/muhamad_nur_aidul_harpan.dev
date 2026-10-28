@@ -11,7 +11,7 @@ export const StatsGrid = () => {
           key={index}
           data-aos="fade-up"
           data-aos-delay={index * 100}
-          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-blue-500/30 hover:-translate-y-1 transition-all duration-300 cursor-default"
+          className="text-center p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-400 ease-out cursor-default will-change-transform"
         >
           <div className="text-3xl font-black text-blue-600 dark:text-blue-400 mb-1">
             {stat.value}

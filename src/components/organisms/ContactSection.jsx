@@ -101,7 +101,7 @@ export const ContactSection = () => {
               return (
                 <div
                   key={idx}
-                  className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-lg hover:translate-x-2 transition-all duration-300"
+                  className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-xl hover:shadow-blue-500/10 hover:translate-x-2 transition-all duration-400 ease-out"
                 >
                   <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full">
                     <Icon size={24} />
@@ -133,7 +133,7 @@ export const ContactSection = () => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold relative z-10 transition-all duration-300 cursor-pointer ${
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold relative z-10 transition-all duration-400 ease-out cursor-pointer ${
                     isActive
                       ? "text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700"
                       : "text-slate-500 hover:text-slate-800 dark:hover:text-white"

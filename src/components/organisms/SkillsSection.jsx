@@ -54,7 +54,7 @@ export const SkillsSection = () => {
                 key={catIndex}
                 data-aos="fade-up"
                 data-aos-delay={catIndex * 100}
-                className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-300"
+                className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out will-change-transform"
               >
 
                 <div className="flex items-center gap-4 mb-8">

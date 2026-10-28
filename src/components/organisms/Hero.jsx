@@ -433,7 +433,7 @@ export const Hero = () => {
                     href={item.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors transform hover:scale-110 duration-200"
+                    className="hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 ease-out transform hover:-translate-y-1 hover:scale-110"
                   >
                     <Icon size={22} />
                   </a>

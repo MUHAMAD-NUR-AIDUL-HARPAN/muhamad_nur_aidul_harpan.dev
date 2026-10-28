@@ -97,7 +97,7 @@ export const CertificatesSection = () => {
                   key={cert.id}
                   data-aos="fade-up"
                   data-aos-delay={(index % 3) * 100}
-                  className="group relative bg-slate-50 dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/60 shadow-lg hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
+                  className="group relative bg-slate-50 dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-700/60 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col justify-between will-change-transform"
                 >
                   <Link to="/certificates" className="block overflow-hidden relative aspect-video bg-slate-200 dark:bg-slate-900">
                     <img
@@ -106,7 +106,7 @@ export const CertificatesSection = () => {
                       loading="lazy"
                       decoding="async"
                       onError={handleImageError}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
 
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -142,7 +142,7 @@ export const CertificatesSection = () => {
                         <Calendar size={12} />
                         {cert.date}
                       </div>
-                      <h3 className="text-lg font-bold mb-2 leading-snug group-hover:text-blue-600 transition-colors text-slate-900 dark:text-slate-100 line-clamp-2">
+                      <h3 className="text-lg font-bold mb-2 leading-snug group-hover:text-blue-600 transition-colors duration-300 ease-out text-slate-900 dark:text-slate-100 line-clamp-2">
                         {cert.title}
                       </h3>
                       <p className="text-slate-500 dark:text-slate-400 text-xs flex items-center gap-1.5">
@@ -163,10 +163,10 @@ export const CertificatesSection = () => {
         <div data-aos="fade-up" className="flex justify-center mt-6">
           <Link
             to="/certificates"
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full font-bold text-sm shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105 active:scale-95 transition-all duration-300"
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full font-bold text-sm shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 hover:scale-105 active:scale-95 transition-all duration-400 ease-out"
           >
             <span>{lang === "id" ? "Lihat Sertifikat Lengkap" : "View All Certificates"}</span>
-            <ArrowRight size={18} className="transform group-hover:translate-x-1.5 transition-transform duration-300" />
+            <ArrowRight size={18} className="transform group-hover:translate-x-1.5 transition-transform duration-400 ease-out" />
           </Link>
         </div>
       </div>

@@ -118,7 +118,7 @@ export const MainLayout = ({ children }) => {
         style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
         className="fixed top-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-400 z-[9999] pointer-events-none will-change-transform transform-gpu"
       />
-      <div className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 relative z-0">
+      <div data-page={isNoLenis ? "admin" : "public"} className="min-h-screen w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200 relative z-0">
         <div className="relative z-10">
           <Navbar />
           <main className="relative">{children}</main>

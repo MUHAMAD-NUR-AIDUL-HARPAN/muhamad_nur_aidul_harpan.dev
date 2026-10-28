@@ -191,10 +191,10 @@ export const CertificatesPage = () => {
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-400 ease-out flex items-center gap-2 cursor-pointer ${
                   isActive
                     ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 border border-blue-500 transform scale-105"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 hover:text-blue-600 dark:hover:text-blue-400"
+                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/40 hover:text-blue-600 dark:hover:text-blue-400 shadow-xs"
                 }`}
               >
                 {category === "All" && <Filter size={16} />}
@@ -218,7 +218,7 @@ export const CertificatesPage = () => {
                 data-aos="fade-up"
                 data-aos-delay={(index % 3) * 100}
                 onClick={() => handleCardClick(cert)}
-                className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer"
+                className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer will-change-transform"
               >
                 <div className="h-56 overflow-hidden relative bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                   <img
@@ -227,7 +227,7 @@ export const CertificatesPage = () => {
                     loading="lazy"
                     decoding="async"
                     onError={handleImageError}
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
 
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -262,7 +262,7 @@ export const CertificatesPage = () => {
                     <Calendar size={12} />
                     {cert.date}
                   </div>
-                  <h3 className="text-xl font-bold mb-2 leading-tight group-hover:text-blue-600 transition-colors text-slate-900 dark:text-slate-100 line-clamp-2">
+                  <h3 className="text-xl font-bold mb-2 leading-tight group-hover:text-blue-600 transition-colors duration-300 ease-out text-slate-900 dark:text-slate-100 line-clamp-2">
                     {cert.title}
                   </h3>
                   <p className="text-slate-500 text-sm flex items-center gap-1.5">

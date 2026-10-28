@@ -229,31 +229,31 @@ export const Navbar = () => {
                 key={item.id}
                 style={{ transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms" }}
                 onClick={() => handleNavClick(item)}
-                className={`group relative flex items-center justify-between w-full max-w-xs px-5 py-3 rounded-2xl transition-all duration-300 transform active:scale-95 cursor-pointer ${
+                className={`group relative flex items-center justify-between w-full max-w-xs px-5 py-3.5 rounded-2xl transition-all duration-400 ease-out transform active:scale-95 cursor-pointer overflow-hidden ${
                   isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 } ${
                   isActive
-                    ? "bg-blue-600/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 shadow-[0_0_15px_rgba(37,99,235,0.15)]"
-                    : "text-slate-800 dark:text-slate-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 border border-transparent"
+                    ? "bg-gradient-to-r from-blue-600/15 via-blue-500/20 to-indigo-600/15 dark:from-blue-500/20 dark:via-blue-400/25 dark:to-indigo-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/35 dark:border-blue-400/35 shadow-[0_4px_20px_rgba(37,99,235,0.18)] font-semibold"
+                    : "text-slate-800 dark:text-slate-200 hover:bg-slate-100/90 dark:hover:bg-slate-800/70 hover:text-blue-600 dark:hover:text-blue-400 border border-transparent font-medium"
                 }`}
               >
-                <div className="flex items-center gap-3.5">
+                <div className="flex items-center gap-3.5 relative z-10">
                   <div
-                    className={`p-2 rounded-xl transition-all duration-300 ${
+                    className={`p-2 rounded-xl transition-all duration-400 ease-out ${
                       isActive
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-500/30 scale-105"
+                        ? "bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30 scale-105"
                         : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-105"
                     }`}
                   >
                     <item.icon size={18} />
                   </div>
-                  <span className="text-lg font-bold tracking-tight">{item.label}</span>
+                  <span className="text-lg tracking-tight">{item.label}</span>
                 </div>
                 <div
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-400 ease-out ${
                     isActive
-                      ? "bg-blue-600 dark:bg-blue-400 shadow-[0_0_8px_#3b82f6] scale-100"
-                      : "bg-transparent scale-0 group-hover:bg-blue-500 group-hover:scale-100"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-400 shadow-[0_0_10px_#3b82f6] scale-100"
+                      : "bg-transparent scale-0 group-hover:bg-blue-500/60 group-hover:scale-75"
                   }`}
                 />
               </button>
@@ -308,7 +308,7 @@ export const Navbar = () => {
           <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 p-1.5 rounded-full flex items-center justify-between w-full shadow-sm z-20">
             <div
               onClick={() => handleNavClick({ id: "home", type: "scroll" })}
-              className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold cursor-pointer shadow-lg hover:shadow-blue-500/40 transition-all duration-300 hover:scale-110 hover:rotate-6 active:scale-95"
+              className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold cursor-pointer shadow-md hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-400 ease-out hover:scale-105 active:scale-95"
             >
               <LogoIcon sizeClass="w-5 h-5" />
             </div>
@@ -322,31 +322,42 @@ export const Navbar = () => {
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className={`group/item cursor-pointer relative px-3 py-1.5 rounded-full flex items-center justify-center transition-all duration-300 ease-out flex-shrink-0 active:scale-95 ${
+                    className={`group/item cursor-pointer relative px-3.5 py-1.5 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-400 ease-out active:scale-95 ${
                       isActive
-                        ? "bg-blue-600/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 dark:border-blue-400/30 shadow-[0_0_12px_rgba(37,99,235,0.15)]"
-                        : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 border border-transparent"
+                        ? "text-blue-600 dark:text-blue-400 font-semibold"
+                        : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium"
                     }`}
                   >
+                    <div
+                      className={`absolute inset-0 rounded-full transition-all duration-400 ease-out pointer-events-none ${
+                        isActive
+                          ? "bg-gradient-to-r from-blue-600/12 via-blue-500/18 to-indigo-600/12 dark:from-blue-500/20 dark:via-blue-400/25 dark:to-indigo-500/20 border border-blue-500/35 dark:border-blue-400/35 shadow-[0_2px_14px_rgba(37,99,235,0.18)] opacity-100 scale-100"
+                          : "opacity-0 scale-95 border border-transparent"
+                      }`}
+                    />
+
+                    {!isActive && (
+                      <div className="absolute inset-0 rounded-full bg-slate-100/80 dark:bg-slate-800/60 opacity-0 group-hover/item:opacity-100 transition-all duration-300 ease-out pointer-events-none" />
+                    )}
+
+                    <div
+                      className={`absolute -bottom-[1px] left-3 right-3 h-[2px] bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400 rounded-full shadow-[0_0_10px_#3b82f6] transition-all duration-400 ease-out ${
+                        isActive ? "opacity-100 scale-x-100" : "opacity-0 scale-x-50"
+                      }`}
+                    />
+
                     <div className="relative z-10 flex items-center gap-2">
                       <item.icon
                         size={15}
-                        className={`transition-all duration-300 transform group-hover/item:scale-110 group-hover/item:-translate-y-0.5 ${
+                        className={`transition-all duration-300 ease-out transform group-hover/item:-translate-y-0.5 ${
                           isActive
-                            ? "text-blue-600 dark:text-blue-400"
+                            ? "text-blue-600 dark:text-blue-400 scale-105"
                             : "text-slate-500 dark:text-slate-400 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400"
                         }`}
                       />
-                      <span
-                        className={`hidden lg:block text-sm transition-colors duration-300 tracking-tight ${
-                          isActive ? "font-bold" : "font-medium"
-                        }`}
-                      >
+                      <span className="hidden lg:block text-sm tracking-tight transition-colors duration-300 ease-out">
                         {item.label}
                       </span>
-                      {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 shadow-[0_0_8px_#3b82f6] animate-pulse" />
-                      )}
                     </div>
                   </button>
                 );
@@ -368,7 +379,7 @@ export const Navbar = () => {
                 handleNavClick({ id: "home", type: "scroll" });
                 setIsMobileMenuOpen(false);
               }}
-              className="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] hover:scale-105 active:scale-95"
+              className="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer shadow-md transition-all duration-400 ease-out backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] hover:shadow-xl hover:shadow-blue-500/20 hover:scale-105 active:scale-95"
             >
               <div className="flex items-center justify-center w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold shadow-md shadow-blue-500/20">
                 <LogoIcon sizeClass="w-4 h-4" />
@@ -380,11 +391,11 @@ export const Navbar = () => {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Menu"
-              className="group relative flex flex-col justify-center items-center w-12 h-12 gap-[5px] rounded-full cursor-pointer shadow-lg transition-all duration-300 backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] hover:scale-105 active:scale-95"
+              className="group relative flex flex-col justify-center items-center w-12 h-12 gap-[5px] rounded-full cursor-pointer shadow-md transition-all duration-400 ease-out backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] hover:scale-105 active:scale-95"
             >
-              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 origin-center ${isMobileMenuOpen ? "w-5 rotate-45 translate-y-[7px]" : "w-5"}`} />
-              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 ${isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"}`} />
-              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-300 origin-center ${isMobileMenuOpen ? "w-5 -rotate-45 -translate-y-[7px]" : "w-5"}`} />
+              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-out origin-center ${isMobileMenuOpen ? "w-5 rotate-45 translate-y-[7px]" : "w-5"}`} />
+              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-out ${isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"}`} />
+              <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-out origin-center ${isMobileMenuOpen ? "w-5 -rotate-45 -translate-y-[7px]" : "w-5"}`} />
             </button>
           </div>
         </div>
