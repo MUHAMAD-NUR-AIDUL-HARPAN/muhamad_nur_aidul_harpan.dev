@@ -12,7 +12,7 @@ const getImageUrl = (imagePath) => {
   return imagePath;
 };
 
-const convertImageToWebP = (file, maxWidth = 1280, quality = 0.85) => {
+const convertImageToWebP = (file, maxWidth = 2880, quality = 0.95) => {
   return new Promise((resolve) => {
     if (!file || file.type === "image/webp") {
       resolve(file);

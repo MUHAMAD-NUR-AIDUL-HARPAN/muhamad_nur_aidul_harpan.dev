@@ -3,7 +3,7 @@ import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
-export const convertPdfToImage = async (file, scale = 2.0) => {
+export const convertPdfToImage = async (file, scale = 3.5) => {
   const arrayBuffer = await file.arrayBuffer();
   const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
   const pdfDoc = await loadingTask.promise;
@@ -13,7 +13,10 @@ export const convertPdfToImage = async (file, scale = 2.0) => {
   const canvas = document.createElement("canvas");
   canvas.width = viewport.width;
   canvas.height = viewport.height;
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d", { alpha: false });
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const renderContext = {
     canvasContext: ctx,
@@ -34,7 +37,7 @@ export const convertPdfToImage = async (file, scale = 2.0) => {
         resolve(imageFile);
       },
       "image/webp",
-      0.9
+      0.96
     );
   });
 };

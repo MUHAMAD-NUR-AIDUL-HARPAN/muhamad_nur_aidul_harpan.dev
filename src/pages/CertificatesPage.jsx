@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ExternalLink,
   Award,
@@ -23,6 +23,9 @@ export const CertificatesPage = () => {
   const [error, setError] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedCert, setSelectedCert] = useState(null);
+
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     const fetchCertificates = async () => {
@@ -86,6 +89,22 @@ export const CertificatesPage = () => {
     if (filteredCertificates.length <= 1) return;
     const nextIdx = (currentIndex + 1) % filteredCertificates.length;
     setSelectedCert(filteredCertificates[nextIdx]);
+  };
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
   };
 
   useEffect(() => {
@@ -266,45 +285,49 @@ export const CertificatesPage = () => {
 
       {selectedCert && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-6 transition-all duration-300"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-6 transition-all duration-300"
           onClick={() => setSelectedCert(null)}
         >
           <div
-            className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300 border border-slate-200 dark:border-slate-800"
+            className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[94vh] flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300 border border-slate-200 dark:border-slate-800"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-              <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-mono font-bold rounded-full border border-white/10 shadow-md">
+            <div className="absolute top-4 left-4 z-30 flex items-center gap-2">
+              <span className="px-3 py-1 bg-black/70 backdrop-blur-md text-white text-xs font-mono font-bold rounded-full border border-white/20 shadow-md">
                 {currentIndex + 1} / {filteredCertificates.length}
               </span>
             </div>
 
             <button
               onClick={() => setSelectedCert(null)}
-              className="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-colors cursor-pointer"
+              className="absolute top-4 right-4 z-30 p-2.5 bg-black/60 hover:bg-black/90 text-white rounded-full backdrop-blur-sm transition-colors cursor-pointer border border-white/20 shadow-md"
               aria-label="Tutup"
             >
               <X size={20} />
             </button>
 
-            <div className="flex-1 overflow-hidden bg-slate-100 dark:bg-slate-950 flex items-center justify-center min-h-[45vh] relative p-4 group/viewer select-none">
+            <div
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              className="flex-1 overflow-hidden bg-slate-100 dark:bg-slate-950 flex items-center justify-center min-h-[45vh] relative p-2 sm:p-6 select-none touch-pan-y"
+            >
               {filteredCertificates.length > 1 && (
                 <>
                   <button
                     onClick={handlePrev}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 bg-black/60 hover:bg-blue-600 text-white rounded-full backdrop-blur-md transition-all hover:scale-110 shadow-lg cursor-pointer flex items-center justify-center"
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 bg-black/70 hover:bg-blue-600 active:scale-90 text-white rounded-full backdrop-blur-md transition-all shadow-xl cursor-pointer flex items-center justify-center border border-white/20"
                     aria-label="Sertifikat Sebelumnya"
-                    title="Sebelumnya (Panah Kiri)"
+                    title="Sebelumnya (Panah Kiri / Geser Kanan)"
                   >
-                    <ChevronLeft size={22} />
+                    <ChevronLeft size={24} />
                   </button>
                   <button
                     onClick={handleNext}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 bg-black/60 hover:bg-blue-600 text-white rounded-full backdrop-blur-md transition-all hover:scale-110 shadow-lg cursor-pointer flex items-center justify-center"
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 bg-black/70 hover:bg-blue-600 active:scale-90 text-white rounded-full backdrop-blur-md transition-all shadow-xl cursor-pointer flex items-center justify-center border border-white/20"
                     aria-label="Sertifikat Berikutnya"
-                    title="Berikutnya (Panah Kanan)"
+                    title="Berikutnya (Panah Kanan / Geser Kiri)"
                   >
-                    <ChevronRight size={22} />
+                    <ChevronRight size={24} />
                   </button>
                 </>
               )}
@@ -314,59 +337,71 @@ export const CertificatesPage = () => {
                 src={getImageUrl(selectedCert.image)}
                 alt={selectedCert.title}
                 onError={handleImageError}
-                className="max-w-full max-h-[62vh] object-contain rounded-lg shadow-lg transition-opacity duration-300"
+                className="max-w-full max-h-[64vh] object-contain rounded-lg shadow-lg transition-opacity duration-300 pointer-events-none"
               />
             </div>
 
-            <div className="p-5 sm:p-7 bg-white dark:bg-slate-900 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 border-t border-slate-100 dark:border-slate-800">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 mb-2 flex-wrap">
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold rounded-full">
-                    {selectedCert.category || "Lainnya"}
-                  </span>
-                  <span className="text-slate-500 text-xs flex items-center gap-1 font-mono">
-                    <Calendar size={13} /> {selectedCert.date}
-                  </span>
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-1.5 truncate">
-                  {selectedCert.title}
-                </h2>
-                <p className="text-slate-600 dark:text-slate-400 text-sm">
-                  {lang === "id" ? "Diterbitkan oleh:" : "Issued by:"}{" "}
-                  <strong className="text-slate-900 dark:text-slate-200">{selectedCert.issuer}</strong>
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 w-full md:w-auto">
-                {filteredCertificates.length > 1 && (
-                  <div className="flex md:hidden items-center gap-2">
-                    <button
-                      onClick={handlePrev}
-                      className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer"
-                    >
-                      <ChevronLeft size={18} />
-                    </button>
-                    <button
-                      onClick={handleNext}
-                      className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer"
-                    >
-                      <ChevronRight size={18} />
-                    </button>
+            <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 flex flex-col gap-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-1.5 flex-wrap">
+                    <span className="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold rounded-full">
+                      {selectedCert.category || "Lainnya"}
+                    </span>
+                    <span className="text-slate-500 text-xs flex items-center gap-1 font-mono">
+                      <Calendar size={13} /> {selectedCert.date}
+                    </span>
                   </div>
-                )}
+                  <h2 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white mb-1 truncate">
+                    {selectedCert.title}
+                  </h2>
+                  <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
+                    {lang === "id" ? "Diterbitkan oleh:" : "Issued by:"}{" "}
+                    <strong className="text-slate-900 dark:text-slate-200">{selectedCert.issuer}</strong>
+                  </p>
+                </div>
 
                 {getValidLink(selectedCert) && (
                   <a
                     href={getValidLink(selectedCert)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-blue-500/25 transition-all hover:scale-105"
+                    className="hidden sm:inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-blue-500/25 transition-all hover:scale-105 flex-shrink-0"
                   >
                     <ExternalLink size={16} />
                     {lang === "id" ? "Lihat Dokumen Asli / PDF" : "View Original Credential"}
                   </a>
                 )}
               </div>
+
+              {filteredCertificates.length > 1 && (
+                <div className="flex sm:hidden items-center gap-2 w-full pt-1">
+                  <button
+                    onClick={handlePrev}
+                    className="flex-1 py-2.5 px-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 shadow-xs"
+                  >
+                    <ChevronLeft size={16} /> Sebelumnya
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-blue-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 shadow-md shadow-blue-500/25"
+                  >
+                    Selanjutnya <ChevronRight size={16} />
+                  </button>
+                </div>
+              )}
+
+              {getValidLink(selectedCert) && (
+                <a
+                  href={getValidLink(selectedCert)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sm:hidden w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-xl text-xs font-bold"
+                >
+                  <ExternalLink size={14} />
+                  {lang === "id" ? "Buka Dokumen Asli / PDF" : "View Original Credential"}
+                </a>
+              )}
             </div>
           </div>
         </div>
