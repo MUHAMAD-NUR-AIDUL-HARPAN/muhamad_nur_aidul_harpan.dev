@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -23,6 +23,15 @@ const RouteLoader = () => (
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    if (!location.state?.scrollTo) {
+      window.scrollTo(0, 0);
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { immediate: true });
+      }
+    }
+  }, [location.pathname, location.state]);
 
   return (
     <MainLayout>

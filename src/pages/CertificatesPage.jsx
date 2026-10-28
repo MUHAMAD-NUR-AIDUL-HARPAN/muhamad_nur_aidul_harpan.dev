@@ -28,6 +28,9 @@ export const CertificatesPage = () => {
   const touchEndX = useRef(0);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    window.lenis?.scrollTo(0, { immediate: true });
+
     const fetchCertificates = async () => {
       try {
         const { data, error: sbError } = await supabase

@@ -77,39 +77,54 @@ export const Navbar = () => {
     return () => observer.disconnect();
   }, [location.pathname]);
 
-  const scrollToTarget = (targetId) => {
-    let attempts = 0;
-    const maxAttempts = 30;
-
-    const attempt = () => {
-      if (targetId === "home") {
-        if (window.lenis) {
-          window.lenis.scrollTo(0, { duration: 1.2 });
-        } else {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-        return;
+  const scrollToTarget = (targetId, isCrossPage = false) => {
+    if (targetId === "home") {
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { duration: 1.0 });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
+      return;
+    }
 
+    const performScroll = () => {
       const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        if (window.lenis) {
-          window.lenis.scrollTo(targetElement, {
-            offset: -80,
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          });
-        } else {
-          const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
-          window.scrollTo({ top, behavior: "smooth" });
-        }
-      } else if (attempts < maxAttempts) {
-        attempts++;
-        setTimeout(attempt, 80);
+      if (!targetElement) return false;
+
+      window.lenis?.resize();
+
+      if (window.lenis) {
+        window.lenis.scrollTo(targetElement, {
+          offset: -80,
+          duration: isCrossPage ? 1.2 : 1.0,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        });
+      } else {
+        const top = targetElement.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
       }
+      return true;
     };
 
-    attempt();
+    if (!isCrossPage) {
+      performScroll();
+      return;
+    }
+
+    let attempts = 0;
+    const maxAttempts = 30;
+    const interval = setInterval(() => {
+      attempts++;
+      const success = performScroll();
+      if (success || attempts >= maxAttempts) {
+        clearInterval(interval);
+        if (success) {
+          setTimeout(performScroll, 300);
+          setTimeout(performScroll, 700);
+          setTimeout(performScroll, 1200);
+        }
+      }
+    }, 60);
   };
 
   const handleNavClick = (item) => {
@@ -130,7 +145,11 @@ export const Navbar = () => {
     if (location.pathname === "/" && location.state?.scrollTo) {
       const targetId = location.state.scrollTo;
       setActiveSection(targetId);
-      scrollToTarget(targetId);
+      window.scrollTo(0, 0);
+      window.lenis?.scrollTo(0, { immediate: true });
+      setTimeout(() => {
+        scrollToTarget(targetId, true);
+      }, 50);
       window.history.replaceState({}, document.title);
     }
   }, [location.pathname, location.state]);
