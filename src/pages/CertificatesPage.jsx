@@ -7,6 +7,8 @@ import {
   Filter,
   X,
   ZoomIn,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useGlobal } from "../context/GlobalContext";
 import { supabase } from "../lib/supabaseClient";
@@ -54,8 +56,8 @@ export const CertificatesPage = () => {
   };
 
   const getValidLink = (cert) => {
-    if (cert.link && cert.link !== "#" && cert.link.trim() !== "") return cert.link;
-    if (cert.image && cert.image.startsWith("http") && !cert.image.includes(".jpg") && !cert.image.includes(".png")) {
+    if (cert?.link && cert.link !== "#" && cert.link.trim() !== "") return cert.link;
+    if (cert?.image && cert.image.startsWith("http") && !cert.image.includes(".jpg") && !cert.image.includes(".png")) {
       return cert.image;
     }
     return null;
@@ -67,13 +69,47 @@ export const CertificatesPage = () => {
   };
 
   const handleCardClick = (cert) => {
-    const link = getValidLink(cert);
-    if (link) {
-      window.open(link, "_blank", "noopener,noreferrer");
-    } else {
-      setSelectedCert(cert);
-    }
+    setSelectedCert(cert);
   };
+
+  const currentIndex = filteredCertificates.findIndex((c) => c.id === selectedCert?.id);
+
+  const handlePrev = (e) => {
+    e?.stopPropagation();
+    if (filteredCertificates.length <= 1) return;
+    const nextIdx = (currentIndex - 1 + filteredCertificates.length) % filteredCertificates.length;
+    setSelectedCert(filteredCertificates[nextIdx]);
+  };
+
+  const handleNext = (e) => {
+    e?.stopPropagation();
+    if (filteredCertificates.length <= 1) return;
+    const nextIdx = (currentIndex + 1) % filteredCertificates.length;
+    setSelectedCert(filteredCertificates[nextIdx]);
+  };
+
+  useEffect(() => {
+    if (!selectedCert) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowLeft") {
+        if (filteredCertificates.length > 1) {
+          const nextIdx = (currentIndex - 1 + filteredCertificates.length) % filteredCertificates.length;
+          setSelectedCert(filteredCertificates[nextIdx]);
+        }
+      } else if (e.key === "ArrowRight") {
+        if (filteredCertificates.length > 1) {
+          const nextIdx = (currentIndex + 1) % filteredCertificates.length;
+          setSelectedCert(filteredCertificates[nextIdx]);
+        }
+      } else if (e.key === "Escape") {
+        setSelectedCert(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedCert, currentIndex, filteredCertificates]);
 
   useEffect(() => {
     document.body.style.overflow = selectedCert ? "hidden" : "unset";
@@ -173,18 +209,9 @@ export const CertificatesPage = () => {
                   />
 
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-sm text-black rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      {validLink ? (
-                        <>
-                          <ExternalLink size={18} />
-                          {lang === "id" ? "Lihat Sertifikat Asli" : "View Credential"}
-                        </>
-                      ) : (
-                        <>
-                          <ZoomIn size={18} />
-                          {lang === "id" ? "Perbesar Gambar" : "Preview Certificate"}
-                        </>
-                      )}
+                    <div className="flex items-center gap-2 px-6 py-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-slate-900 dark:text-white rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-lg">
+                      <ZoomIn size={18} />
+                      {lang === "id" ? "Buka Pratinjau" : "Preview Certificate"}
                     </div>
                   </div>
 
@@ -193,6 +220,19 @@ export const CertificatesPage = () => {
                       {cert.category || (lang === "id" ? "Lainnya" : "Other")}
                     </span>
                   </div>
+
+                  {validLink && (
+                    <a
+                      href={validLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute top-4 right-4 z-10 p-2 bg-black/60 hover:bg-blue-600 text-white rounded-full backdrop-blur-md transition-all shadow-md"
+                      title={lang === "id" ? "Buka Dokumen Asli" : "Open Credential"}
+                    >
+                      <ExternalLink size={14} />
+                    </a>
+                  )}
                 </div>
 
                 <div className="p-6">
@@ -226,46 +266,106 @@ export const CertificatesPage = () => {
 
       {selectedCert && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 md:p-8 transition-opacity duration-200"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-6 transition-all duration-300"
           onClick={() => setSelectedCert(null)}
         >
           <div
-            className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300"
+            className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl relative transition-all duration-300 border border-slate-200 dark:border-slate-800"
             onClick={(e) => e.stopPropagation()}
           >
+            <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+              <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-mono font-bold rounded-full border border-white/10 shadow-md">
+                {currentIndex + 1} / {filteredCertificates.length}
+              </span>
+            </div>
+
             <button
               onClick={() => setSelectedCert(null)}
-              className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-colors cursor-pointer"
+              className="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-sm transition-colors cursor-pointer"
+              aria-label="Tutup"
             >
-              <X size={24} />
+              <X size={20} />
             </button>
 
-            <div className="flex-1 overflow-auto bg-slate-100 dark:bg-slate-950 flex items-center justify-center min-h-[40vh] relative p-4">
+            <div className="flex-1 overflow-hidden bg-slate-100 dark:bg-slate-950 flex items-center justify-center min-h-[45vh] relative p-4 group/viewer select-none">
+              {filteredCertificates.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrev}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 bg-black/60 hover:bg-blue-600 text-white rounded-full backdrop-blur-md transition-all hover:scale-110 shadow-lg cursor-pointer flex items-center justify-center"
+                    aria-label="Sertifikat Sebelumnya"
+                    title="Sebelumnya (Panah Kiri)"
+                  >
+                    <ChevronLeft size={22} />
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 bg-black/60 hover:bg-blue-600 text-white rounded-full backdrop-blur-md transition-all hover:scale-110 shadow-lg cursor-pointer flex items-center justify-center"
+                    aria-label="Sertifikat Berikutnya"
+                    title="Berikutnya (Panah Kanan)"
+                  >
+                    <ChevronRight size={22} />
+                  </button>
+                </>
+              )}
+
               <img
+                key={selectedCert.id}
                 src={getImageUrl(selectedCert.image)}
                 alt={selectedCert.title}
                 onError={handleImageError}
-                className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-lg"
+                className="max-w-full max-h-[62vh] object-contain rounded-lg shadow-lg transition-opacity duration-300"
               />
             </div>
 
-            <div className="p-6 md:p-8 bg-white dark:bg-slate-900 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-t border-slate-100 dark:border-slate-800">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
+            <div className="p-5 sm:p-7 bg-white dark:bg-slate-900 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-2 flex-wrap">
                   <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold rounded-full">
                     {selectedCert.category || "Lainnya"}
                   </span>
-                  <span className="text-slate-500 text-sm flex items-center gap-1">
-                    <Calendar size={14} /> {selectedCert.date}
+                  <span className="text-slate-500 text-xs flex items-center gap-1 font-mono">
+                    <Calendar size={13} /> {selectedCert.date}
                   </span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-1.5 truncate">
                   {selectedCert.title}
                 </h2>
-                <p className="text-slate-600 dark:text-slate-400">
-                  {lang === "id" ? "Penerbit:" : "Issuer:"}{" "}
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  {lang === "id" ? "Diterbitkan oleh:" : "Issued by:"}{" "}
                   <strong className="text-slate-900 dark:text-slate-200">{selectedCert.issuer}</strong>
                 </p>
+              </div>
+
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                {filteredCertificates.length > 1 && (
+                  <div className="flex md:hidden items-center gap-2">
+                    <button
+                      onClick={handlePrev}
+                      className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer"
+                    >
+                      <ChevronLeft size={18} />
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer"
+                    >
+                      <ChevronRight size={18} />
+                    </button>
+                  </div>
+                )}
+
+                {getValidLink(selectedCert) && (
+                  <a
+                    href={getValidLink(selectedCert)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-blue-500/25 transition-all hover:scale-105"
+                  >
+                    <ExternalLink size={16} />
+                    {lang === "id" ? "Lihat Dokumen Asli / PDF" : "View Original Credential"}
+                  </a>
+                )}
               </div>
             </div>
           </div>
