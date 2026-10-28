@@ -230,8 +230,12 @@ export const Navbar = () => {
                 key={item.id}
                 style={{ transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms" }}
                 onClick={() => handleNavClick(item)}
-                className={`group relative flex items-center w-full max-w-xs px-5 py-3 rounded-2xl transition-all duration-300 active:scale-95 cursor-pointer ${
+                className={`group relative flex items-center w-full max-w-xs px-5 py-3.5 rounded-2xl transition-all duration-300 active:scale-95 cursor-pointer ${
                   isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                } ${
+                  isActive
+                    ? "bg-blue-500/10 dark:bg-blue-400/15 text-blue-600 dark:text-blue-400 font-semibold shadow-xs"
+                    : "text-slate-700 dark:text-slate-200 hover:bg-blue-500/10 dark:hover:bg-blue-400/15 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
                 }`}
               >
                 <div className="flex items-center gap-3.5 relative z-10">
@@ -254,12 +258,29 @@ export const Navbar = () => {
                     </div>
 
                     <div
-                      className={`absolute -inset-[2px] rounded-full border-[1.5px] border-blue-500/80 dark:border-blue-400/90 shadow-[0_0_8px_rgba(59,130,246,0.5)] pointer-events-none transition-all duration-400 ${
+                      className={`absolute -inset-[2px] rounded-full p-[1.5px] overflow-hidden pointer-events-none transition-all duration-300 shadow-[0_0_10px_rgba(56,189,248,0.5)] ${
                         isActive ? "opacity-100 scale-100" : "opacity-0 scale-90"
                       }`}
-                    />
+                      style={maskStyle}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 via-sky-400 to-indigo-500" />
+                    </div>
+                    <div
+                      className={`absolute -inset-[3px] rounded-full p-[2px] overflow-hidden blur-[3px] pointer-events-none transition-all duration-300 ${
+                        isActive ? "opacity-80 scale-100" : "opacity-0 scale-90"
+                      }`}
+                      style={maskStyle}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 via-sky-400 to-indigo-500" />
+                    </div>
 
-                    <div className="w-full h-full flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                    <div
+                      className={`w-full h-full flex items-center justify-center rounded-full transition-all duration-300 ${
+                        isActive
+                          ? "bg-gradient-to-tr from-blue-600/20 via-sky-400/15 to-indigo-600/20 shadow-xs"
+                          : "bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-500/15 dark:group-hover:bg-blue-400/20"
+                      }`}
+                    >
                       <item.icon
                         size={18}
                         className={`transition-colors duration-300 ${
@@ -270,13 +291,7 @@ export const Navbar = () => {
                       />
                     </div>
                   </div>
-                  <span
-                    className={`text-lg tracking-tight transition-colors duration-300 ${
-                      isActive
-                        ? "text-blue-600 dark:text-blue-400 font-semibold"
-                        : "text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white font-medium"
-                    }`}
-                  >
+                  <span className="text-lg tracking-tight transition-colors duration-300">
                     {item.label}
                   </span>
                 </div>
@@ -355,10 +370,14 @@ export const Navbar = () => {
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className="group/item cursor-pointer relative px-3 py-1.5 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 active:scale-95"
+                    className={`group/item cursor-pointer relative px-3 py-1.5 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 active:scale-95 ${
+                      isActive
+                        ? "bg-blue-500/10 dark:bg-blue-400/15 text-blue-600 dark:text-blue-400 font-semibold shadow-xs"
+                        : "text-slate-600 dark:text-slate-300 hover:bg-blue-500/10 dark:hover:bg-blue-400/15 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+                    }`}
                   >
                     <div className="relative z-10 flex items-center gap-2">
-                      <div className="relative flex items-center justify-center w-7 h-7">
+                      <div className="relative flex items-center justify-center w-7 h-7 rounded-full">
                         <div
                           className={`absolute -inset-[2px] rounded-full p-[1.5px] overflow-hidden pointer-events-none transition-opacity duration-300 ${
                             isActive ? "opacity-0" : "opacity-0 group-hover/item:opacity-100"
@@ -377,8 +396,27 @@ export const Navbar = () => {
                         </div>
 
                         <div
-                          className={`absolute -inset-[2px] rounded-full border-[1.5px] border-blue-500/80 dark:border-blue-400/90 shadow-[0_0_8px_rgba(59,130,246,0.5)] pointer-events-none transition-all duration-400 ${
+                          className={`absolute -inset-[2px] rounded-full p-[1.5px] overflow-hidden pointer-events-none transition-all duration-300 shadow-[0_0_10px_rgba(56,189,248,0.5)] ${
                             isActive ? "opacity-100 scale-100" : "opacity-0 scale-90"
+                          }`}
+                          style={maskStyle}
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 via-sky-400 to-indigo-500" />
+                        </div>
+                        <div
+                          className={`absolute -inset-[3px] rounded-full p-[2px] overflow-hidden blur-[3px] pointer-events-none transition-all duration-300 ${
+                            isActive ? "opacity-80 scale-100" : "opacity-0 scale-90"
+                          }`}
+                          style={maskStyle}
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 via-sky-400 to-indigo-500" />
+                        </div>
+
+                        <div
+                          className={`absolute inset-0 rounded-full transition-all duration-300 ${
+                            isActive
+                              ? "bg-gradient-to-tr from-blue-600/20 via-sky-400/15 to-indigo-600/20 shadow-xs"
+                              : "bg-transparent group-hover/item:bg-blue-500/10 dark:group-hover/item:bg-blue-400/15"
                           }`}
                         />
 
@@ -391,13 +429,7 @@ export const Navbar = () => {
                           }`}
                         />
                       </div>
-                      <span
-                        className={`hidden lg:block text-sm tracking-tight transition-colors duration-300 ease-out ${
-                          isActive
-                            ? "text-blue-600 dark:text-blue-400 font-semibold"
-                            : "text-slate-600 dark:text-slate-300 group-hover/item:text-slate-900 dark:group-hover/item:text-white font-medium"
-                        }`}
-                      >
+                      <span className="hidden lg:block text-sm tracking-tight transition-colors duration-300 ease-out">
                         {item.label}
                       </span>
                     </div>
