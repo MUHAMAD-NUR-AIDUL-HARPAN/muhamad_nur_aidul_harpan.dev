@@ -232,10 +232,6 @@ export const Navbar = () => {
                 onClick={() => handleNavClick(item)}
                 className={`group relative flex items-center w-full max-w-xs px-5 py-3.5 rounded-2xl transition-all duration-300 active:scale-95 cursor-pointer ${
                   isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                } ${
-                  isActive
-                    ? "bg-blue-500/10 dark:bg-blue-400/15 text-blue-600 dark:text-blue-400 font-semibold shadow-xs"
-                    : "text-slate-700 dark:text-slate-200 hover:bg-blue-500/10 dark:hover:bg-blue-400/15 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
                 }`}
               >
                 <div className="flex items-center gap-3.5 relative z-10">
@@ -291,7 +287,13 @@ export const Navbar = () => {
                       />
                     </div>
                   </div>
-                  <span className="text-lg tracking-tight transition-colors duration-300">
+                  <span
+                    className={`text-lg tracking-tight transition-colors duration-300 ${
+                      isActive
+                        ? "text-blue-600 dark:text-blue-400 font-semibold"
+                        : "text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 font-medium"
+                    }`}
+                  >
                     {item.label}
                   </span>
                 </div>
@@ -370,11 +372,7 @@ export const Navbar = () => {
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className={`group/item cursor-pointer relative px-3 py-1.5 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 active:scale-95 ${
-                      isActive
-                        ? "bg-blue-500/10 dark:bg-blue-400/15 text-blue-600 dark:text-blue-400 font-semibold shadow-xs"
-                        : "text-slate-600 dark:text-slate-300 hover:bg-blue-500/10 dark:hover:bg-blue-400/15 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
-                    }`}
+                    className="group/item cursor-pointer relative px-3 py-1.5 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 active:scale-95"
                   >
                     <div className="relative z-10 flex items-center gap-2">
                       <div className="relative flex items-center justify-center w-7 h-7 rounded-full">
@@ -429,7 +427,13 @@ export const Navbar = () => {
                           }`}
                         />
                       </div>
-                      <span className="hidden lg:block text-sm tracking-tight transition-colors duration-300 ease-out">
+                      <span
+                        className={`hidden lg:block text-sm tracking-tight transition-colors duration-300 ease-out ${
+                          isActive
+                            ? "text-blue-600 dark:text-blue-400 font-semibold"
+                            : "text-slate-600 dark:text-slate-300 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400 font-medium"
+                        }`}
+                      >
                         {item.label}
                       </span>
                     </div>
