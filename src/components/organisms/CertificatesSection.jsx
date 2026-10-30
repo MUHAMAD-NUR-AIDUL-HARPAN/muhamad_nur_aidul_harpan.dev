@@ -5,6 +5,7 @@ import { useGlobal } from "../../context/GlobalContext";
 import { supabase } from "../../lib/supabaseClient";
 import { TextHighlighter } from "../atoms/TextHighlighter";
 import { ButtonRing } from "../atoms/ButtonRing";
+import { ScrollScrubText } from "../atoms/ScrollScrubText";
 
 const FALLBACK_IMAGE =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23f1f5f9'/%3E%3Cpath d='M400 200c-33.1 0-60 26.9-60 60s26.9 60 60 60 60-26.9 60-60-26.9-60-60-60zm0 90c-16.5 0-30-13.5-30-30s13.5-30 30-30 30 13.5 30 30-13.5 30-30 30z' fill='%2394a3b8'/%3E%3Cpath d='M360 320h80v100l-40-20-40 20z' fill='%2394a3b8'/%3E%3Ctext x='50%25' y='65%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' font-weight='bold' fill='%2364748b'%3ESertifikat%3C/text%3E%3C/svg%3E";
@@ -76,11 +77,17 @@ export const CertificatesSection = () => {
               {lang === "id" ? "Sertifikasi Unggulan" : "Featured Certificates"}
             </span>
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-base sm:text-lg">
-            {lang === "id"
-              ? "Bukti dedikasi dan standar kompetensi profesional saya dalam industri teknologi terkini."
-              : "Proof of my continuous learning, technical competence, and industry standards."}
-          </p>
+          <div className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-base sm:text-lg">
+            <ScrollScrubText
+              text={
+                lang === "id"
+                  ? "Bukti dedikasi dan standar kompetensi profesional saya dalam industri teknologi terkini."
+                  : "Proof of my continuous learning, technical competence, and industry standards."
+              }
+              start="top 90%"
+              end="bottom 65%"
+            />
+          </div>
         </div>
 
         {loading ? (

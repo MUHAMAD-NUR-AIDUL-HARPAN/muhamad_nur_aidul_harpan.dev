@@ -5,6 +5,7 @@ import { experienceData } from "../../data/content";
 import { useGlobal } from "../../context/GlobalContext";
 import { Briefcase, GraduationCap, Calendar } from "lucide-react";
 import { TextHighlighter } from "../atoms/TextHighlighter";
+import { ScrollScrubText } from "../atoms/ScrollScrubText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -195,11 +196,17 @@ export const ExperienceSection = () => {
               </span>
             </h2>
           </div>
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
-            {lang === "id"
-              ? "Perjalanan saya dalam membangun produk digital dan memperdalam keahlian teknis."
-              : "My journey in building digital products and deepening technical expertise."}
-          </p>
+          <div className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
+            <ScrollScrubText
+              text={
+                lang === "id"
+                  ? "Perjalanan saya dalam membangun produk digital dan memperdalam keahlian teknis."
+                  : "My journey in building digital products and deepening technical expertise."
+              }
+              start="top 90%"
+              end="bottom 65%"
+            />
+          </div>
 
           <div className="flex flex-col items-center justify-center mt-8 -mb-12">
             <div className="relative w-6 h-6 rounded-full flex items-center justify-center">

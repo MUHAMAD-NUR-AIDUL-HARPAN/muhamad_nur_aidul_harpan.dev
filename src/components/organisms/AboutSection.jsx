@@ -6,6 +6,7 @@ import { aboutData, skills } from "../../data/content";
 import { StatsGrid } from "../molecules/StatsGrid";
 import { TechTag } from "../atoms/TechTag";
 import { TextHighlighter } from "../atoms/TextHighlighter";
+import { ScrollScrubText } from "../atoms/ScrollScrubText";
 import { User, Code } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -65,12 +66,12 @@ export const AboutSection = () => {
             </div>
 
             <h3 className="text-xl font-medium text-slate-500 mb-6 border-l-4 border-blue-500 pl-4">
-              {lang === "id" ? t.subtitle.id : t.subtitle.en}
+              <ScrollScrubText text={lang === "id" ? t.subtitle.id : t.subtitle.en} start="top 90%" end="bottom 70%" />
             </h3>
 
-            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-8">
-              {lang === "id" ? t.bio.id : t.bio.en}
-            </p>
+            <div className="text-lg text-slate-700 dark:text-slate-200 leading-relaxed mb-8">
+              <ScrollScrubText text={lang === "id" ? t.bio.id : t.bio.en} start="top 85%" end="bottom 60%" />
+            </div>
 
             <StatsGrid />
           </div>

@@ -6,6 +6,7 @@ import { projectsData, projectCategories } from "../../data/content";
 import { ProjectCard } from "../molecules/ProjectCard";
 import { TextHighlighter } from "../atoms/TextHighlighter";
 import { ButtonRing } from "../atoms/ButtonRing";
+import { ScrollScrubText } from "../atoms/ScrollScrubText";
 import { Code } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -91,11 +92,17 @@ export const ProjectsSection = () => {
               {lang === "id" ? "Proyek Pilihan" : "Featured Work"}
             </span>
           </h2>
-          <p className="text-slate-500 max-w-xl mx-auto">
-            {lang === "id"
-              ? "Koleksi proyek terpilih yang memperlihatkan keahlian saya dalam menciptakan solusi aplikasi dengan kode yang terstruktur."
-              : "A selection of projects that demonstrate my ability to solve complex problems with clean code."}
-          </p>
+          <div className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
+            <ScrollScrubText
+              text={
+                lang === "id"
+                  ? "Koleksi proyek terpilih yang memperlihatkan keahlian saya dalam menciptakan solusi aplikasi dengan kode yang terstruktur."
+                  : "A selection of projects that demonstrate my ability to solve complex problems with clean code."
+              }
+              start="top 90%"
+              end="bottom 65%"
+            />
+          </div>
         </div>
 
         <div data-aos="fade-up" data-aos-delay="100" className="flex flex-wrap justify-center gap-2.5 mb-12">

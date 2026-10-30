@@ -3,6 +3,7 @@ import { SkillBar } from "../molecules/SkillBar";
 import { Layout, Server, Settings, Cpu, Layers } from "lucide-react";
 import { useGlobal } from "../../context/GlobalContext";
 import { TextHighlighter } from "../atoms/TextHighlighter";
+import { ScrollScrubText } from "../atoms/ScrollScrubText";
 
 const iconMap = {
   Layout: Layout,
@@ -38,11 +39,17 @@ export const SkillsSection = () => {
               {lang === "id" ? "Kemampuan Teknis" : "Technical Proficiency"}
             </span>
           </h2>
-          <p className="text-slate-500 max-w-xl mx-auto">
-            {lang === "id"
-              ? "Teknologi dan perangkat modern yang saya gunakan untuk membangun sistem handal dan terukur."
-              : "A deep dive into the tools and modern technologies I use to build scalable products."}
-          </p>
+          <div className="text-slate-500 max-w-xl mx-auto">
+            <ScrollScrubText
+              text={
+                lang === "id"
+                  ? "Teknologi dan perangkat modern yang saya gunakan untuk membangun sistem handal dan terukur."
+                  : "A deep dive into the tools and modern technologies I use to build scalable products."
+              }
+              start="top 90%"
+              end="bottom 65%"
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
