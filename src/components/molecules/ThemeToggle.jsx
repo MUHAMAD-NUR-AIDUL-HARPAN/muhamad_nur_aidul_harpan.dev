@@ -6,29 +6,29 @@ export const ThemeToggle = () => {
   const { isDarkMode, toggleTheme, lang, toggleLang } = useGlobal();
 
   return (
-    <div className="flex gap-2 bg-white dark:bg-slate-800 p-1.5 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
-      <div className="relative group inline-block cursor-pointer">
+    <div className="flex items-center gap-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-1 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className="relative group flex items-center justify-center cursor-pointer">
         <ButtonRing rounded="rounded-full" />
         <button
           onClick={toggleLang}
-          className="cursor-pointer relative px-3 py-1 flex items-center gap-2 text-xs font-bold rounded-full bg-slate-100 dark:bg-slate-900/50 shadow-sm hover:bg-slate-200 dark:hover:bg-slate-800 active:scale-95 transition-all border border-slate-200 dark:border-slate-700"
+          className="cursor-pointer relative h-8 px-2.5 flex items-center justify-center gap-1.5 text-xs font-bold rounded-full bg-slate-100 dark:bg-slate-900/60 shadow-sm hover:bg-slate-200 dark:hover:bg-slate-800 active:scale-95 transition-all border border-slate-200/80 dark:border-slate-700/80"
         >
-          <div className="w-4 h-3 rounded-[2px] overflow-hidden border border-slate-300 dark:border-slate-600 flex-shrink-0 shadow-sm">
+          <div className="w-[18px] h-[13px] rounded-[2px] overflow-hidden border border-slate-300 dark:border-slate-600 flex-shrink-0 shadow-2xs flex items-center justify-center">
             <img
               src={lang === "id" ? "https://flagcdn.com/w20/id.png" : "https://flagcdn.com/w20/gb.png"}
               alt={lang}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover block"
             />
           </div>
-          <span className="text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+          <span className="text-slate-700 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors leading-none tracking-wide flex items-center">
             {lang.toUpperCase()}
           </span>
         </button>
       </div>
 
-      <div className="w-px bg-slate-200 dark:bg-slate-700 my-1.5" />
+      <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-0.5" />
 
-      <div className="relative group inline-block cursor-pointer">
+      <div className="relative group flex items-center justify-center cursor-pointer">
         <ButtonRing rounded="rounded-full" />
         <button
           onClick={toggleTheme}

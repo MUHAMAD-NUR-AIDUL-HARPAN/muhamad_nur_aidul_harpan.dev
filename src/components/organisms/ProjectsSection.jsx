@@ -4,7 +4,7 @@ import { projectsData, projectCategories } from "../../data/content";
 import { ProjectCard } from "../molecules/ProjectCard";
 import { TextHighlighter } from "../atoms/TextHighlighter";
 import { ButtonRing } from "../atoms/ButtonRing";
-import { Filter } from "lucide-react";
+import { Code } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 
 export const ProjectsSection = () => {
@@ -53,7 +53,7 @@ export const ProjectsSection = () => {
         >
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="p-2.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 shadow-sm">
-              <Filter size={20} />
+              <Code size={20} />
             </div>
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
               {lang === "id" ? "Koleksi Proyek" : "Featured Projects"}

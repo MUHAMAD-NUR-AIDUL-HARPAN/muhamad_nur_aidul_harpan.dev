@@ -36,7 +36,7 @@ export const TextHighlighter = ({ className = "" }) => {
           transformOrigin: "left center",
           transform: isVisible ? "scaleX(1)" : "scaleX(0)",
           transition: "transform 1.4s cubic-bezier(0.25, 1, 0.5, 1) 0.15s",
-        }}
+        }}  
         className="absolute inset-0 bg-blue-200/80 dark:bg-blue-600/30 rounded-md block will-change-transform transform-gpu"
       >
         <span className="absolute inset-0 bg-gradient-to-r from-blue-300/10 via-white/30 dark:via-blue-400/20 to-blue-400/30 pointer-events-none" />

@@ -15,19 +15,31 @@ const maskStyle = {
   maskComposite: "exclude",
 };
 
-const LogoIcon = ({ sizeClass = "w-5 h-5" }) => (
+const LogoIcon = ({ sizeClass = "w-6 h-6" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
+    viewBox="0 0 64 64"
+    className={`${sizeClass} select-none`}
     fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={sizeClass}
   >
-    <polyline points="16 18 22 12 16 6" />
-    <polyline points="8 6 2 12 8 18" />
+    <circle cx="32" cy="32" r="32" fill="#0f172a" />
+    <path
+      d="M24 22 L14 32 L24 42 M40 22 L50 32 L40 42"
+      stroke="#ffffff"
+      strokeWidth="5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+    <line
+      x1="36"
+      y1="18"
+      x2="28"
+      y2="46"
+      stroke="#3b82f6"
+      strokeWidth="5"
+      strokeLinecap="round"
+    />
   </svg>
 );
 
@@ -216,7 +228,7 @@ export const Navbar = () => {
   return (
     <>
       <div
-        className={`fixed inset-0 w-full h-[100dvh] bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-2xl z-40 flex flex-col justify-center items-center md:hidden transition-all duration-400 ease-out transform-gpu ${
+        className={`fixed inset-0 w-full h-[100dvh] bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-2xl z-40 flex flex-col justify-center items-center md:hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu ${
           isMobileMenuOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"
         }`}
       >
@@ -228,9 +240,9 @@ export const Navbar = () => {
             return (
               <button
                 key={item.id}
-                style={{ transitionDelay: isMobileMenuOpen ? `${40 + i * 30}ms` : "0ms" }}
+                style={{ transitionDelay: isMobileMenuOpen ? `${35 + i * 25}ms` : "0ms" }}
                 onClick={() => handleNavClick(item)}
-                className={`group relative flex items-center w-full max-w-xs px-5 py-3.5 rounded-2xl transition-all duration-300 active:scale-95 cursor-pointer ${
+                className={`group relative flex items-center w-full max-w-xs px-5 py-3.5 rounded-2xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-95 cursor-pointer ${
                   isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
@@ -326,7 +338,7 @@ export const Navbar = () => {
           </div>
         </div>
 
-        <div className={`absolute bottom-10 z-10 transition-all duration-500 delay-300 transform ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+        <div className={`absolute bottom-10 z-10 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] delay-200 transform ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
           <ThemeToggle />
         </div>
       </div>
@@ -357,9 +369,9 @@ export const Navbar = () => {
               <ButtonRing rounded="rounded-full" />
               <div
                 onClick={() => handleNavClick({ id: "home", type: "scroll" })}
-                className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold shadow-md hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-400 ease-out active:scale-95"
+                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full font-bold shadow-md hover:shadow-xl hover:shadow-blue-500/35 transition-all duration-400 ease-out active:scale-95 overflow-hidden bg-slate-900 border border-slate-700/60"
               >
-                <LogoIcon sizeClass="w-5 h-5" />
+                <LogoIcon sizeClass="w-full h-full" />
               </div>
             </div>
 
@@ -461,8 +473,8 @@ export const Navbar = () => {
                 }}
                 className="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer shadow-md transition-all duration-400 ease-out backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] hover:shadow-xl hover:shadow-blue-500/20 active:scale-95"
               >
-                <div className="flex items-center justify-center w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-full font-bold shadow-md shadow-blue-500/20">
-                  <LogoIcon sizeClass="w-4 h-4" />
+                <div className="flex items-center justify-center w-9 h-9 bg-slate-900 text-white rounded-full font-bold shadow-md shadow-blue-500/20 overflow-hidden border border-slate-700/60">
+                  <LogoIcon sizeClass="w-full h-full" />
                 </div>
               </div>
             </div>
@@ -474,11 +486,11 @@ export const Navbar = () => {
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Toggle Menu"
-                className="relative flex flex-col justify-center items-center w-12 h-12 gap-[5px] rounded-full cursor-pointer shadow-md transition-all duration-400 ease-out backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] active:scale-95"
+                className="relative flex flex-col justify-center items-center w-12 h-12 gap-[5px] rounded-full cursor-pointer shadow-md transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] backdrop-blur-xl border bg-white/90 dark:bg-slate-900/90 border-white/50 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#111111] active:scale-95"
               >
-                <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-out origin-center ${isMobileMenuOpen ? "w-5 rotate-45 translate-y-[7px]" : "w-5"}`} />
-                <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-out ${isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"}`} />
-                <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-out origin-center ${isMobileMenuOpen ? "w-5 -rotate-45 -translate-y-[7px]" : "w-5"}`} />
+                <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${isMobileMenuOpen ? "w-5 rotate-45 translate-y-[7px]" : "w-5"}`} />
+                <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${isMobileMenuOpen ? "w-0 opacity-0" : "w-5 opacity-100"}`} />
+                <span className={`h-[2px] bg-slate-900 dark:bg-white rounded-full transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${isMobileMenuOpen ? "w-5 -rotate-45 -translate-y-[7px]" : "w-5"}`} />
               </button>
             </div>
           </div>
