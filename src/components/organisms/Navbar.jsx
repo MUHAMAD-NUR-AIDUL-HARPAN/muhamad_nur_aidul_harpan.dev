@@ -430,17 +430,18 @@ export const Navbar = () => {
         </div>
       </div>
 
-      <nav
-        className={`fixed top-4 md:top-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform origin-top ${
-          shouldShow
-            ? "translate-y-0 opacity-100 scale-100"
-            : "-translate-y-24 opacity-0 scale-90 pointer-events-none"
-        }`}
-      >
+      <nav className="fixed top-4 md:top-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <div
-          ref={desktopNavRef}
-          className="hidden md:block pointer-events-auto relative rounded-full w-max group/navbar shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] will-change-transform"
+          className={`hidden md:block pointer-events-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform origin-center ${
+            shouldShow
+              ? "scale-x-100 scale-y-100 opacity-100"
+              : "scale-x-0 scale-y-95 opacity-0 pointer-events-none"
+          }`}
         >
+          <div
+            ref={desktopNavRef}
+            className="relative rounded-full w-max group/navbar shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] will-change-transform"
+          >
           <div
             className="absolute -inset-[3px] rounded-full p-[3px] overflow-hidden opacity-60 group-hover/navbar:opacity-90 blur-[6px] transition-opacity duration-500 pointer-events-none"
             style={maskStyle}
@@ -554,9 +555,16 @@ export const Navbar = () => {
             </div>
           </div>
         </div>
+      </div>
 
         <div className="md:hidden pointer-events-none w-full flex justify-between items-center">
-          <div className="pointer-events-auto">
+          <div
+            className={`pointer-events-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform ${
+              shouldShow
+                ? "translate-x-0 scale-100 opacity-100"
+                : "translate-x-[calc(50vw-2.5rem)] scale-0 opacity-0 pointer-events-none"
+            }`}
+          >
             <div className="relative group/logo cursor-pointer">
               <ButtonRing rounded="rounded-full" />
               <div
@@ -573,7 +581,13 @@ export const Navbar = () => {
             </div>
           </div>
 
-          <div className="pointer-events-auto">
+          <div
+            className={`pointer-events-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform ${
+              shouldShow
+                ? "translate-x-0 scale-100 opacity-100"
+                : "-translate-x-[calc(50vw-2.5rem)] scale-0 opacity-0 pointer-events-none"
+            }`}
+          >
             <div className="relative group/menu cursor-pointer">
               <ButtonRing rounded="rounded-full" />
               <button
