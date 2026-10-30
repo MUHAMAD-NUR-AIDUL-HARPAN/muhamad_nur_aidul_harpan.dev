@@ -432,10 +432,10 @@ export const Navbar = () => {
 
       <nav className="fixed top-4 md:top-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <div
-          className={`hidden md:block pointer-events-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform origin-center ${
+          className={`hidden md:block pointer-events-auto transform-gpu will-change-transform origin-center transition-all ease-[cubic-bezier(0.16,1,0.3,1)] ${
             shouldShow
-              ? "scale-x-100 scale-y-100 opacity-100"
-              : "scale-x-0 scale-y-95 opacity-0 pointer-events-none"
+              ? "scale-x-100 scale-y-100 opacity-100 duration-500 delay-0"
+              : "scale-x-0 scale-y-75 opacity-0 duration-500 delay-75 pointer-events-none"
           }`}
         >
           <div
@@ -458,7 +458,13 @@ export const Navbar = () => {
 
           <div className="absolute -inset-[2px] rounded-full border border-slate-300/40 dark:border-slate-700/40 pointer-events-none z-10" />
 
-          <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 p-1.5 rounded-full flex items-center justify-between w-full shadow-sm z-20">
+          <div
+            className={`relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 p-1.5 rounded-full flex items-center justify-between w-full shadow-sm z-20 transform-gpu transition-all ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              shouldShow
+                ? "opacity-100 scale-100 blur-0 duration-300 delay-150"
+                : "opacity-0 scale-95 blur-[2px] duration-150 delay-0 pointer-events-none"
+            }`}
+          >
             <div className="relative group/logo cursor-pointer flex-shrink-0">
               <ButtonRing rounded="rounded-full" />
               <div
@@ -559,13 +565,19 @@ export const Navbar = () => {
 
         <div className="md:hidden pointer-events-none w-full flex justify-between items-center">
           <div
-            className={`pointer-events-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform ${
+            className={`pointer-events-auto transition-all ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform ${
               shouldShow
-                ? "translate-x-0 scale-100 opacity-100"
-                : "translate-x-[calc(50vw-2.5rem)] scale-0 opacity-0 pointer-events-none"
+                ? "translate-x-0 scale-100 opacity-100 duration-500 delay-0"
+                : "translate-x-[calc(50vw-2.5rem)] scale-0 opacity-0 duration-500 delay-75 pointer-events-none"
             }`}
           >
-            <div className="relative group/logo cursor-pointer">
+            <div
+              className={`relative group/logo cursor-pointer transition-all ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                shouldShow
+                  ? "opacity-100 scale-100 duration-300 delay-150"
+                  : "opacity-0 scale-90 duration-150 delay-0"
+              }`}
+            >
               <ButtonRing rounded="rounded-full" />
               <div
                 onClick={() => {
@@ -582,13 +594,19 @@ export const Navbar = () => {
           </div>
 
           <div
-            className={`pointer-events-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform ${
+            className={`pointer-events-auto transition-all ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform ${
               shouldShow
-                ? "translate-x-0 scale-100 opacity-100"
-                : "-translate-x-[calc(50vw-2.5rem)] scale-0 opacity-0 pointer-events-none"
+                ? "translate-x-0 scale-100 opacity-100 duration-500 delay-0"
+                : "-translate-x-[calc(50vw-2.5rem)] scale-0 opacity-0 duration-500 delay-75 pointer-events-none"
             }`}
           >
-            <div className="relative group/menu cursor-pointer">
+            <div
+              className={`relative group/menu cursor-pointer transition-all ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                shouldShow
+                  ? "opacity-100 scale-100 duration-300 delay-150"
+                  : "opacity-0 scale-90 duration-150 delay-0"
+              }`}
+            >
               <ButtonRing rounded="rounded-full" />
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
