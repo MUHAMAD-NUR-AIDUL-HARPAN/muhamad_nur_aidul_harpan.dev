@@ -12,11 +12,12 @@ export const ProjectCard = ({ project, index = 0 }) => {
   };
 
   return (
-    <div
-      data-aos="fade-up"
-      data-aos-delay={(index % 3) * 100}
-      className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col justify-between will-change-transform"
-    >
+    <div className="lenis-skew transform-gpu will-change-transform h-full">
+      <div
+        data-aos="fade-up"
+        data-aos-delay={(index % 3) * 100}
+        className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col justify-between will-change-transform h-full"
+      >
 
       <div className="h-60 overflow-hidden relative">
         <img
@@ -120,5 +121,6 @@ export const ProjectCard = ({ project, index = 0 }) => {
         </div>
       </div>
     </div>
+  </div>
   );
 };

@@ -1,3 +1,6 @@
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGlobal } from "../../context/GlobalContext";
 import { aboutData, skills } from "../../data/content";
 import { StatsGrid } from "../molecules/StatsGrid";
@@ -5,17 +8,40 @@ import { TechTag } from "../atoms/TechTag";
 import { TextHighlighter } from "../atoms/TextHighlighter";
 import { User, Code } from "lucide-react";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export const AboutSection = () => {
   const { lang } = useGlobal();
   const t = aboutData;
+  const sectionRef = useRef(null);
+  const bgTextRef = useRef(null);
+
+  useEffect(() => {
+    if (!sectionRef.current || !bgTextRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.to(bgTextRef.current, {
+        xPercent: -15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
+    <section ref={sectionRef} className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
 
       <div className="hidden md:block absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       <div 
-        className="hidden md:block absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
+        ref={bgTextRef}
+        className="hidden md:block absolute top-10 right-[-10%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform"
       >
         ABOUT ME
       </div>
@@ -54,46 +80,47 @@ export const AboutSection = () => {
             data-aos-delay="150"
             className="relative"
           >
-
-            <div className="p-8 rounded-3xl bg-white/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-2xl relative z-10 hover:shadow-2xl hover:shadow-blue-500/15 hover:border-blue-500/30 transition-all duration-500 ease-out">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600">
-                  <Code size={20} />
+            <div className="lenis-skew transform-gpu will-change-transform">
+              <div className="p-8 rounded-3xl bg-white/50 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-2xl relative z-10 hover:shadow-2xl hover:shadow-blue-500/15 hover:border-blue-500/30 transition-all duration-500 ease-out">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+                    <Code size={20} />
+                  </div>
+                  <h3 className="text-xl font-bold">
+                    {lang === "id" ? t.techTitle.id : t.techTitle.en}
+                  </h3>
                 </div>
-                <h3 className="text-xl font-bold">
-                  {lang === "id" ? t.techTitle.id : t.techTitle.en}
-                </h3>
-              </div>
 
-              <div className="flex flex-wrap gap-3">
-                {skills.map((skill, index) => (
-                  <TechTag key={skill} label={skill} index={index} />
-                ))}
-              </div>
-
-              <div className="mt-8 p-4 rounded-xl bg-slate-900 text-slate-300 font-mono text-xs overflow-hidden border border-slate-800 shadow-md">
-                <div className="flex gap-1.5 mb-3">
-                  <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                <div className="flex flex-wrap gap-3">
+                  {skills.map((skill, index) => (
+                    <TechTag key={skill} label={skill} index={index} />
+                  ))}
                 </div>
-                <p>
-                  <span className="text-pink-400">const</span>{" "}
-                  <span className="text-blue-400">developer</span> ={" "}
-                  <span className="text-yellow-300">{`{`}</span>
-                </p>
-                <p className="pl-4">
-                  passion: <span className="text-green-400">"infinite"</span>,
-                </p>
-                <p className="pl-4">
-                  coffeeLevel: <span className="text-blue-400">100</span>,
-                </p>
-                <p className="pl-4">
-                  bugs: <span className="text-red-400">null</span>
-                </p>
-                <p>
-                  <span className="text-yellow-300">{`}`}</span>;
-                </p>
+
+                <div className="mt-8 p-4 rounded-xl bg-slate-900 text-slate-300 font-mono text-xs overflow-hidden border border-slate-800 shadow-md">
+                  <div className="flex gap-1.5 mb-3">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                  </div>
+                  <p>
+                    <span className="text-pink-400">const</span>{" "}
+                    <span className="text-blue-400">developer</span> ={" "}
+                    <span className="text-yellow-300">{`{`}</span>
+                  </p>
+                  <p className="pl-4">
+                    passion: <span className="text-green-400">"infinite"</span>,
+                  </p>
+                  <p className="pl-4">
+                    coffeeLevel: <span className="text-blue-400">100</span>,
+                  </p>
+                  <p className="pl-4">
+                    bugs: <span className="text-red-400">null</span>
+                  </p>
+                  <p>
+                    <span className="text-yellow-300">{`}`}</span>;
+                  </p>
+                </div>
               </div>
             </div>
 

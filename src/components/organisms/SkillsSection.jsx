@@ -50,31 +50,32 @@ export const SkillsSection = () => {
             const Icon = iconMap[category.icon] || Cpu;
 
             return (
-              <div
-                key={catIndex}
-                data-aos="fade-up"
-                data-aos-delay={catIndex * 100}
-                className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out will-change-transform"
-              >
+              <div key={catIndex} className="lenis-skew transform-gpu will-change-transform h-full">
+                <div
+                  data-aos="fade-up"
+                  data-aos-delay={catIndex * 100}
+                  className="bg-white dark:bg-slate-900/50 backdrop-blur-sm p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out will-change-transform h-full"
+                >
 
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="p-3 rounded-2xl bg-blue-100 dark:bg-blue-900/30 text-blue-600">
-                    <Icon size={28} />
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="p-3 rounded-2xl bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+                      <Icon size={28} />
+                    </div>
+                    <h3 className="text-2xl font-bold">{category.category}</h3>
                   </div>
-                  <h3 className="text-2xl font-bold">{category.category}</h3>
-                </div>
 
-                <div className="space-y-6">
-                  {category.skills.map((skill, skillIndex) => (
-                    <SkillBar
-                      key={skillIndex}
-                      name={skill.name}
-                      level={skill.level}
-                      iconKey={skill.iconKey}
-                      color={skill.color}
-                      index={skillIndex}
-                    />
-                  ))}
+                  <div className="space-y-6">
+                    {category.skills.map((skill, skillIndex) => (
+                      <SkillBar
+                        key={skillIndex}
+                        name={skill.name}
+                        level={skill.level}
+                        iconKey={skill.iconKey}
+                        color={skill.color}
+                        index={skillIndex}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             );

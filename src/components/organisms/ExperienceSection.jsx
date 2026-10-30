@@ -62,41 +62,43 @@ const ExperienceCard = ({ item, index }) => {
         data-aos-delay={index * 100}
         className="w-full md:w-5/12 pl-12 md:pl-0"
       >
-        <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-500 ease-out group will-change-transform">
-          <div
-            className={`hidden md:block absolute top-6 w-4 h-4 bg-slate-50 dark:bg-slate-800 border-t border-r border-slate-200 dark:border-slate-800 transform rotate-45 ${
-              isLeft
-                ? "-left-2 border-t-0 border-r-0 border-b border-l"
-                : "-right-2"
-            }`}
-          />
+        <div className="lenis-skew transform-gpu will-change-transform">
+          <div className="relative p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-1.5 transition-all duration-500 ease-out group will-change-transform">
+            <div
+              className={`hidden md:block absolute top-6 w-4 h-4 bg-slate-50 dark:bg-slate-800 border-t border-r border-slate-200 dark:border-slate-800 transform rotate-45 ${
+                isLeft
+                  ? "-left-2 border-t-0 border-r-0 border-b border-l"
+                  : "-right-2"
+              }`}
+            />
 
-          <div className="flex flex-col gap-2 mb-4">
-            <span className="inline-flex items-center gap-2 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-              <Calendar size={12} />
-              {item.period}
-            </span>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-200 leading-tight">
-              {lang === "id" ? item.role.id : item.role.en}
-            </h3>
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              @ {item.company}
-            </p>
-          </div>
-
-          <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
-            {lang === "id" ? item.desc.id : item.desc.en}
-          </p>
-
-          <div className="flex flex-wrap gap-2">
-            {item.tech.map((tech, idx) => (
-              <span
-                key={idx}
-                className="px-2 py-1 text-[10px] font-bold uppercase tracking-wide bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-md border border-slate-200 dark:border-slate-700"
-              >
-                {tech}
+            <div className="flex flex-col gap-2 mb-4">
+              <span className="inline-flex items-center gap-2 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                <Calendar size={12} />
+                {item.period}
               </span>
-            ))}
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-200 leading-tight">
+                {lang === "id" ? item.role.id : item.role.en}
+              </h3>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                @ {item.company}
+              </p>
+            </div>
+
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
+              {lang === "id" ? item.desc.id : item.desc.en}
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {item.tech.map((tech, idx) => (
+                <span
+                  key={idx}
+                  className="px-2 py-1 text-[10px] font-bold uppercase tracking-wide bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-md border border-slate-200 dark:border-slate-700"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -109,11 +111,25 @@ export const ExperienceSection = () => {
   const timelineRef = useRef(null);
   const fillLineRef = useRef(null);
   const beaconRef = useRef(null);
+  const bgTextRef = useRef(null);
 
   useEffect(() => {
     if (!timelineRef.current || !fillLineRef.current || !beaconRef.current) return;
 
     const ctx = gsap.context(() => {
+      if (bgTextRef.current) {
+        gsap.to(bgTextRef.current, {
+          xPercent: 18,
+          ease: "none",
+          scrollTrigger: {
+            trigger: timelineRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
+
       gsap.fromTo(
         fillLineRef.current,
         { scaleY: 0 },
@@ -155,7 +171,8 @@ export const ExperienceSection = () => {
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       <div 
-        className="hidden md:block absolute top-20 left-[-20%] text-[4rem] md:text-[8rem] lg:text-[12rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
+        ref={bgTextRef}
+        className="hidden md:block absolute top-20 left-[-20%] text-[4rem] md:text-[8rem] lg:text-[12rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform"
       >
         EXPERIENCE
       </div>

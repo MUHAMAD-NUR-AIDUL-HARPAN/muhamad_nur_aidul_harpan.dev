@@ -5,11 +5,12 @@ export const EducationCard = ({ item, index }) => {
   const { lang } = useGlobal();
 
   return (
-    <div
-      data-aos="fade-up"
-      data-aos-delay={index * 120}
-      className="group relative bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-100 dark:border-slate-800 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out overflow-hidden will-change-transform"
-    >
+    <div className="lenis-skew transform-gpu will-change-transform h-full">
+      <div
+        data-aos="fade-up"
+        data-aos-delay={index * 120}
+        className="group relative bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-100 dark:border-slate-800 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out overflow-hidden will-change-transform h-full"
+      >
 
       <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-500/10 transition-colors duration-500" />
 
@@ -47,5 +48,6 @@ export const EducationCard = ({ item, index }) => {
         </div>
       </div>
     </div>
+  </div>
   );
 };

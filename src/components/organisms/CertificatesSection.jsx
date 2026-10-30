@@ -94,12 +94,12 @@ export const CertificatesSection = () => {
             {certificates.map((cert, index) => {
               const validLink = getValidLink(cert);
               return (
-                <div
-                  key={cert.id}
-                  data-aos="fade-up"
-                  data-aos-delay={(index % 3) * 100}
-                  className="group relative bg-slate-50 dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-700/60 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col justify-between will-change-transform"
-                >
+                <div key={cert.id} className="lenis-skew transform-gpu will-change-transform h-full">
+                  <div
+                    data-aos="fade-up"
+                    data-aos-delay={(index % 3) * 100}
+                    className="group relative bg-slate-50 dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-700/60 shadow-md hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col justify-between will-change-transform h-full"
+                  >
                   <Link to="/certificates" className="block overflow-hidden relative aspect-video bg-slate-200 dark:bg-slate-900">
                     <img
                       src={getImageUrl(cert.image)}
@@ -156,6 +156,7 @@ export const CertificatesSection = () => {
 
                   <div className="h-1 w-full bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-500 dark:to-indigo-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </div>
+              </div>
               );
             })}
           </div>

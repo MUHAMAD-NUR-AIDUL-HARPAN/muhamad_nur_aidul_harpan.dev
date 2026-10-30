@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGlobal } from "../../context/GlobalContext";
 import { projectsData, projectCategories } from "../../data/content";
 import { ProjectCard } from "../molecules/ProjectCard";
@@ -7,11 +9,33 @@ import { ButtonRing } from "../atoms/ButtonRing";
 import { Code } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export const ProjectsSection = () => {
   const { lang } = useGlobal();
   const [activeCategory, setActiveCategory] = useState("All");
   const [projects, setProjects] = useState(projectsData);
   const [categories, setCategories] = useState(projectCategories);
+  const sectionRef = useRef(null);
+  const workTextRef = useRef(null);
+
+  useEffect(() => {
+    if (!sectionRef.current || !workTextRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.to(workTextRef.current, {
+        xPercent: -20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   useEffect(() => {
     supabase
@@ -36,12 +60,13 @@ export const ProjectsSection = () => {
       : projects.filter((item) => item.category === activeCategory);
 
   return (
-    <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
+    <section ref={sectionRef} className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
 
       <div className="hidden md:block absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       <div 
-        className="hidden md:block absolute top-10 right-[-5%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap"
+        ref={workTextRef}
+        className="hidden md:block absolute top-10 right-[-5%] text-[5rem] md:text-[10rem] lg:text-[15rem] font-black text-slate-200 dark:text-slate-200/5 opacity-50 select-none pointer-events-none z-0 whitespace-nowrap will-change-transform"
       >
         WORK
       </div>

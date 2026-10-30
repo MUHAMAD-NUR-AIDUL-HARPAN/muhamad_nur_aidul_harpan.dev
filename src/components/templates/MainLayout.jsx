@@ -41,6 +41,7 @@ export const MainLayout = ({ children }) => {
     let lenis = null;
     let tickerUpdate = null;
     let handleNativeScroll = null;
+    let stopTimer = null;
 
     if (!isNoLenis && isDesktop) {
       lenis = new Lenis({
@@ -57,10 +58,22 @@ export const MainLayout = ({ children }) => {
       gsap.ticker.add(tickerUpdate);
       gsap.ticker.lagSmoothing(0);
 
-      const onScroll = ({ progress }) => {
+      const skewTo = gsap.quickTo(".lenis-skew", "skewY", {
+        duration: 0.5,
+        ease: "power2.out",
+      });
+
+      const onScroll = ({ progress, velocity }) => {
         if (progressBarRef.current) {
           progressBarRef.current.style.transform = `scaleX(${progress})`;
         }
+        const clampedVelocity = Math.max(-2, Math.min(2, (velocity || 0) * 0.1));
+        skewTo(clampedVelocity);
+
+        clearTimeout(stopTimer);
+        stopTimer = setTimeout(() => {
+          skewTo(0);
+        }, 100);
       };
       lenis.on("scroll", onScroll);
     } else {
@@ -78,6 +91,8 @@ export const MainLayout = ({ children }) => {
     }
 
     return () => {
+      if (stopTimer) clearTimeout(stopTimer);
+      gsap.set(".lenis-skew", { skewY: 0 });
       if (tickerUpdate) gsap.ticker.remove(tickerUpdate);
       if (handleNativeScroll) window.removeEventListener("scroll", handleNativeScroll);
       if (lenis) {
