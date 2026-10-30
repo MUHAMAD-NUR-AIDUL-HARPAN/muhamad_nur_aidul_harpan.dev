@@ -48,15 +48,18 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const desktopNavRef = useRef(null);
   const isTransitioningRef = useRef(false);
+
+  const shouldShow = isVisible || isMobileMenuOpen;
 
   useEffect(() => {
     if (!desktopNavRef.current) return;
     gsap.fromTo(
       desktopNavRef.current,
       { y: -60, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
+      { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", clearProps: "transform,opacity" }
     );
 
     const rings = desktopNavRef.current.querySelectorAll(".navbar-spin-ring");
@@ -68,6 +71,88 @@ export const Navbar = () => {
     });
 
     return () => spinTween.kill();
+  }, []);
+
+  const [prevPath, setPrevPath] = useState(location.pathname);
+  if (prevPath !== location.pathname) {
+    setPrevPath(location.pathname);
+    setIsVisible(true);
+  }
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let accumulatedDelta = 0;
+    let isScrollingDown = false;
+    let ticking = false;
+
+    const updateScroll = () => {
+      const currentY = Math.max(0, window.scrollY);
+      const delta = currentY - lastY;
+
+      if (isTransitioningRef.current) {
+        lastY = currentY;
+        accumulatedDelta = 0;
+        ticking = false;
+        return;
+      }
+
+      if (currentY <= 50) {
+        setIsVisible(true);
+        accumulatedDelta = 0;
+        lastY = currentY;
+        ticking = false;
+        return;
+      }
+
+      if (delta > 0) {
+        if (!isScrollingDown) {
+          isScrollingDown = true;
+          accumulatedDelta = 0;
+        }
+        accumulatedDelta += delta;
+        if (accumulatedDelta > 10) {
+          setIsVisible(false);
+        }
+      } else if (delta < 0) {
+        if (isScrollingDown) {
+          isScrollingDown = false;
+          accumulatedDelta = 0;
+        }
+        accumulatedDelta += Math.abs(delta);
+        if (accumulatedDelta > 6) {
+          setIsVisible(true);
+        }
+      }
+
+      lastY = currentY;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScroll);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    let unsubLenis = null;
+    let timer = null;
+    const bindLenis = () => {
+      if (window.lenis) {
+        unsubLenis = window.lenis.on("scroll", onScroll);
+      } else {
+        timer = setTimeout(bindLenis, 150);
+      }
+    };
+    bindLenis();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (unsubLenis) unsubLenis();
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -96,6 +181,7 @@ export const Navbar = () => {
   const scrollToTarget = (targetId) => {
     isTransitioningRef.current = true;
     setActiveSection(targetId);
+    setIsVisible(true);
 
     if (targetId === "home") {
       if (window.lenis) {
@@ -134,6 +220,7 @@ export const Navbar = () => {
   };
 
   const handleNavClick = (item) => {
+    setIsVisible(true);
     if (item.type === "route") {
       navigate(item.path);
     } else {
@@ -343,7 +430,13 @@ export const Navbar = () => {
         </div>
       </div>
 
-      <nav className="fixed top-6 md:top-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+      <nav
+        className={`fixed top-4 md:top-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform origin-top ${
+          shouldShow
+            ? "translate-y-0 opacity-100 scale-100"
+            : "-translate-y-24 opacity-0 scale-90 pointer-events-none"
+        }`}
+      >
         <div
           ref={desktopNavRef}
           className="hidden md:block pointer-events-auto relative rounded-full w-max group/navbar shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] will-change-transform"
@@ -462,7 +555,7 @@ export const Navbar = () => {
           </div>
         </div>
 
-        <div className="md:hidden pointer-events-none fixed top-4 left-4 right-4 flex justify-between z-50">
+        <div className="md:hidden pointer-events-none w-full flex justify-between items-center">
           <div className="pointer-events-auto">
             <div className="relative group/logo cursor-pointer">
               <ButtonRing rounded="rounded-full" />
